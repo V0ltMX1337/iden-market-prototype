@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +12,6 @@ const ProductPage = () => {
   const [selectedColor, setSelectedColor] = useState("Серый");
   const [quantity, setQuantity] = useState(1);
 
-  // Mock data - в реальном приложении загружать по productId
   const product = {
     id: productId,
     title: "Наушники Buds3 Pro (беспроводная зарядка)",
@@ -46,11 +45,38 @@ const ProductPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/marketplace" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Icon name="Store" size={20} className="text-white" />
+              </div>
+              <span className="text-xl font-bold">Поехали</span>
+            </Link>
+
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm">
+                <Icon name="Heart" size={18} className="mr-2" />
+                Избранное
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Icon name="ShoppingCart" size={18} className="mr-2" />
+                Корзина
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Breadcrumbs */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center text-sm text-gray-600 space-x-2">
-            <span>Главная</span>
+            <Link to="/marketplace" className="hover:text-primary">
+              Главная
+            </Link>
             <Icon name="ChevronRight" size={14} />
             <span>Электроника</span>
             <Icon name="ChevronRight" size={14} />
@@ -65,13 +91,13 @@ const ProductPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Images */}
           <div className="space-y-4">
-            <div className="aspect-square bg-white rounded-lg overflow-hidden">
+            <Card className="aspect-square overflow-hidden">
               <img
                 src={product.images[selectedImage]}
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
-            </div>
+            </Card>
             <div className="flex space-x-2">
               {product.images.map((image, index) => (
                 <button
@@ -99,12 +125,11 @@ const ProductPage = () => {
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 {product.title}
               </h1>
-              <div className="flex items-center space-x-4 text-sm text-gray-600">
+              <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
                 <span>Артикул: {product.sku}</span>
                 <span>Продано: 625</span>
-                <span>Склад: Москва</span>
               </div>
-              <div className="flex items-center mt-2">
+              <div className="flex items-center">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Icon
@@ -119,35 +144,47 @@ const ProductPage = () => {
                   {product.rating}
                 </span>
                 <span className="ml-1 text-sm text-gray-500">
-                  {product.reviewsCount} отзывов
+                  ({product.reviewsCount} отзывов)
                 </span>
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="text-blue-600 p-0 ml-2"
-                >
-                  В избранное
-                </Button>
               </div>
             </div>
 
             {/* Price */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center space-x-2 mb-2">
-                <span className="text-3xl font-bold text-gray-900">
-                  {product.price} ₽
-                </span>
-                {product.oldPrice && (
-                  <>
-                    <span className="text-lg text-gray-500 line-through">
-                      {product.oldPrice} ₽
-                    </span>
-                    <Badge variant="destructive">-{product.discount}%</Badge>
-                  </>
-                )}
-              </div>
-              <p className="text-sm text-gray-600">Без скидки</p>
-            </div>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-3xl font-bold text-gray-900">
+                    {product.price} ₽
+                  </span>
+                  {product.oldPrice && (
+                    <>
+                      <span className="text-lg text-gray-500 line-through">
+                        {product.oldPrice} ₽
+                      </span>
+                      <Badge variant="destructive">-{product.discount}%</Badge>
+                    </>
+                  )}
+                </div>
+                <p className="text-sm text-gray-600">Цена с учетом скидки</p>
+              </CardContent>
+            </Card>
+
+            {/* Safe Deal Info */}
+            <Card className="border-green-200 bg-green-50">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon name="Shield" size={16} className="text-green-600" />
+                  <span className="font-medium text-green-700">
+                    Безопасная сделка
+                  </span>
+                </div>
+                <p className="text-sm text-green-700">
+                  Сначала покупатель оплачивает товар, деньги резервируются
+                  маркетплейсом. Продавец получает деньги только после получения
+                  товара покупателем.
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Variants */}
             <div>
@@ -194,22 +231,8 @@ const ProductPage = () => {
                 </button>
               </div>
               <Button className="flex-1" size="lg">
-                В корзину
+                <Icon name="ShoppingCart" size={18} className="mr-2" />В корзину
               </Button>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="grid grid-cols-4 gap-2">
-              {product.features.map((feature) => (
-                <Button
-                  key={feature}
-                  variant="outline"
-                  size="sm"
-                  className="text-xs"
-                >
-                  {feature}
-                </Button>
-              ))}
             </div>
           </div>
         </div>
@@ -218,12 +241,22 @@ const ProductPage = () => {
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
+              <Link
+                to="/seller/1"
+                className="flex items-center space-x-4 hover:bg-gray-50 p-2 rounded-lg transition-colors"
+              >
                 <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center">
                   <span className="text-white font-bold">On</span>
                 </div>
                 <div>
-                  <h3 className="font-medium">{product.seller}</h3>
+                  <h3 className="font-medium flex items-center gap-2">
+                    {product.seller}
+                    <Icon
+                      name="ExternalLink"
+                      size={14}
+                      className="text-gray-400"
+                    />
+                  </h3>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Icon
                       name="Star"
@@ -234,10 +267,10 @@ const ProductPage = () => {
                     <span>3719 отзывов</span>
                   </div>
                 </div>
-              </div>
-              <div className="text-right text-sm">
-                <div className="text-gray-600">962 товаров</div>
-                <div className="text-gray-600">7000+ продаж</div>
+              </Link>
+              <div className="text-right text-sm text-gray-600">
+                <div>962 товаров</div>
+                <div>7000+ продаж</div>
               </div>
             </div>
           </CardContent>
@@ -247,8 +280,8 @@ const ProductPage = () => {
         <Card>
           <CardContent className="p-6">
             <h2 className="text-xl font-bold mb-4">О товаре</h2>
-            <h3 className="font-medium mb-2">Наушники Galaxyy Buds3 Pro</h3>
-            <p className="text-gray-700">{product.description}</p>
+            <h3 className="font-medium mb-2">Наушники Galaxy Buds3 Pro</h3>
+            <p className="text-gray-700 mb-6">{product.description}</p>
 
             <Separator className="my-6" />
 
