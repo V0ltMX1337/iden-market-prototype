@@ -34,7 +34,10 @@ const ProductCard = ({
   isDeliveryFree = false,
 }: ProductCardProps) => {
   return (
-    <Card className="group hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+    <Card
+      className="group hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+      onClick={() => (window.location.href = `/product/${id}`)}
+    >
       <CardContent className="p-4">
         {/* Image */}
         <div className="relative mb-3">

@@ -38,7 +38,7 @@ const AdminSidebar = () => {
       <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700">
         <NavLink
           to="/admin/profile"
-          className="flex items-center gap-3 hover:bg-gray-800 transition-colors p-2 rounded-lg"
+          className="flex items-center gap-3 hover:bg-gray-800 transition-colors p-2 rounded-lg w-fit"
         >
           <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
             <span className="text-black text-sm font-bold">А</span>
