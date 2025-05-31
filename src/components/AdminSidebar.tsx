@@ -36,7 +36,10 @@ const AdminSidebar = () => {
       </nav>
 
       <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700">
-        <div className="flex items-center gap-3">
+        <NavLink
+          to="/admin/profile"
+          className="flex items-center gap-3 hover:bg-gray-800 transition-colors p-2 rounded-lg"
+        >
           <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
             <span className="text-black text-sm font-bold">А</span>
           </div>
@@ -44,7 +47,7 @@ const AdminSidebar = () => {
             <p className="text-sm font-medium">Александр Волков</p>
             <p className="text-xs text-gray-400">admin@potionshop.ru</p>
           </div>
-        </div>
+        </NavLink>
       </div>
     </div>
   );

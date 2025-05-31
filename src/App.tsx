@@ -14,6 +14,7 @@ import AdminOverview from "@/components/AdminOverview";
 import AdminProducts from "@/components/AdminProducts";
 import AdminOrders from "@/components/AdminOrders";
 import AdminAnalytics from "@/components/AdminAnalytics";
+import AdminFinance from "@/components/AdminFinance";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="overview" element={<AdminOverview />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="finance" element={<AdminFinance />} />
             <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
