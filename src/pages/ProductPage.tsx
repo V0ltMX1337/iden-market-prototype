@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Icon from "@/components/ui/icon";
+import Header from "@/components/Header";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -35,44 +36,15 @@ const ProductPage = () => {
     ],
     description:
       "Беспроводные внутриканальные наушники в полностью переработанном дизайне. Легкие, удобные и эргономичные.",
-    features: [
-      "Возврат денег",
-      "Способы оплаты",
-      "Условия доставки",
-      "Возврат товаров",
-    ],
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/marketplace" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Icon name="Store" size={20} className="text-white" />
-              </div>
-              <span className="text-xl font-bold">Поехали</span>
-            </Link>
-
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <Icon name="Heart" size={18} className="mr-2" />
-                Избранное
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Icon name="ShoppingCart" size={18} className="mr-2" />
-                Корзина
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Breadcrumbs */}
       <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center text-sm text-gray-600 space-x-2">
             <Link to="/marketplace" className="hover:text-primary">
               Главная
@@ -87,7 +59,7 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Images */}
           <div className="space-y-4">
