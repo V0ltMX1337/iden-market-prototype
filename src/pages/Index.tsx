@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import SellerProfile from "@/components/SellerProfile";
 import CategoryFilter from "@/components/CategoryFilter";
 import ProductGrid from "@/components/ProductGrid";
 import { Button } from "@/components/ui/button";
@@ -83,12 +84,34 @@ const Index = () => {
             {/* Products Grid */}
             <ProductGrid />
 
-            {/* Load More */}
-            <div className="text-center mt-12">
-              <Button variant="outline" size="lg">
-                Показать ещё товары
-              </Button>
-            </div>
+            {/* Test Seller Card Section */}
+            <section className="mt-16 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Тестовая карточка продавца
+                </h2>
+              </div>
+              <div className="flex justify-center">
+                <div
+                  className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
+                  onClick={() => (window.location.href = "/seller/1")}
+                >
+                  <SellerProfile
+                    id={1}
+                    name="ТехноМир"
+                    rating={4.8}
+                    reviewsCount={2847}
+                    joinDate="Февраль 2020"
+                    avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                    isVerified={true}
+                    responseTime="в течение часа"
+                    location="Москва"
+                    description="Официальный дилер электроники с гарантией качества. Продаем только оригинальную технику с официальной гарантией."
+                    totalSales={15420}
+                  />
+                </div>
+              </div>
+            </section>
           </main>
         </div>
       </div>
