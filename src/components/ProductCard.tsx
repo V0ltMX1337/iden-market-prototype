@@ -12,6 +12,9 @@ interface ProductCardProps {
   reviewsCount: number;
   image: string;
   seller: string;
+  sellerRating?: number;
+  isVerifiedSeller?: boolean;
+  isSafeTransaction?: boolean;
   discount?: number;
   isDeliveryFree?: boolean;
 }
@@ -24,6 +27,9 @@ const ProductCard = ({
   reviewsCount,
   image,
   seller,
+  sellerRating = 4.5,
+  isVerifiedSeller = false,
+  isSafeTransaction = false,
   discount,
   isDeliveryFree = false,
 }: ProductCardProps) => {
@@ -100,7 +106,39 @@ const ProductCard = ({
         </div>
 
         {/* Seller */}
-        <div className="text-xs text-gray-500 mb-3">от {seller}</div>
+        <div className="border-t pt-2 mt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-gray-600">от {seller}</span>
+            <div className="flex items-center">
+              <Icon
+                name="Star"
+                size={10}
+                className="text-yellow-400 fill-current mr-1"
+              />
+              <span className="text-xs font-medium">{sellerRating}</span>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {isVerifiedSeller && (
+              <Badge
+                variant="secondary"
+                className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700"
+              >
+                <Icon name="Shield" size={8} className="mr-1" />
+                Проверен
+              </Badge>
+            )}
+            {isSafeTransaction && (
+              <Badge
+                variant="outline"
+                className="text-xs px-1.5 py-0.5 border-blue-200 text-blue-600"
+              >
+                <Icon name="Lock" size={8} className="mr-1" />
+                Безопасная сделка
+              </Badge>
+            )}
+          </div>
+        </div>
 
         {/* Actions */}
         <div className="flex space-x-2">
