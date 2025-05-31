@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import Cart from "@/components/Cart";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Header = () => {
               Продавцам
             </a>
             <div className="flex items-center space-x-2">
+              <Cart />
               <Button variant="outline" onClick={() => navigate("/register")}>
                 Регистрация
               </Button>

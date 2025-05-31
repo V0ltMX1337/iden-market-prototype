@@ -278,8 +278,11 @@ const NewMarketplace = () => {
         </div>
       </section>
 
+      {/* Sellers Slider */}
+      <SellersSlider />
+
       {/* Promo Blocks */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Wholesale Instructions */}
           <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white overflow-hidden">
