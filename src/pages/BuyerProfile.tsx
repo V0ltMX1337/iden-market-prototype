@@ -11,8 +11,10 @@ import Icon from "@/components/ui/icon";
 const BuyerProfile = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("profile");
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [searchOrders, setSearchOrders] = useState("");
+  const [selectedOrderFilter, setSelectedOrderFilter] = useState("all");
 
   const user = {
     firstName: "Анна",
@@ -66,12 +68,33 @@ const BuyerProfile = () => {
 
   const menuItems = [
     { id: "profile", label: "Профиль", icon: "User" },
-    { id: "orders", label: "Заказы", icon: "Package" },
+    {
+      id: "orders",
+      label: "Заказы",
+      icon: "Package",
+      hasSubmenu: true,
+      submenu: [
+        { id: "all", label: "Все" },
+        { id: "delivered", label: "Доставлен" },
+        { id: "shipping", label: "В пути" },
+        { id: "processing", label: "Обрабатывается" },
+        { id: "cancelled", label: "Отменен" },
+      ],
+    },
     { id: "messages", label: "Сообщения", icon: "MessageCircle" },
     { id: "reviews", label: "Мои отзывы", icon: "Star" },
     { id: "returns", label: "Возвраты", icon: "RotateCcw" },
     { id: "addresses", label: "Профили доставки", icon: "MapPin" },
-    { id: "settings", label: "Настройки", icon: "Settings" },
+    {
+      id: "settings",
+      label: "Настройки",
+      icon: "Settings",
+      hasSubmenu: true,
+      submenu: [
+        { id: "notifications", label: "Уведомления" },
+        { id: "telegram", label: "Telegram" },
+      ],
+    },
   ];
 
   const filteredOrders = orders.filter(
@@ -148,6 +171,28 @@ const BuyerProfile = () => {
       processing: { label: "Обрабатывается", variant: "outline" as const },
     };
     return statusMap[status as keyof typeof statusMap] || statusMap.processing;
+  };
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections((prev) =>
+      prev.includes(sectionId)
+        ? prev.filter((id) => id !== sectionId)
+        : [...prev, sectionId],
+    );
+  };
+
+  const handleSubmenuClick = (parentId: string, submenuId: string) => {
+    if (parentId === "orders") {
+      setSelectedOrderFilter(submenuId);
+      setActiveSection("orders");
+    } else if (parentId === "settings") {
+      setActiveSection(`${parentId}-${submenuId}`);
+    }
+  };
+
+  const getFilteredOrders = () => {
+    if (selectedOrderFilter === "all") return orders;
+    return orders.filter((order) => order.status === selectedOrderFilter);
   };
 
   const renderStars = (rating: number) => {
@@ -229,14 +274,27 @@ const BuyerProfile = () => {
         );
 
       case "orders":
+        const filteredOrdersByStatus = getFilteredOrders();
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Мои заказы</CardTitle>
+              <CardTitle>
+                Мои заказы
+                {selectedOrderFilter !== "all" && (
+                  <Badge variant="secondary" className="ml-2">
+                    {
+                      menuItems
+                        .find((item) => item.id === "orders")
+                        ?.submenu?.find((sub) => sub.id === selectedOrderFilter)
+                        ?.label
+                    }
+                  </Badge>
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {orders.map((order) => (
+                {filteredOrdersByStatus.map((order) => (
                   <div
                     key={order.id}
                     className="border rounded-lg p-4 space-y-3"
