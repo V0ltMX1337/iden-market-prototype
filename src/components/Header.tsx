@@ -2,10 +2,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  // Mock user data - in real app would come from context/store
+  const user = {
+    firstName: "Анна",
+    lastName: "Покупатель",
+    avatar: "",
+  };
+
   return (
     <header className="border-b bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,17 +34,19 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/login")}
-              className="hover:text-primary"
+              onClick={() => navigate("/buyer/profile")}
+              className="flex items-center space-x-2 hover:text-primary"
             >
-              Войти
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/register")}
-            >
-              Регистрация
+              <Avatar className="w-6 h-6">
+                <AvatarImage src={user.avatar} />
+                <AvatarFallback className="text-xs">
+                  {user.firstName[0]}
+                  {user.lastName[0]}
+                </AvatarFallback>
+              </Avatar>
+              <span>
+                {user.firstName} {user.lastName}
+              </span>
             </Button>
           </div>
         </div>
@@ -44,7 +55,12 @@ const Header = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary">IdenMarket</h1>
+            <h1
+              className="text-2xl font-bold text-primary cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => navigate("/")}
+            >
+              IdenMarket
+            </h1>
             <Badge variant="secondary" className="ml-2 text-xs">
               beta
             </Badge>

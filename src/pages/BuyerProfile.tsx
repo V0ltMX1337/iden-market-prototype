@@ -1,19 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/icon";
 
 const BuyerProfile = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("profile");
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [searchOrders, setSearchOrders] = useState("");
 
   const user = {
     firstName: "Анна",
     lastName: "Покупатель",
     email: "anna@example.com",
     avatar: "",
+    birthDate: "15.03.1990",
+    gender: "Женский",
+    phone: "+7 912 345-67-89",
+    phoneVerified: true,
+    username: "anna_buyer",
   };
 
   const orders = [
@@ -22,6 +32,9 @@ const BuyerProfile = () => {
       date: "2024-05-25",
       total: 1200,
       status: "delivered",
+      seller: "TechStore",
+      productImage:
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=80&h=80&fit=crop",
       items: [{ name: "Смартфон Samsung", quantity: 1, price: 1200 }],
     },
     {
@@ -29,6 +42,9 @@ const BuyerProfile = () => {
       date: "2024-05-22",
       total: 450,
       status: "shipping",
+      seller: "AudioWorld",
+      productImage:
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
       items: [{ name: "Беспроводные наушники", quantity: 1, price: 450 }],
     },
   ];
@@ -57,6 +73,73 @@ const BuyerProfile = () => {
     { id: "addresses", label: "Профили доставки", icon: "MapPin" },
     { id: "settings", label: "Настройки", icon: "Settings" },
   ];
+
+  const filteredOrders = orders.filter(
+    (order) =>
+      order.id.toLowerCase().includes(searchOrders.toLowerCase()) ||
+      order.seller.toLowerCase().includes(searchOrders.toLowerCase()) ||
+      order.items.some((item) =>
+        item.name.toLowerCase().includes(searchOrders.toLowerCase()),
+      ),
+  );
+
+  const renderEditableField = (
+    label: string,
+    value: string,
+    fieldKey: string,
+    isPhone = false,
+  ) => {
+    const isEditing = editingField === fieldKey;
+
+    return (
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+        <div className="flex items-center space-x-2">
+          {isEditing ? (
+            <>
+              <Input type="text" defaultValue={value} className="flex-1" />
+              <Button size="sm" onClick={() => setEditingField(null)}>
+                Сохранить
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingField(null)}
+              >
+                Отмена
+              </Button>
+            </>
+          ) : (
+            <>
+              <div className="flex-1 flex items-center space-x-2">
+                <span className="border border-gray-300 rounded-md px-3 py-2 bg-gray-50 flex-1">
+                  {value}
+                </span>
+                {isPhone && user.phoneVerified && (
+                  <Badge
+                    variant="default"
+                    className="bg-green-100 text-green-800"
+                  >
+                    <Icon name="CheckCircle" size={12} className="mr-1" />
+                    Подтвержден
+                  </Badge>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingField(fieldKey)}
+              >
+                <Icon name="Edit2" size={14} />
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
@@ -107,14 +190,14 @@ const BuyerProfile = () => {
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Имя
-                  </label>
-                  <input
-                    type="text"
-                    value={user.firstName}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {renderEditableField("Имя", user.firstName, "firstName")}
+                {renderEditableField("Фамилия", user.lastName, "lastName")}
+                {renderEditableField("Имя пользователя", user.username, "username")}
+                {renderEditableField("Дата рождения", user.birthDate, "birthDate")}
+                {renderEditableField("Пол", user.gender, "gender")}
+                {renderEditableField("Номер телефона", user.phone, "phone", true)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     readOnly
                   />
