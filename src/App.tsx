@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Marketplace from "./pages/Marketplace";
 import ProductPage from "./pages/ProductPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
 import SellerProfile from "@/pages/SellerProfile";
@@ -28,6 +31,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/seller/:sellerId" element={<SellerPage />} />

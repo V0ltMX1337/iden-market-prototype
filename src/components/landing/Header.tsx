@@ -25,9 +25,12 @@ const Header = () => {
             <a href="#sellers" className="text-gray-600 hover:text-primary">
               Продавцам
             </a>
-            <Button onClick={() => navigate("/marketplace")}>
-              Перейти в каталог
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Войти
+              </Button>
+              <Button onClick={() => navigate("/marketplace")}>Каталог</Button>
+            </div>
           </nav>
         </div>
       </div>
