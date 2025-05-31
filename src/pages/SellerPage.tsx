@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import Header from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,34 +57,51 @@ const SellerPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Icon name="Store" size={20} className="text-white" />
-              </div>
-              <span className="text-xl font-bold">Поехали</span>
-            </div>
+    <div className="min-h-screen bg-gray-50 font-roboto">
+      <Header />
 
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <Icon name="Heart" size={18} className="mr-2" />
-                Избранное
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Icon name="ShoppingCart" size={18} className="mr-2" />
-                Корзина
-              </Button>
+      {/* Hero Banner */}
+      <section className="bg-gradient-to-r from-primary to-purple-600 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Магазин {seller.name}</h2>
+              <p className="text-lg opacity-90">
+                Официальный продавец электроники
+              </p>
+            </div>
+            <div className="flex items-center space-x-2 bg-white/10 rounded-lg px-4 py-2">
+              <Icon
+                name="Star"
+                size={20}
+                className="text-yellow-400 fill-current"
+              />
+              <span className="font-medium">{seller.rating}</span>
+              <span className="opacity-90">
+                ({seller.reviewsCount} отзывов)
+              </span>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      <div className="container mx-auto px-4 py-6">
-        {/* Seller Header */}
+      {/* Breadcrumbs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav className="flex items-center space-x-2 text-sm text-gray-600">
+          <a href="/" className="hover:text-primary">
+            Главная
+          </a>
+          <Icon name="ChevronRight" size={16} />
+          <a href="/marketplace" className="hover:text-primary">
+            Маркетплейс
+          </a>
+          <Icon name="ChevronRight" size={16} />
+          <span className="text-gray-900">Продавец {seller.name}</span>
+        </nav>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        {/* Seller Info */}
         <Card className="mb-8">
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-6">
@@ -94,29 +112,15 @@ const SellerPage = () => {
                 <div>
                   <h1 className="text-3xl font-bold mb-2">{seller.name}</h1>
                   <div className="flex items-center space-x-4 text-gray-600 mb-2">
-                    <div className="flex items-center">
-                      <Icon
-                        name="Star"
-                        size={16}
-                        className="text-yellow-400 fill-current mr-1"
-                      />
-                      <span className="font-medium">{seller.rating}</span>
-                      <span className="ml-1">
-                        ({seller.reviewsCount} отзывов)
-                      </span>
-                    </div>
-                    <span>•</span>
                     <span>На площадке с {seller.joinDate}</span>
+                    <span>•</span>
+                    <span>{seller.totalProducts} товаров</span>
+                    <span>•</span>
+                    <span>{seller.totalSales}+ продаж</span>
                   </div>
                   <p className="text-gray-700 max-w-2xl">
                     {seller.description}
                   </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div>{seller.totalProducts} товаров</div>
-                  <div>{seller.totalSales}+ продаж</div>
                 </div>
               </div>
             </div>
@@ -134,25 +138,39 @@ const SellerPage = () => {
 
         {/* Products Section */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-4">Товары продавца</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Товары продавца</h2>
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" size="sm">
+                <Icon name="Filter" size={16} className="mr-2" />
+                Фильтры
+              </Button>
+              <Button variant="outline" size="sm">
+                <Icon name="ArrowUpDown" size={16} className="mr-2" />
+                Сортировка
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product) => (
               <Card
                 key={product.id}
-                className="group hover:shadow-lg transition-shadow cursor-pointer"
+                className="group hover:shadow-lg transition-all duration-200 border-gray-200 hover:border-primary/20"
               >
-                <div className="aspect-square overflow-hidden rounded-t-lg">
+                <div className="aspect-square overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                 </div>
                 <CardContent className="p-4">
-                  <h3 className="font-medium mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="font-medium mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                     {product.title}
                   </h3>
-                  <div className="flex items-center mb-2">
+
+                  <div className="flex items-center mb-3">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Icon
@@ -167,17 +185,26 @@ const SellerPage = () => {
                         />
                       ))}
                     </div>
-                    <span className="ml-1 text-xs text-gray-500">
+                    <span className="ml-2 text-xs text-gray-500">
                       ({product.reviews})
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold">{product.price} ₽</span>
-                    {product.oldPrice && (
-                      <span className="text-sm text-gray-500 line-through">
-                        {product.oldPrice} ₽
+
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl font-bold text-gray-900">
+                        {product.price.toLocaleString()} ₽
                       </span>
-                    )}
+                      {product.oldPrice && (
+                        <span className="text-sm text-gray-500 line-through">
+                          {product.oldPrice.toLocaleString()} ₽
+                        </span>
+                      )}
+                    </div>
+
+                    <Button className="w-full" size="sm">
+                      В корзину
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -185,10 +212,13 @@ const SellerPage = () => {
           </div>
         </div>
 
-        {/* Contact Info */}
+        {/* Contact Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Связаться с продавцом</CardTitle>
+            <CardTitle className="flex items-center">
+              <Icon name="MessageCircle" size={20} className="mr-2" />
+              Связаться с продавцом
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
