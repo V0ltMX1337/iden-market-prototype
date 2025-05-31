@@ -71,6 +71,7 @@ const LandingPage = () => {
                   size="lg"
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-primary text-lg px-8 py-4"
+                  onClick={() => navigate("/admin/register")}
                 >
                   <Icon name="Store" size={20} className="mr-2" />
                   Стать продавцом
