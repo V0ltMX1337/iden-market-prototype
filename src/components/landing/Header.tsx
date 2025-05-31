@@ -26,10 +26,13 @@ const Header = () => {
               Продавцам
             </a>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" onClick={() => navigate("/login")}>
-                Войти
+              <Button variant="outline" onClick={() => navigate("/register")}>
+                Регистрация
               </Button>
-              <Button onClick={() => navigate("/marketplace")}>Каталог</Button>
+              <Button onClick={() => navigate("/login")}>Войти</Button>
+              <Button variant="ghost" onClick={() => navigate("/marketplace")}>
+                Каталог
+              </Button>
             </div>
           </nav>
         </div>
