@@ -1,94 +1,58 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
-import BalanceCard from "./finance/BalanceCard";
-import TransactionHistory from "./finance/TransactionHistory";
-import { Transaction } from "./finance/TransactionItem";
 
 const AdminFinance = () => {
-  const balanceData = {
-    available: 245680,
-    pending: 89420,
-    lastPayout: 156700,
-    payoutDate: "2025-05-25",
-  };
-
-  const transactions: Transaction[] = [
+  const stats = [
     {
-      id: 1,
-      type: "sale",
-      amount: 12500,
-      date: "2025-05-30",
-      description: "Заказ #1047",
+      title: "Общий доход",
+      value: "₽487,230",
+      change: "+12%",
+      icon: "TrendingUp",
     },
     {
-      id: 2,
-      type: "payout",
-      amount: -156700,
-      date: "2025-05-25",
-      description: "Выплата на карту",
+      title: "Продажи за месяц",
+      value: "₽89,400",
+      change: "+8%",
+      icon: "ShoppingBag",
     },
     {
-      id: 3,
-      type: "sale",
-      amount: 8900,
-      date: "2025-05-29",
-      description: "Заказ #1046",
+      title: "Комиссия платформы",
+      value: "₽24,361",
+      change: "-",
+      icon: "CreditCard",
     },
-    {
-      id: 4,
-      type: "sale",
-      amount: 15600,
-      date: "2025-05-28",
-      description: "Заказ #1045",
-    },
-    {
-      id: 5,
-      type: "commission",
-      amount: -1250,
-      date: "2025-05-27",
-      description: "Комиссия платформы",
-    },
+    { title: "К выводу", value: "₽462,869", change: "+15%", icon: "Wallet" },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Финансы</h2>
-        <p className="text-gray-600">Управление балансом и движением средств</p>
+        <h2 className="text-xl font-semibold">Финансы</h2>
+        <p className="text-gray-600">Доходы и расходы магазина</p>
       </div>
 
-      {/* Баланс кабинета */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <BalanceCard
-          title="Доступно к выплате"
-          amount={balanceData.available}
-          description="Готово к выводу"
-          icon="Wallet"
-          colorClass="text-green-600"
-        />
-        <BalanceCard
-          title="В обработке"
-          amount={balanceData.pending}
-          description="Ожидает подтверждения"
-          icon="Clock"
-          colorClass="text-yellow-600"
-        />
-        <BalanceCard
-          title="Последняя выплата"
-          amount={balanceData.lastPayout}
-          description={balanceData.payoutDate}
-          icon="ArrowDownLeft"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat) => (
+          <Card key={stat.title}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    {stat.title}
+                  </p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs text-green-600">{stat.change}</p>
+                </div>
+                <Icon
+                  name={stat.icon as any}
+                  size={24}
+                  className="text-gray-400"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-
-      {/* Кнопка вывода средств */}
-      <div className="flex justify-end">
-        <button className="bg-yellow-500 text-black px-6 py-2 rounded-lg font-medium hover:bg-yellow-400 transition-colors flex items-center gap-2">
-          <Icon name="Download" size={16} />
-          Вывести средства
-        </button>
-      </div>
-
-      <TransactionHistory transactions={transactions} />
     </div>
   );
 };

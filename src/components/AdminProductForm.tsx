@@ -7,9 +7,10 @@ import Icon from "@/components/ui/icon";
 
 interface AdminProductFormProps {
   onClose: () => void;
+  productId?: number;
 }
 
-const AdminProductForm = ({ onClose }: AdminProductFormProps) => {
+const AdminProductForm = ({ onClose, productId }: AdminProductFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -32,7 +33,9 @@ const AdminProductForm = ({ onClose }: AdminProductFormProps) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Создать новый товар</CardTitle>
+          <CardTitle>
+            {productId ? "Редактировать товар" : "Создать новый товар"}
+          </CardTitle>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <Icon name="X" size={20} />
           </Button>

@@ -20,6 +20,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({
+  id,
   title,
   price,
   oldPrice,

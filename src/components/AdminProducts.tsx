@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import AdminProductForm from "@/components/AdminProductForm";
 
 const AdminProducts = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<number | null>(null);
   const [products] = useState([
     {
       id: 1,
@@ -49,7 +52,7 @@ const AdminProducts = () => {
           <h2 className="text-xl font-semibold">Товары</h2>
           <p className="text-gray-600">Управление каталогом товаров</p>
         </div>
-        <Button>
+        <Button onClick={() => setIsFormOpen(true)}>
           <Icon name="Plus" size={16} className="mr-2" />
           Добавить товар
         </Button>
@@ -85,7 +88,11 @@ const AdminProducts = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingProduct(product.id)}
+                    >
                       <Icon name="Edit" size={14} />
                     </Button>
                     <Button variant="outline" size="sm">
@@ -98,6 +105,15 @@ const AdminProducts = () => {
           </div>
         </CardContent>
       </Card>
+
+      {isFormOpen && <AdminProductForm onClose={() => setIsFormOpen(false)} />}
+
+      {editingProduct && (
+        <AdminProductForm
+          productId={editingProduct}
+          onClose={() => setEditingProduct(null)}
+        />
+      )}
     </div>
   );
 };
