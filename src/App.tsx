@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Marketplace from "./pages/Marketplace";
+import ProductPage from "./pages/ProductPage";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
 import SellerProfile from "@/pages/SellerProfile";
