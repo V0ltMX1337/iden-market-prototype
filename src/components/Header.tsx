@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
+import Cart from "@/components/Cart";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -89,17 +90,7 @@ const Header = () => {
               <Icon name="Heart" size={20} />
               <span className="hidden sm:inline">Избранное</span>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center space-x-2"
-            >
-              <Icon name="ShoppingCart" size={20} />
-              <span className="hidden sm:inline">Корзина</span>
-              <Badge variant="destructive" className="ml-1">
-                3
-              </Badge>
-            </Button>
+            <Cart />
           </div>
         </div>
 

@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import Cart from "@/components/Cart";
 
 const Header = () => {
   const navigate = useNavigate();
