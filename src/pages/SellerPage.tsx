@@ -4,9 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const SellerPage = () => {
   const { sellerId } = useParams();
+
+  const isVerified = sellerId === "1";
 
   const seller = {
     id: sellerId,
@@ -110,7 +118,35 @@ const SellerPage = () => {
                   <span className="text-white text-2xl font-bold">On</span>
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold mb-2">{seller.name}</h1>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl font-bold">{seller.name}</h1>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <div
+                            className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                              isVerified ? "bg-green-100" : "bg-red-100"
+                            }`}
+                          >
+                            <Icon
+                              name={isVerified ? "Check" : "X"}
+                              size={14}
+                              className={
+                                isVerified ? "text-green-600" : "text-red-600"
+                              }
+                            />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>
+                            {isVerified
+                              ? "Верифицированный продавец IdenMarket"
+                              : "Продавец не верифицирован"}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   <div className="flex items-center space-x-4 text-gray-600 mb-2">
                     <span>На площадке с {seller.joinDate}</span>
                     <span>•</span>
