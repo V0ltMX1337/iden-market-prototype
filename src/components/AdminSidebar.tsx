@@ -35,7 +35,7 @@ const AdminSidebar = () => {
         ))}
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700">
+      <div className="absolute bottom-0 left-0 w-64 p-6 border-t border-gray-700">
         <NavLink
           to="/admin/profile"
           className="flex items-center gap-3 hover:bg-gray-800 transition-colors p-2 rounded-lg w-fit"

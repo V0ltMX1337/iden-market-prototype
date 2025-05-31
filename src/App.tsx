@@ -37,8 +37,8 @@ const App = () => (
             <Route index element={<AdminOverview />} />
             <Route path="/admin/overview" element={<AdminOverview />} />
             <Route path="/admin/profile" element={<SellerProfile />} />
-            <Route path="/admin/products" element={<div>Товары</div>} />
-            <Route path="finance" element={<AdminFinance />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
