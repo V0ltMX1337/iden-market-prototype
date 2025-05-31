@@ -10,6 +10,10 @@ import SellerPage from "@/pages/SellerPage";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminRegister from "@/pages/AdminRegister";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminOverview from "@/components/AdminOverview";
+import AdminProducts from "@/components/AdminProducts";
+import AdminOrders from "@/components/AdminOrders";
+import AdminAnalytics from "@/components/AdminAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -25,8 +29,13 @@ const App = () => (
           <Route path="/seller/:sellerId" element={<SellerPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="overview" element={<AdminOverview />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
