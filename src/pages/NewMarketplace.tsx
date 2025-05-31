@@ -113,9 +113,6 @@ const NewMarketplace = () => {
       {/* Special Offers Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></section>
 
-      {/* Special Offers Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></section>
-
       {/* Popular Sellers Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -198,7 +195,7 @@ const NewMarketplace = () => {
       </section>
 
       {/* Special Offers Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></section>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Спецпредложения</h2>
           <Button variant="outline" size="sm">
@@ -280,9 +277,6 @@ const NewMarketplace = () => {
           ))}
         </div>
       </section>
-
-      {/* Promo Blocks */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
       {/* Sellers Slider */}
       <SellersSlider />
