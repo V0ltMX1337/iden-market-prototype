@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
+import SellerProfile from "@/pages/SellerProfile";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminRegister from "@/pages/AdminRegister";
 import AdminDashboard from "@/pages/AdminDashboard";
@@ -32,9 +33,9 @@ const App = () => (
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin" element={<AdminDashboard />}>
             <Route index element={<AdminOverview />} />
-            <Route path="overview" element={<AdminOverview />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="orders" element={<AdminOrders />} />
+            <Route path="/admin/overview" element={<AdminOverview />} />
+            <Route path="/admin/profile" element={<SellerProfile />} />
+            <Route path="/admin/products" element={<div>Товары</div>} />
             <Route path="finance" element={<AdminFinance />} />
             <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
