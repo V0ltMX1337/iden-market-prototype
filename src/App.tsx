@@ -21,6 +21,7 @@ import AdminProducts from "@/components/AdminProducts";
 import AdminOrders from "@/components/AdminOrders";
 import AdminAnalytics from "@/components/AdminAnalytics";
 import AdminFinance from "@/components/AdminFinance";
+import NewMarketplace from "./pages/NewMarketplace";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,11 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/buyer/profile" element={<BuyerProfile />} />
-          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/marketplace" element={<NewMarketplace />} />
+          <Route
+            path="/marketplace/category/:category"
+            element={<Marketplace />}
+          />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/seller/:sellerId" element={<SellerPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
