@@ -1,16 +1,9 @@
-import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import BalanceCard from "./finance/BalanceCard";
+import TransactionHistory from "./finance/TransactionHistory";
+import { Transaction } from "./finance/TransactionItem";
 
 const AdminFinance = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("month");
-
   const balanceData = {
     available: 245680,
     pending: 89420,
@@ -18,7 +11,7 @@ const AdminFinance = () => {
     payoutDate: "2025-05-25",
   };
 
-  const transactions = [
+  const transactions: Transaction[] = [
     {
       id: 1,
       type: "sale",
@@ -56,40 +49,6 @@ const AdminFinance = () => {
     },
   ];
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("ru-RU", {
-      style: "currency",
-      currency: "RUB",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case "sale":
-        return "TrendingUp";
-      case "payout":
-        return "ArrowDownLeft";
-      case "commission":
-        return "Percent";
-      default:
-        return "Circle";
-    }
-  };
-
-  const getTransactionColor = (type: string) => {
-    switch (type) {
-      case "sale":
-        return "text-green-600";
-      case "payout":
-        return "text-blue-600";
-      case "commission":
-        return "text-red-600";
-      default:
-        return "text-gray-600";
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div>
@@ -99,55 +58,26 @@ const AdminFinance = () => {
 
       {/* Баланс кабинета */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Доступно к выплате
-            </CardTitle>
-            <Icon name="Wallet" className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {formatCurrency(balanceData.available)}
-            </div>
-            <p className="text-xs text-muted-foreground">Готово к выводу</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">В обработке</CardTitle>
-            <Icon name="Clock" className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">
-              {formatCurrency(balanceData.pending)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Ожидает подтверждения
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Последняя выплата
-            </CardTitle>
-            <Icon
-              name="ArrowDownLeft"
-              className="h-4 w-4 text-muted-foreground"
-            />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(balanceData.lastPayout)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {balanceData.payoutDate}
-            </p>
-          </CardContent>
-        </Card>
+        <BalanceCard
+          title="Доступно к выплате"
+          amount={balanceData.available}
+          description="Готово к выводу"
+          icon="Wallet"
+          colorClass="text-green-600"
+        />
+        <BalanceCard
+          title="В обработке"
+          amount={balanceData.pending}
+          description="Ожидает подтверждения"
+          icon="Clock"
+          colorClass="text-yellow-600"
+        />
+        <BalanceCard
+          title="Последняя выплата"
+          amount={balanceData.lastPayout}
+          description={balanceData.payoutDate}
+          icon="ArrowDownLeft"
+        />
       </div>
 
       {/* Кнопка вывода средств */}
@@ -158,60 +88,7 @@ const AdminFinance = () => {
         </button>
       </div>
 
-      {/* Движение денег */}
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle>Движение средств</CardTitle>
-              <CardDescription>
-                История операций за выбранный период
-              </CardDescription>
-            </div>
-            <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-1 text-sm"
-            >
-              <option value="week">Неделя</option>
-              <option value="month">Месяц</option>
-              <option value="quarter">Квартал</option>
-              <option value="year">Год</option>
-            </select>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`p-2 rounded-full bg-gray-100 ${getTransactionColor(transaction.type)}`}
-                  >
-                    <Icon
-                      name={getTransactionIcon(transaction.type) as any}
-                      size={16}
-                    />
-                  </div>
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-sm text-gray-500">{transaction.date}</p>
-                  </div>
-                </div>
-                <div
-                  className={`font-bold ${transaction.amount > 0 ? "text-green-600" : "text-red-600"}`}
-                >
-                  {transaction.amount > 0 ? "+" : ""}
-                  {formatCurrency(transaction.amount)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <TransactionHistory transactions={transactions} />
     </div>
   );
 };
