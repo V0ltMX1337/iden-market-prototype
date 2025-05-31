@@ -190,26 +190,35 @@ const BuyerProfile = () => {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {renderEditableField("Имя", user.firstName, "firstName")}
                 {renderEditableField("Фамилия", user.lastName, "lastName")}
-                {renderEditableField("Имя пользователя", user.username, "username")}
-                {renderEditableField("Дата рождения", user.birthDate, "birthDate")}
+                {renderEditableField(
+                  "Имя пользователя",
+                  user.username,
+                  "username",
+                )}
+                {renderEditableField(
+                  "Дата рождения",
+                  user.birthDate,
+                  "birthDate",
+                )}
                 {renderEditableField("Пол", user.gender, "gender")}
-                {renderEditableField("Номер телефона", user.phone, "phone", true)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    readOnly
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Фамилия
+                {renderEditableField(
+                  "Номер телефона",
+                  user.phone,
+                  "phone",
+                  true,
+                )}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email адрес
                   </label>
                   <input
-                    type="text"
-                    value={user.lastName}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    type="email"
+                    value={user.email}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
                     readOnly
                   />
                 </div>
