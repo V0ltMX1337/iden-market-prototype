@@ -10,8 +10,8 @@ const Header = () => {
 
   // Mock user data - in real app would come from context/store
   const user = {
-    firstName: "Анна",
-    lastName: "Покупатель",
+    firstName: "Potion",
+    lastName: "Market",
     avatar: "",
   };
 
@@ -21,7 +21,7 @@ const Header = () => {
         {/* Top bar */}
         <div className="flex items-center justify-between py-2 text-sm text-gray-600">
           <div className="flex items-center space-x-4">
-            <span>📍 Москва</span>
+            <span>📍 Дзержинск</span>
             <span>•</span>
             <a href="#" className="hover:text-primary">
               Доставка и оплата
@@ -59,7 +59,7 @@ const Header = () => {
               className="text-2xl font-bold text-primary cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => navigate("/")}
             >
-              IdenMarket
+              PotionMarket
             </h1>
             <Badge variant="secondary" className="ml-2 text-xs">
               beta
@@ -115,18 +115,6 @@ const Header = () => {
             </a>
             <a href="#" className="hover:text-primary">
               Электроника
-            </a>
-            <a href="#" className="hover:text-primary">
-              Одежда
-            </a>
-            <a href="#" className="hover:text-primary">
-              Дом и сад
-            </a>
-            <a href="#" className="hover:text-primary">
-              Спорт
-            </a>
-            <a href="#" className="hover:text-primary">
-              Красота
             </a>
             <a href="#" className="hover:text-primary">
               Авто
