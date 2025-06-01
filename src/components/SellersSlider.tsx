@@ -16,15 +16,15 @@ const SellersSlider = () => {
   const sellers: Seller[] = [
     {
       id: 1,
-      name: "OnShop",
+      name: "PotionShop",
       avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face",
+        "https://avatars.mds.yandex.net/get-market-shop-logo/1514990/2a000001972259f49d26bbab7511ac916a70/56x56",
       rating: 4.8,
-      products: 127,
+      products: 1,
     },
     {
       id: 2,
-      name: "ReVolt",
+      name: "OnShop",
       avatar:
         "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face",
       rating: 4.9,
@@ -32,35 +32,27 @@ const SellersSlider = () => {
     },
     {
       id: 3,
-      name: "GG17",
+      name: "PotionShop",
       avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b332c796?w=64&h=64&fit=crop&crop=face",
-      rating: 4.7,
-      products: 234,
+        "https://avatars.mds.yandex.net/get-market-shop-logo/1514990/2a000001972259f49d26bbab7511ac916a70/56x56",
+      rating: 4.8,
+      products: 1,
     },
     {
       id: 4,
-      name: "ATALANT",
+      name: "OnShop",
       avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face",
-      rating: 4.6,
-      products: 156,
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face",
+      rating: 4.9,
+      products: 89,
     },
     {
       id: 5,
-      name: "AKIRA",
+      name: "OnShop",
       avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face",
-      rating: 5.0,
-      products: 78,
-    },
-    {
-      id: 6,
-      name: "TechPro",
-      avatar:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=64&h=64&fit=crop&crop=face",
-      rating: 4.5,
-      products: 203,
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face",
+      rating: 4.9,
+      products: 89,
     },
   ];
 
