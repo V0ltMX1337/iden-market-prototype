@@ -72,9 +72,7 @@ const NewMarketplace = () => {
         </div>
       </section>
 
-      {/* Special Offers Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></section>
-
+  
 
       {/* Special Offers Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -88,45 +86,48 @@ const NewMarketplace = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {[
             {
-              name: "Беспроводные наушники Pods Max",
-              price: "4 050₽",
-              oldPrice: "6 500₽",
+              name: "Игровой пк, Core i3 7100, 8 ГБ ОЗУ, SSD 256 Гб, GTX 1650; предустановленная Windows 11 PRO",
+              price: "46 739₽",
+              oldPrice: "76 500₽",
               discount: "-38%",
               image:
-                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop",
+                "https://avatars.mds.yandex.net/get-mpic/15282130/2a00000197240072cd812d3099f5c8f4514a/optimize",
             },
+
             {
-              name: "Перфоратор Makita аккумуляторный",
-              price: "3 000₽",
-              oldPrice: "3 500₽",
-              discount: "-14%",
-              image:
-                "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300&h=300&fit=crop",
-            },
-            {
-              name: "Колонка JBL Clip 5",
-              price: "1 490₽",
-              oldPrice: "1 700₽",
-              discount: "-12%",
-              image:
-                "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop",
-            },
-            {
-              name: "Внешний аккумулятор MagSafe",
-              price: "310₽",
-              oldPrice: "500₽",
+              name: "Игровой пк, Core i3 7100, 8 ГБ ОЗУ, SSD 256 Гб, GTX 1650; предустановленная Windows 11 PRO",
+              price: "46 739₽",
+              oldPrice: "76 500₽",
               discount: "-38%",
               image:
-                "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=300&h=300&fit=crop",
+                "https://avatars.mds.yandex.net/get-mpic/15282130/2a00000197240072cd812d3099f5c8f4514a/optimize",
+            },
+
+            {
+              name: "Игровой пк, Core i3 7100, 8 ГБ ОЗУ, SSD 256 Гб, GTX 1650; предустановленная Windows 11 PRO",
+              price: "46 739₽",
+              oldPrice: "76 500₽",
+              discount: "-38%",
+              image:
+                "https://avatars.mds.yandex.net/get-mpic/15282130/2a00000197240072cd812d3099f5c8f4514a/optimize",
             },
             {
-              name: "Набор 2 в 1 Секатор и Пила Makita",
-              price: "2 500₽",
-              oldPrice: "3 300₽",
-              discount: "-24%",
+              name: "Игровой пк, Core i3 7100, 8 ГБ ОЗУ, SSD 256 Гб, GTX 1650; предустановленная Windows 11 PRO",
+              price: "46 739₽",
+              oldPrice: "76 500₽",
+              discount: "-38%",
               image:
-                "https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=300&h=300&fit=crop",
+                "https://avatars.mds.yandex.net/get-mpic/15282130/2a00000197240072cd812d3099f5c8f4514a/optimize",
             },
+            {
+              name: "Игровой пк, Core i3 7100, 8 ГБ ОЗУ, SSD 256 Гб, GTX 1650; предустановленная Windows 11 PRO",
+              price: "46 739₽",
+              oldPrice: "76 500₽",
+              discount: "-38%",
+              image:
+                "https://avatars.mds.yandex.net/get-mpic/15282130/2a00000197240072cd812d3099f5c8f4514a/optimize",
+            },
+
           ].map((product, index) => (
             <div
               key={index}

@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import SellerProfile from "@/components/SellerProfile";
 import CategoryFilter from "@/components/CategoryFilter";
 import ProductGrid from "@/components/ProductGrid";
 import { Button } from "@/components/ui/button";
@@ -37,7 +36,7 @@ const Marketplace = () => {
             Электроника
           </a>
           <Icon name="ChevronRight" size={16} />
-          <span className="text-gray-900">Смартфоны</span>
+          <span className="text-gray-900">Компьютеры</span>
         </nav>
       </div>
 
@@ -54,8 +53,8 @@ const Marketplace = () => {
             {/* Sort and View Options */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
-                <h1 className="text-2xl font-bold text-gray-900">Смартфоны</h1>
-                <Badge variant="secondary">1,254 товара</Badge>
+                <h1 className="text-2xl font-bold text-gray-900">Компьютеры</h1>
+                <Badge variant="secondary">1 товар</Badge>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600">Сортировка:</span>
@@ -73,7 +72,7 @@ const Marketplace = () => {
             <div className="flex items-center space-x-2 mb-6">
               <span className="text-sm text-gray-600">Применены фильтры:</span>
               <Badge variant="outline" className="flex items-center space-x-1">
-                <span>Смартфоны</span>
+                <span>Персональные компьютеры</span>
                 <Icon name="X" size={12} className="cursor-pointer" />
               </Badge>
               <Button variant="ghost" size="sm" className="text-primary">
@@ -83,35 +82,6 @@ const Marketplace = () => {
 
             {/* Products Grid */}
             <ProductGrid />
-
-            {/* Test Seller Card Section */}
-            <section className="mt-16 mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Тестовая карточка продавца
-                </h2>
-              </div>
-              <div className="flex justify-center">
-                <div
-                  className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
-                  onClick={() => (window.location.href = "/seller/1")}
-                >
-                  <SellerProfile
-                    id={1}
-                    name="Айден"
-                    rating={4.8}
-                    reviewsCount={2847}
-                    joinDate="Февраль 2025"
-                    avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-                    isVerified={true}
-                    responseTime="в течение часа"
-                    location="Москва"
-                    description="Официальный дилер электроники с гарантией качества. Продаем только оригинальную технику с официальной гарантией."
-                    totalSales={15420}
-                  />
-                </div>
-              </div>
-            </section>
           </main>
         </div>
       </div>

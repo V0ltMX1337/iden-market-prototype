@@ -1,12 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/icon";
 
 const CategoryFilter = () => {
   const categories = [
-    { name: "Смартфоны", count: 1254, active: true },
+    { name: "Персональные компьютеры", count: 1, active: true },
     { name: "Ноутбуки", count: 432, active: false },
     { name: "Планшеты", count: 234, active: false },
     { name: "Наушники", count: 891, active: false },
@@ -14,7 +13,7 @@ const CategoryFilter = () => {
     { name: "Аксессуары", count: 2341, active: false },
   ];
 
-  const brands = ["Apple", "Samsung", "Xiaomi", "Huawei", "OnePlus", "Sony"];
+  const brands = ["PotionShop", "Xiaomi"];
 
   const features = [
     "Быстрая доставка",
@@ -25,30 +24,6 @@ const CategoryFilter = () => {
 
   return (
     <div className="space-y-6">
-      {/* Categories */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Категории</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {categories.map((category) => (
-            <div
-              key={category.name}
-              className={`flex items-center justify-between p-2 rounded-md cursor-pointer transition-colors ${
-                category.active
-                  ? "bg-primary/10 text-primary"
-                  : "hover:bg-gray-50"
-              }`}
-            >
-              <span className="text-sm">{category.name}</span>
-              <Badge variant="secondary" className="text-xs">
-                {category.count}
-              </Badge>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
       {/* Price Range */}
       <Card>
         <CardHeader>
