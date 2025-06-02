@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
 
-  // Mock user data - in real app would come from context/store
   const user = {
     firstName: "Potion",
     lastName: "Market",
@@ -16,114 +15,82 @@ const Header = () => {
   };
 
   return (
-    <header className="border-b bg-white shadow-sm">
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top bar */}
-        <div className="flex items-center justify-between py-2 text-sm text-gray-600">
-          <div className="flex items-center space-x-4">
-            <span>📍 Дзержинск</span>
-            <span>•</span>
-            <a href="#" className="hover:text-primary">
-              Доставка и оплата
-            </a>
-          </div>
-          <div className="flex items-center space-x-4">
-            <a href="#" className="hover:text-primary">
-              Помощь
-            </a>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/buyer/profile")}
-              className="flex items-center space-x-2 hover:text-primary"
-            >
-              <Avatar className="w-6 h-6">
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback className="text-xs">
-                  {user.firstName[0]}
-                  {user.lastName[0]}
-                </AvatarFallback>
-              </Avatar>
-              <span>
-                {user.firstName} {user.lastName}
-              </span>
-            </Button>
-          </div>
-        </div>
-
         {/* Main header */}
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
             <h1
-              className="text-2xl font-bold text-primary cursor-pointer hover:opacity-80 transition-opacity"
+              className="text-2xl font-bold text-gray-900 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => navigate("/")}
             >
               PotionMarket
             </h1>
-            <Badge variant="secondary" className="ml-2 text-xs">
+            <Badge
+              variant="secondary"
+              className="ml-2 text-xs bg-blue-100 text-blue-700"
+            >
               beta
             </Badge>
           </div>
 
           {/* Search bar */}
-          <div className="flex-1 max-w-2xl mx-8">
+          <div className="flex-1 max-w-lg mx-8">
             <div className="relative">
               <Input
-                placeholder="Найти товары, бренды и магазины"
-                className="pr-12 h-12 text-base"
+                placeholder="Поиск товаров..."
+                className="w-full h-10 pl-4 pr-10 bg-gray-50 border-0 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               />
-              <Button size="sm" className="absolute right-1 top-1 h-10">
-                <Icon name="Search" size={16} />
+              <Button
+                size="sm"
+                variant="ghost"
+                className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-transparent"
+              >
+                <Icon name="Search" size={16} className="text-gray-400" />
               </Button>
             </div>
           </div>
 
           {/* User actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center space-x-2"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10"
             >
               <Icon name="Heart" size={20} />
-              <span className="hidden sm:inline">Избранное</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center space-x-2"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10 relative"
             >
               <Icon name="ShoppingCart" size={20} />
-              <span className="hidden sm:inline">Корзина</span>
-              <Badge variant="destructive" className="ml-1">
+              <Badge
+                variant="destructive"
+                className="absolute -top-1 -right-1 h-5 w-5 text-xs"
+              >
                 3
               </Badge>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/buyer/profile")}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10 px-3"
+            >
+              <Avatar className="w-6 h-6">
+                <AvatarImage src={user.avatar} />
+                <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                  {user.firstName[0]}
+                  {user.lastName[0]}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium">{user.firstName}</span>
+            </Button>
           </div>
         </div>
-
-        {/* Navigation */}
-        <nav className="py-3">
-          <div className="flex items-center space-x-8 text-sm">
-            <a
-              href="#"
-              className="flex items-center space-x-1 text-primary font-medium"
-            >
-              <Icon name="Menu" size={16} />
-              <span>Каталог</span>
-            </a>
-            <a href="#" className="hover:text-primary">
-              Электроника
-            </a>
-            <a href="#" className="hover:text-primary">
-              Авто
-            </a>
-            <a href="#" className="hover:text-primary text-orange-500">
-              🔥 Акции
-            </a>
-          </div>
-        </nav>
       </div>
     </header>
   );
