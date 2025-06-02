@@ -387,54 +387,93 @@ const NewMarketplace = () => {
         {/* Sale Products */}
         <div>
           <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-cols-4 gap-8">
             {saleProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group overflow-hidden"
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden border border-gray-100"
               >
                 <div className="relative">
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-bold">
-                    -{product.discount}%
+                  {/* Discount Badge */}
+                  <div className="absolute top-4 left-4">
+                    <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                      -{product.discount}%
+                    </div>
                   </div>
-                  <div className="absolute top-3 right-3 bg-green-500 rounded-full p-1">
-                    <Icon name="Check" size={16} className="text-white" />
+                  {/* Quality Badge */}
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-lg flex items-center">
+                      <Icon name="Check" size={12} className="mr-1" />
+                      Проверено
+                    </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute bottom-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full"
-                  >
-                    <Icon name="Heart" size={16} className="text-gray-600" />
-                  </Button>
+                  {/* Quick Actions */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
+                      >
+                        <Icon
+                          name="Heart"
+                          size={16}
+                          className="text-gray-600"
+                        />
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
+                      >
+                        <Icon name="Eye" size={16} className="text-gray-600" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h4 className="font-medium text-base mb-3 line-clamp-2 min-h-[3rem] text-gray-800">
+                <div className="p-6">
+                  <h4 className="font-semibold text-lg mb-3 line-clamp-2 min-h-[3.5rem] text-gray-900">
                     {product.title}
                   </h4>
-                  <div className="space-y-2">
-                    <div className="flex items-baseline space-x-2">
-                      <span className="font-bold text-xl text-gray-900">
+                  <div className="space-y-3">
+                    <div className="flex items-baseline space-x-3">
+                      <span className="font-bold text-2xl text-gray-900">
                         {product.price.toLocaleString()}₽
                       </span>
-                      <span className="text-gray-400 line-through text-sm">
+                      <span className="text-gray-400 line-through text-lg">
                         {product.oldPrice.toLocaleString()}₽
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <span>Продано: {Math.floor(Math.random() * 1000)}</span>
-                      <div className="flex items-center">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-sm text-gray-600">
                         <Icon
                           name="Star"
-                          size={14}
+                          size={16}
                           className="text-yellow-500 mr-1 fill-current"
                         />
-                        <span>{(4.0 + Math.random() * 1).toFixed(1)}</span>
+                        <span className="font-medium">
+                          {(4.0 + Math.random() * 1).toFixed(1)}
+                        </span>
+                        <span className="text-gray-400 ml-2">
+                          ({Math.floor(Math.random() * 500 + 100)})
+                        </span>
+                      </div>
+                      <span className="text-sm text-green-600 font-medium">
+                        Продано: {Math.floor(Math.random() * 1000)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-sm text-gray-500">
+                        Быстрая доставка
+                      </span>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Icon name="Truck" size={14} className="mr-1" />
+                        <span>2-3 дня</span>
                       </div>
                     </div>
                   </div>
