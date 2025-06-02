@@ -387,35 +387,56 @@ const NewMarketplace = () => {
         {/* Sale Products */}
         <div>
           <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-10 gap-4">
+          <div className="grid grid-cols-5 gap-6">
             {saleProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group overflow-hidden"
               >
                 <div className="relative">
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="w-full h-32 object-cover rounded-t-lg"
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <Badge className="absolute top-2 left-2 bg-red-500 text-white">
+                  <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-bold">
                     -{product.discount}%
-                  </Badge>
+                  </div>
+                  <div className="absolute top-3 right-3 bg-green-500 rounded-full p-1">
+                    <Icon name="Check" size={16} className="text-white" />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute bottom-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full"
+                  >
+                    <Icon name="Heart" size={16} className="text-gray-600" />
+                  </Button>
                 </div>
-                <div className="p-3">
-                  <h4 className="font-medium text-sm mb-2 line-clamp-2">
+                <div className="p-4">
+                  <h4 className="font-medium text-base mb-3 line-clamp-2 min-h-[3rem] text-gray-800">
                     {product.title}
                   </h4>
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-bold text-lg">
-                        ₽{product.price.toLocaleString()}
+                  <div className="space-y-2">
+                    <div className="flex items-baseline space-x-2">
+                      <span className="font-bold text-xl text-gray-900">
+                        {product.price.toLocaleString()}₽
+                      </span>
+                      <span className="text-gray-400 line-through text-sm">
+                        {product.oldPrice.toLocaleString()}₽
                       </span>
                     </div>
-                    <span className="text-gray-500 line-through text-sm">
-                      ₽{product.oldPrice.toLocaleString()}
-                    </span>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>Продано: {Math.floor(Math.random() * 1000)}</span>
+                      <div className="flex items-center">
+                        <Icon
+                          name="Star"
+                          size={14}
+                          className="text-yellow-500 mr-1 fill-current"
+                        />
+                        <span>{(4.0 + Math.random() * 1).toFixed(1)}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
