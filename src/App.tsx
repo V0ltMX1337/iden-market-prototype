@@ -40,7 +40,7 @@ const App = () => (
           <Route path="/marketplace" element={<NewMarketplace />} />
           <Route
             path="/marketplace/category/:category"
-            element={<Marketplace />}
+            element={<NewMarketplace />}
           />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/seller/:sellerId" element={<SellerPage />} />

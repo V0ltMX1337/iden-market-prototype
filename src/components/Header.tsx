@@ -66,7 +66,7 @@ const Header = () => {
               <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
               <span>Везде</span>
               <Icon name="ChevronRight" size={16} className="mx-1" />
-              <span>Искать на Wikkeo...</span>
+              <span>Искать на PotionMarket...</span>
             </div>
           </div>
 
