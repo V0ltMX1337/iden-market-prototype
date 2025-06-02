@@ -8,87 +8,91 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
 
-  const user = {
-    firstName: "Potion",
-    lastName: "Market",
-    avatar: "",
-  };
-
   return (
-    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main header */}
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <h1
-              className="text-2xl font-bold text-gray-900 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => navigate("/")}
-            >
-              PotionMarket
-            </h1>
-            <Badge
-              variant="secondary"
-              className="ml-2 text-xs bg-blue-100 text-blue-700"
-            >
-              beta
-            </Badge>
+    <header className="bg-white border-b border-gray-200">
+      {/* Top navigation bar */}
+      <div className="bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-10 text-sm">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center text-gray-600">
+                <Icon name="MapPin" size={14} className="mr-1" />
+                Россия
+              </div>
+            </div>
+            <div className="flex items-center space-x-6 text-gray-600">
+              <a href="#" className="hover:text-blue-600">
+                Создать магазин
+              </a>
+              <a href="#" className="hover:text-blue-600">
+                Управление магазином
+              </a>
+              <a href="#" className="hover:text-blue-600">
+                Новинки
+              </a>
+              <a href="#" className="hover:text-blue-600">
+                Для поставщиков
+              </a>
+              <a href="#" className="hover:text-blue-600">
+                Помощь
+              </a>
+              <a href="#" className="hover:text-blue-600">
+                Поддержка
+              </a>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-yellow-400 rounded-full mr-1"></span>
+                <span>Светлая</span>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Search bar */}
-          <div className="flex-1 max-w-lg mx-8">
-            <div className="relative">
-              <Input
-                placeholder="Поиск товаров..."
-                className="w-full h-10 pl-4 pr-10 bg-gray-50 border-0 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
-              />
-              <Button
-                size="sm"
-                variant="ghost"
-                className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-transparent"
+      {/* Main header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo and breadcrumb */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center">
+              <Icon name="Grid3X3" size={24} className="text-blue-600 mr-2" />
+              <h1
+                className="text-2xl font-bold text-blue-600 cursor-pointer"
+                onClick={() => navigate("/")}
               >
-                <Icon name="Search" size={16} className="text-gray-400" />
-              </Button>
+                WIKKEO
+              </h1>
+            </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
+              <span>Везде</span>
+              <Icon name="ChevronRight" size={16} className="mx-1" />
+              <span>Искать на Wikkeo...</span>
             </div>
           </div>
 
-          {/* User actions */}
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10"
-            >
+          {/* Right side icons */}
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="Search" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2">
               <Icon name="Heart" size={20} />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10 relative"
-            >
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="Package" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="MessageCircle" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2 relative">
               <Icon name="ShoppingCart" size={20} />
-              <Badge
-                variant="destructive"
-                className="absolute -top-1 -right-1 h-5 w-5 text-xs"
-              >
-                3
-              </Badge>
+              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                1
+              </span>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/buyer/profile")}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 h-10 px-3"
-            >
-              <Avatar className="w-6 h-6">
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
-                  {user.firstName[0]}
-                  {user.lastName[0]}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">{user.firstName}</span>
-            </Button>
+            <div className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
+              <span>АП</span>
+            </div>
           </div>
         </div>
       </div>
