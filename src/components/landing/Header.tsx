@@ -85,21 +85,30 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-10 h-10 rounded-full p-0 bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="w-12 h-12 rounded-full p-0 bg-primary text-primary-foreground hover:bg-primary/90 text-base font-semibold"
                   >
                     АП
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48" align="end">
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => navigate("/profile")}
+                  >
                     <Icon name="User" className="mr-2 h-4 w-4" />
                     Профиль
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => navigate("/orders")}
+                  >
                     <Icon name="Package" className="mr-2 h-4 w-4" />
                     Заказы
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => navigate("/reviews")}
+                  >
                     <Icon name="MessageSquare" className="mr-2 h-4 w-4" />
                     Мои отзывы
                   </DropdownMenuItem>

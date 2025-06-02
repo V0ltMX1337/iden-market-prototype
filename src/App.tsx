@@ -9,6 +9,8 @@ import ProductPage from "./pages/ProductPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import Orders from "./pages/Orders";
+import Reviews from "./pages/Reviews";
 import BuyerProfile from "./pages/BuyerProfile";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/" element={<NewMarketplace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/reviews" element={<Reviews />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/buyer/profile" element={<BuyerProfile />} />
           <Route path="/marketplace" element={<NewMarketplace />} />
