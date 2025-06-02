@@ -40,22 +40,29 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="flex items-center space-x-2"
+                  className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   <Icon name="Grid3X3" size={16} />
-                  <span>Категории</span>
+                  <span>Каталог</span>
                   <Icon name="ChevronDown" size={16} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                {categories.map((category) => (
-                  <DropdownMenuItem
-                    key={category.name}
-                    className="cursor-pointer"
-                  >
-                    {category.name}
-                  </DropdownMenuItem>
-                ))}
+              <DropdownMenuContent className="w-80 p-0" align="start">
+                <div className="max-h-96 overflow-hidden">
+                  {categories.map((category) => (
+                    <DropdownMenuItem
+                      key={category.name}
+                      className="cursor-pointer px-4 py-3 hover:bg-gray-50"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">
+                          {category.name.split(" ")[0]}
+                        </span>
+                        <span className="text-gray-700">{category.name}</span>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
