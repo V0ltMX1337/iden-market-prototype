@@ -59,7 +59,7 @@ const Header = () => {
                 className="text-2xl font-bold text-blue-600 cursor-pointer"
                 onClick={() => navigate("/")}
               >
-                WIKKEO
+                POTIONSHOP
               </h1>
             </div>
             <div className="flex items-center text-sm text-gray-600">
