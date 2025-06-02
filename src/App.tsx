@@ -7,7 +7,6 @@ import Marketplace from "./pages/Marketplace";
 import ProductPage from "./pages/ProductPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile";
 import BuyerProfile from "./pages/BuyerProfile";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
