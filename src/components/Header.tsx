@@ -56,17 +56,17 @@ const Header = () => {
             <div className="flex items-center">
               <Icon name="Grid3X3" size={24} className="text-blue-600 mr-2" />
               <h1
-                className="text-2xl text-blue-600 cursor-pointer font-extrabold"
+                className="text-2xl font-bold text-blue-600 cursor-pointer"
                 onClick={() => navigate("/")}
               >
-                POTIONMARKET
+                POTIONSHOP
               </h1>
             </div>
             <div className="flex items-center text-sm text-gray-600">
               <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
               <span>Везде</span>
               <Icon name="ChevronRight" size={16} className="mx-1" />
-              <span>Искать на PotionMarket...</span>
+              <span>Искать на Wikkeo...</span>
             </div>
           </div>
 

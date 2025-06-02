@@ -40,29 +40,22 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="flex items-center space-x-2"
                 >
                   <Icon name="Grid3X3" size={16} />
-                  <span>Каталог</span>
+                  <span>Категории</span>
                   <Icon name="ChevronDown" size={16} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 p-0" align="start">
-                <div className="max-h-96 overflow-hidden">
-                  {categories.map((category) => (
-                    <DropdownMenuItem
-                      key={category.name}
-                      className="cursor-pointer px-4 py-3 hover:bg-gray-50"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">
-                          {category.name.split(" ")[0]}
-                        </span>
-                        <span className="text-gray-700">{category.name}</span>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
+              <DropdownMenuContent className="w-56">
+                {categories.map((category) => (
+                  <DropdownMenuItem
+                    key={category.name}
+                    className="cursor-pointer"
+                  >
+                    {category.name}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -85,30 +78,21 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-12 h-12 rounded-full p-0 bg-primary text-primary-foreground hover:bg-primary/90 text-base font-semibold"
+                    className="w-10 h-10 rounded-full p-0 bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     АП
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48" align="end">
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/profile")}
-                  >
+                  <DropdownMenuItem className="cursor-pointer">
                     <Icon name="User" className="mr-2 h-4 w-4" />
                     Профиль
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/orders")}
-                  >
+                  <DropdownMenuItem className="cursor-pointer">
                     <Icon name="Package" className="mr-2 h-4 w-4" />
                     Заказы
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/reviews")}
-                  >
+                  <DropdownMenuItem className="cursor-pointer">
                     <Icon name="MessageSquare" className="mr-2 h-4 w-4" />
                     Мои отзывы
                   </DropdownMenuItem>
