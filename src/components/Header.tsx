@@ -56,10 +56,10 @@ const Header = () => {
             <div className="flex items-center">
               <Icon name="Grid3X3" size={24} className="text-blue-600 mr-2" />
               <h1
-                className="text-2xl font-bold text-blue-600 cursor-pointer"
+                className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
                 onClick={() => navigate("/")}
               >
-                POTIONSHOP
+                POTIONMARKET
               </h1>
             </div>
             <div className="flex items-center text-sm text-gray-600">
