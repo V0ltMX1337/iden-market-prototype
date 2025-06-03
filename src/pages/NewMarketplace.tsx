@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
 
@@ -342,7 +341,7 @@ const NewMarketplace = () => {
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center"
+                className="bg-white p-6 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center rounded-2xl"
               >
                 <div className="text-4xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold mb-1">{category.name}</h3>
@@ -355,7 +354,7 @@ const NewMarketplace = () => {
         </div>
 
         {/* Top Sellers */}
-        <div className="mb-8">
+        <div className="mb-8 rounded-3xl">
           <h2 className="text-2xl font-bold mb-6 text-center">
             Топ 10 продавцов
           </h2>

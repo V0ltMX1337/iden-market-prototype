@@ -1,8 +1,7 @@
-import { Input } from "@/components/ui/input";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -61,6 +60,9 @@ const Header = () => {
               >
                 POTIONMARKET
               </h1>
+              <Badge variant="secondary" className="ml-2 text-xs">
+                              beta
+              </Badge>
             </div>
             <div className="flex items-center text-sm text-gray-600">
               <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
