@@ -305,10 +305,8 @@ const Index = () => {
               alt={banners[currentSlide].title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <div className="text-center text-white">
-                
-              </div>
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center ">
+              <div className="text-center text-white"></div>
             </div>
           </div>
           <Button
