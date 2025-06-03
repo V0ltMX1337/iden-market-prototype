@@ -7,6 +7,7 @@ import Marketplace from "./pages/Marketplace";
 import ProductPage from "./pages/ProductPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 import BuyerProfile from "./pages/BuyerProfile";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/SellerPage";
@@ -33,7 +34,8 @@ const App = () => (
           <Route path="/" element={<NewMarketplace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<BuyerProfile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/user/profile" element={<BuyerProfile />} />
           <Route
             path="/marketplace/category/:category"
             element={<Marketplace />}
