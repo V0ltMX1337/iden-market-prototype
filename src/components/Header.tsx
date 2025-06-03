@@ -57,7 +57,7 @@ const Header = () => {
                 className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
                 onClick={() => navigate("/")}
               >
-                POTIONMARKETS
+                POTIONMARKET
               </h1>
               <Badge variant="secondary" className="ml-2 text-xs">
                 beta
