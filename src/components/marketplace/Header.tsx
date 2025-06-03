@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import FancyText from '@carefully-coded/react-text-gradient';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,7 +70,13 @@ const Header = () => {
                 className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
                 onClick={() => navigate("/")}
               >
+                <FancyText
+                  gradient={{ from: '#7589C2', to: '#8BC2FC', type: 'linear' }}
+                  animateTo={{ from: '#0045FF', to: '#7580C2' }}
+                  animateDuration={2000}
+                >
                 POTIONMARKET
+                </FancyText>
               </h1>
               <Badge variant="secondary" className="ml-2 text-xs">
                 beta
