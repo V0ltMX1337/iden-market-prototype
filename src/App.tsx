@@ -3,14 +3,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Marketplace from "./pages/marketplace/Marketplace";
-import ProductPage from "./pages/ProductPage";
+import MarketplaceCategory from "./pages/marketplace/MarketplaceCategory";
+import ProductPage from "./pages/marketplace/ProductPage";
 import Login from "./pages/index/Login";
 import Register from "./pages/index/Register";
-import BuyerProfile from "./pages/BuyerProfile";
-import NotFound from "./pages/index/NotFound";
-import SellerPage from "@/pages/SellerPage";
-import SellerProfile from "@/pages/SellerProfile";
+import BuyerProfile from "./pages/index/Profile";
+import NotFound from "./pages/NotFound";
+import SellerPage from "@/pages/seller/SellerPage";
+import SellerProfile from "@/pages/seller/SellerProfile";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminRegister from "@/pages/admin/AdminRegister";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -36,7 +36,7 @@ const App = () => (
           <Route path="/profile/*" element={<BuyerProfile />} />
           <Route
             path="/marketplace/category/:category"
-            element={<Marketplace />}
+            element={<MarketplaceCategory />}
           />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/seller/:sellerId" element={<SellerPage />} />

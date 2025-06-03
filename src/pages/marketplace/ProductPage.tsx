@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Icon from "@/components/ui/icon";
 import Header from "@/components/marketplace/Header";
+import Footer from "@/components/marketplace/Footer";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -265,6 +266,7 @@ const ProductPage = () => {
           </CardContent>
         </Card>
       </div>
+      <Footer></Footer>
     </div>
   );
 };

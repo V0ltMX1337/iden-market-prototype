@@ -1,4 +1,5 @@
 import Header from "@/components/marketplace/Header";
+import Footer from "@/components/marketplace/Footer";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
@@ -477,11 +478,13 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+
               </div>
             ))}
           </div>
         </div>
       </main>
+      <Footer></Footer>
     </div>
   );
 };
