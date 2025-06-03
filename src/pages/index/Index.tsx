@@ -10,7 +10,7 @@ const Index = () => {
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1416&h=400&fit=crop",
+        "https://iss.s.wik-prod.top/HLpidE4K7ezx9kGBRSpD7APCy38tJM/9c/19/18/86/2c/018d3a99-9c19-7818-862c-43de4676bf8e.jpg",
       title: "Летняя распродажа",
       subtitle: "Скидки до 70% на все товары",
     },
@@ -307,10 +307,7 @@ const Index = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
-                <h2 className="text-4xl font-bold mb-2">
-                  {banners[currentSlide].title}
-                </h2>
-                <p className="text-xl">{banners[currentSlide].subtitle}</p>
+                
               </div>
             </div>
           </div>
@@ -341,7 +338,7 @@ const Index = () => {
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center"
+                className="bg-white p-6 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center rounded-2xl"
               >
                 <div className="text-4xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold mb-1">{category.name}</h3>
@@ -354,7 +351,7 @@ const Index = () => {
         </div>
 
         {/* Top Sellers */}
-        <div className="mb-8">
+        <div className="mb-8 rounded-3xl">
           <h2 className="text-2xl font-bold mb-6 text-center">
             Топ 10 продавцов
           </h2>

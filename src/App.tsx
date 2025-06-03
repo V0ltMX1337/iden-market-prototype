@@ -19,7 +19,7 @@ import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFinance from "@/components/admin/AdminFinance";
-import NewMarketplace from "./pages/marketplace/NewMarketplace";
+import Index from "./pages/index/Index";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +30,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<NewMarketplace />} />
+          <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<BuyerProfile />} />
