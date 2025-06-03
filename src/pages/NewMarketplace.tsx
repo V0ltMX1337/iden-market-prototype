@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
 
