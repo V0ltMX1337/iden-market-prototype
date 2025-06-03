@@ -7,7 +7,7 @@ import MarketplaceCategory from "./pages/marketplace/MarketplaceCategory";
 import ProductPage from "./pages/marketplace/ProductPage";
 import Login from "./pages/index/Login";
 import Register from "./pages/index/Register";
-import BuyerProfile from "./pages/index/Profile";
+import Profile from "./pages/index/Profile";
 import NotFound from "./pages/NotFound";
 import SellerPage from "@/pages/seller/SellerPage";
 import SellerProfile from "@/pages/seller/SellerProfile";
@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile/*" element={<BuyerProfile />} />
+          <Route path="/profile/*" element={<Profile />} />
           <Route
             path="/marketplace/category/:category"
             element={<MarketplaceCategory />}

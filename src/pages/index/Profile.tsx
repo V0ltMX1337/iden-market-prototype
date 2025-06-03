@@ -11,7 +11,7 @@ import ProfileReturns from "@/components/profile/ProfileReturns";
 import ProfileDelivery from "@/components/profile/ProfileDelivery";
 import ProfileSettings from "@/components/profile/ProfileSettings";
 
-const BuyerProfile = () => {
+const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -107,4 +107,4 @@ const BuyerProfile = () => {
   );
 };
 
-export default BuyerProfile;
+export default Profile;
