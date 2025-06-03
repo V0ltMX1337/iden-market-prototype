@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
@@ -38,7 +39,7 @@ const Header = () => {
                 Поддержка
               </a>
               <div className="flex items-center">
-                <span className="w-2 h-2 bg-yellow-400 rounded-full mr-1 text-sm font-normal"></span>
+                <span className="w-2 h-2 bg-yellow-400 rounded-full mr-1"></span>
                 <span>Светлая</span>
               </div>
             </div>
@@ -60,7 +61,7 @@ const Header = () => {
                 POTIONMARKET
               </h1>
               <Badge variant="secondary" className="ml-2 text-xs">
-                beta
+                              beta
               </Badge>
             </div>
             <div className="flex items-center text-sm text-gray-600">
