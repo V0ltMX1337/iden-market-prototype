@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Icon from "@/components/ui/icon";
-import Header from "@/components/Header";
+import Header from "@/components/marketplace/Header";
 
 const ProductPage = () => {
   const { productId } = useParams();

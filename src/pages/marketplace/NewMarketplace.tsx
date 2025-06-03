@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/marketplace/Header";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";

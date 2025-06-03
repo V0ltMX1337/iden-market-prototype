@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import AdminProductForm from "@/components/AdminProductForm";
+import AdminProductForm from "@/components/admin/AdminProductForm";
 
 const AdminProducts = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);

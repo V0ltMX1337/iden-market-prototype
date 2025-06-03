@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Header from "@/components/Header";
+import Header from "@/components/marketplace/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

@@ -71,7 +71,6 @@ const Header = () => {
             </div>
             <div className="flex items-center text-sm text-gray-600">
               <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
-              <span>Везде</span>
               <Icon name="ChevronRight" size={16} className="mx-1" />
               <span>Искать на PotionMarket...</span>
             </div>

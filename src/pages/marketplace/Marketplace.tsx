@@ -1,6 +1,6 @@
-import Header from "@/components/Header";
-import CategoryFilter from "@/components/CategoryFilter";
-import ProductGrid from "@/components/ProductGrid";
+import Header from "@/components/marketplace/Header";
+import CategoryFilter from "@/components/marketplace/category/CategoryFilter";
+import ProductGrid from "@/components/marketplace/category/ProductGrid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
