@@ -1,5 +1,6 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/marketplace/Header";
+import Footer from "@/components/marketplace/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import ProfileMain from "@/components/profile/ProfileMain";
@@ -103,6 +104,8 @@ const Profile = () => {
           </main>
         </div>
       </div>
+
+      <Footer></Footer>
     </div>
   );
 };
