@@ -305,6 +305,7 @@ const Index = () => {
               alt={banners[currentSlide].title}
               className="w-full h-full object-cover"
             />
+<<<<<<< HEAD
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
                 <h2 className="text-4xl font-bold mb-2">
@@ -312,6 +313,10 @@ const Index = () => {
                 </h2>
                 <p className="text-xl">{banners[currentSlide].subtitle}</p>
               </div>
+=======
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center ">
+              <div className="text-center text-white"></div>
+>>>>>>> 54c3cd1e715b9c0fc50c2d2e96c9dd0b9659b562
             </div>
           </div>
           <Button
