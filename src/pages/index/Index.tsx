@@ -42,25 +42,25 @@ const Index = () => {
     {
       name: "ElectroShop",
       avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face",
+        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
       rating: 4.9,
     },
     {
       name: "FashionHub",
       avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b332c1e4?w=64&h=64&fit=crop&crop=face",
+        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
       rating: 4.8,
     },
     {
       name: "HomeDecor",
       avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face",
+        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
       rating: 4.7,
     },
     {
       name: "TechWorld",
       avatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=face",
+        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
       rating: 4.9,
     },
     {
