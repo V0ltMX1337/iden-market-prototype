@@ -10,6 +10,21 @@ const Marketplace = () => {
     <div className="min-h-screen bg-gray-50 font-roboto">
       <Header />
 
+      {/* Hero Banner */}
+      <section className="bg-gradient-to-r from-primary to-purple-600 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Скидки до 70%</h2>
+              <p className="text-lg opacity-90">На электронику и аксессуары</p>
+            </div>
+            <Button variant="secondary" size="lg">
+              Смотреть акции
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <nav className="flex items-center space-x-2 text-sm text-gray-600">
