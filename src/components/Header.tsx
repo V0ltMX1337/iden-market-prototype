@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -91,9 +97,42 @@ const Header = () => {
                 1
               </span>
             </Button>
-            <div className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-              <span>АП</span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="p-0 rounded-full">
+                  <div className="flex items-center justify-center bg-blue-600 text-white w-8 h-8 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors">
+                    АП
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile")}
+                  className="cursor-pointer"
+                >
+                  <Icon name="User" size={16} className="mr-2" />
+                  Профиль
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=orders")}
+                  className="cursor-pointer"
+                >
+                  <Icon name="Package" size={16} className="mr-2" />
+                  Заказы
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=reviews")}
+                  className="cursor-pointer"
+                >
+                  <Icon name="MessageCircle" size={16} className="mr-2" />
+                  Мои отзывы
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-red-600 hover:text-red-700">
+                  <Icon name="LogOut" size={16} className="mr-2" />
+                  Выйти
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
