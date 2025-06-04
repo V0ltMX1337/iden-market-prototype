@@ -246,13 +246,6 @@ const Header = () => {
                   }`}
                 />
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 rounded-r-lg rounded-l-none border-l border-gray-200 hover:bg-blue-50"
-              >
-                <Icon name="Search" size={20} />
-              </Button>
             </div>
           </div>
 
