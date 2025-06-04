@@ -1,75 +1,80 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SellersStories = () => {
-  const products = [
+  const sellers = [
     {
       id: 1,
-      name: "iPhone 14 Pro",
-      image:
-        "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=200&h=200&fit=crop&crop=center",
-      price: "от 89 990 ₽",
+      name: "iPhone 12 Pro и Pro Max",
+      avatar:
+        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-purple-500",
     },
     {
       id: 2,
-      name: "iPhone 14",
-      image:
-        "https://images.unsplash.com/photo-1678652197542-6348c4dd7f2c?w=200&h=200&fit=crop&crop=center",
-      price: "от 69 990 ₽",
+      name: "Привет, фиолет!",
+      avatar:
+        "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-purple-400",
     },
     {
       id: 3,
-      name: "Samsung Galaxy S23",
-      image:
-        "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=200&h=200&fit=crop&crop=center",
-      price: "от 79 990 ₽",
+      name: "Samsung Galaxy S21",
+      avatar:
+        "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-gray-900",
     },
     {
       id: 4,
-      name: "iPhone 13",
-      image:
-        "https://images.unsplash.com/photo-1632633173522-15b8d0b069d6?w=200&h=200&fit=crop&crop=center",
-      price: "от 59 990 ₽",
+      name: "Игровые консоли",
+      avatar:
+        "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-blue-400",
     },
     {
       id: 5,
-      name: "Xiaomi 13 Pro",
-      image:
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=200&h=200&fit=crop&crop=center",
-      price: "от 49 990 ₽",
+      name: "iPhone 12 Pro и Pro Max",
+      avatar:
+        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-gray-900",
     },
     {
       id: 6,
-      name: "Google Pixel 7",
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop&crop=center",
-      price: "от 54 990 ₽",
+      name: "Привет, фиолет!",
+      avatar:
+        "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-purple-400",
+    },
+    {
+      id: 7,
+      name: "Samsung Galaxy",
+      avatar:
+        "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=100&h=100&fit=crop&crop=center",
+      borderColor: "border-gray-400",
     },
   ];
 
   return (
-    <div className="bg-white py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-center space-x-8 overflow-x-auto scrollbar-hide">
-          {products.map((product) => (
+    <div className="bg-white py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center space-x-6 overflow-x-auto">
+          {sellers.map((seller) => (
             <div
-              key={product.id}
-              className="flex flex-col items-center space-y-3 cursor-pointer group min-w-fit"
+              key={seller.id}
+              className="flex flex-col items-center space-y-2 cursor-pointer group min-w-fit"
             >
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 group-hover:scale-105 transition-transform duration-300 shadow-md">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div
+                className={`p-1 rounded-full border-2 ${seller.borderColor} group-hover:scale-105 transition-transform duration-200`}
+              >
+                <Avatar className="w-16 h-16">
+                  <AvatarImage src={seller.avatar} alt={seller.name} />
+                  <AvatarFallback className="bg-gray-200 text-gray-600 text-sm">
+                    {seller.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
               </div>
-              <div className="text-center">
-                <p className="text-sm font-medium text-gray-900 mb-1">
-                  {product.name}
-                </p>
-                <p className="text-xs text-gray-600">{product.price}</p>
-              </div>
+              <span className="text-xs text-gray-700 text-center max-w-20 leading-tight">
+                {seller.name}
+              </span>
             </div>
           ))}
         </div>
