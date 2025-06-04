@@ -1,24 +1,19 @@
-import { LucideIcon, icons } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
 interface IconProps {
-  name: string;
+  name: keyof typeof LucideIcons;
   size?: number;
   className?: string;
-  fallback?: string;
+  fallback?: keyof typeof LucideIcons;
 }
 
 const Icon = ({
   name,
-  size = 16,
+  size = 24,
   className = "",
   fallback = "CircleAlert",
 }: IconProps) => {
-  const IconComponent =
-    icons[name as keyof typeof icons] || icons[fallback as keyof typeof icons];
-
-  if (!IconComponent) {
-    return null;
-  }
+  const IconComponent = LucideIcons[name] || LucideIcons[fallback];
 
   return <IconComponent size={size} className={className} />;
 };
