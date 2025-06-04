@@ -19,6 +19,7 @@ const ProfileMain = () => {
     phone: "+7 912 345-67-89",
     phoneVerified: true,
     username: "anna_buyer",
+    accountId: "237157",
   };
 
   const renderEditableField = (
@@ -105,6 +106,23 @@ const ProfileMain = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              ID аккаунта
+            </label>
+            <div className="flex items-center space-x-2">
+              <span className="border border-gray-300 rounded-md px-3 py-2 bg-gray-50 flex-1 text-gray-600">
+                ID: {user.accountId}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigator.clipboard.writeText(user.accountId)}
+              >
+                <Icon name="Copy" size={14} />
+              </Button>
+            </div>
+          </div>
           {renderEditableField("Имя", user.firstName, "firstName")}
           {renderEditableField("Фамилия", user.lastName, "lastName")}
           {renderEditableField("Имя пользователя", user.username, "username")}
