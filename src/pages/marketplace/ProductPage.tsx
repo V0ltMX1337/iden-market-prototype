@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
-import ProductCard from "@/components/marketplace/ProductCard";
+import ProductCard from "@/components/marketplace/category/ProductCard";
 
 const ProductPage = () => {
   const { productId } = useParams();
