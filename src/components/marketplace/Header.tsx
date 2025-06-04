@@ -223,27 +223,36 @@ const Header = () => {
                 beta
               </Badge>
             </div>
-            <div className="flex items-center bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300 rounded-lg px-3 py-2 transition-all duration-200 min-w-64">
-              <Icon
-                name="Globe"
-                size={16}
-                className="text-yellow-500 mr-2 flex-shrink-0"
-              />
-              <Icon
-                name="ChevronRight"
-                size={16}
-                className="mx-1 text-gray-400 flex-shrink-0"
-              />
-              <Input
-                placeholder="Искать на PotionMarket..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
-                className={`border-0 bg-transparent placeholder:text-gray-500 text-sm focus-visible:ring-0 px-0 transition-all duration-200 ${
-                  isSearchFocused ? "placeholder:text-gray-400" : ""
-                }`}
-              />
+            <div className="flex items-center bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 flex-1 max-w-2xl mr-4">
+              <div className="flex items-center px-3 py-2 flex-1">
+                <Icon
+                  name="Globe"
+                  size={16}
+                  className="text-yellow-500 mr-2 flex-shrink-0"
+                />
+                <Icon
+                  name="ChevronRight"
+                  size={16}
+                  className="mx-1 text-gray-400 flex-shrink-0"
+                />
+                <Input
+                  placeholder="Искать на PotionMarket..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  className={`border-0 bg-transparent placeholder:text-gray-500 text-sm focus-visible:ring-0 px-0 flex-1 transition-all duration-200 ${
+                    isSearchFocused ? "placeholder:text-gray-400" : ""
+                  }`}
+                />
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 rounded-r-lg rounded-l-none border-l border-gray-200 hover:bg-blue-50"
+              >
+                <Icon name="Search" size={20} />
+              </Button>
             </div>
           </div>
 
