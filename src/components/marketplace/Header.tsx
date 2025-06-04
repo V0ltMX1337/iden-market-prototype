@@ -199,7 +199,6 @@ const Header = () => {
                   align="start"
                   className="w-80 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0"
                   sideOffset={12}
-                  onMouseLeave={() => setHoveredCategory(null)}
                 >
                   <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100">
                     ✨ Каталог товаров
@@ -214,10 +213,9 @@ const Header = () => {
                           onMouseEnter={() => {
                             if (category.subcategories.length > 0) {
                               setHoveredCategory(index);
+                            } else {
+                              setHoveredCategory(null);
                             }
-                          }}
-                          onMouseLeave={() => {
-                            // Убираем задержку для более стабильной работы
                           }}
                         >
                           <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
@@ -249,7 +247,7 @@ const Header = () => {
                         <div
                           className="absolute left-full top-0 w-[500px] bg-white border border-gray-200 rounded-lg shadow-2xl ml-2 z-[60]"
                           style={{
-                            top: `${hoveredCategory * 52}px`, // Увеличиваем отступ для точного позиционирования
+                            top: `${hoveredCategory * 48 + 48}px`,
                           }}
                           onMouseEnter={() => {
                             setHoveredCategory(hoveredCategory);
