@@ -2,6 +2,12 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Icon from "@/components/ui/icon";
 import ProfileMain from "@/components/profile/ProfileMain";
 import ProfileOrders from "@/components/profile/ProfileOrders";
@@ -71,39 +77,115 @@ const Profile = () => {
               <CardContent className="p-6">
                 <nav className="space-y-2">
                   {menuItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => navigate(item.path)}
-                      className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
-                        isActive(item.path)
-                          ? "text-blue-600"
-                          : "text-gray-700 hover:text-blue-600"
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Icon
-                          name={item.icon as any}
-                          size={20}
-                          className={`${
+                    <div key={item.id}>
+                      {item.id === "orders" ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button
+                              className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
+                                isActive(item.path)
+                                  ? "text-blue-600"
+                                  : "text-gray-700 hover:text-blue-600"
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <Icon
+                                  name={item.icon as any}
+                                  size={20}
+                                  className={`${
+                                    isActive(item.path)
+                                      ? "text-blue-600"
+                                      : "text-blue-500"
+                                  }`}
+                                />
+                                <span className="font-medium">
+                                  {item.label}
+                                </span>
+                              </div>
+                              <Icon
+                                name="ChevronDown"
+                                size={16}
+                                className={`transition-transform ${
+                                  isActive(item.path)
+                                    ? "text-blue-600"
+                                    : "text-gray-400"
+                                }`}
+                              />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="w-48">
+                            <DropdownMenuItem
+                              onClick={() => navigate("/profile/orders")}
+                            >
+                              <div className="flex items-center justify-between w-full">
+                                <span>Все</span>
+                                <span className="text-xs text-gray-400">2</span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <span>Ожидают</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <span>В пути</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <div className="flex items-center justify-between w-full">
+                                <span>Доставлен</span>
+                                <span className="text-xs text-gray-400">1</span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <span>Ждут оценки</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <div className="flex items-center justify-between w-full">
+                                <span>Отменен</span>
+                                <span className="text-xs text-gray-400">1</span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <div className="flex items-center justify-between w-full">
+                                <span>Завершен</span>
+                                <span className="text-xs text-gray-400">1</span>
+                              </div>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : (
+                        <button
+                          onClick={() => navigate(item.path)}
+                          className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
                             isActive(item.path)
                               ? "text-blue-600"
-                              : "text-blue-500"
+                              : "text-gray-700 hover:text-blue-600"
                           }`}
-                        />
-                        <span className="font-medium">{item.label}</span>
-                      </div>
-                      {(item.id === "orders" || item.id === "settings") && (
-                        <Icon
-                          name="ChevronDown"
-                          size={16}
-                          className={`transition-transform ${
-                            isActive(item.path)
-                              ? "text-blue-600"
-                              : "text-gray-400"
-                          }`}
-                        />
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Icon
+                              name={item.icon as any}
+                              size={20}
+                              className={`${
+                                isActive(item.path)
+                                  ? "text-blue-600"
+                                  : "text-blue-500"
+                              }`}
+                            />
+                            <span className="font-medium">{item.label}</span>
+                          </div>
+                          {item.id === "settings" && (
+                            <Icon
+                              name="ChevronDown"
+                              size={16}
+                              className={`transition-transform ${
+                                isActive(item.path)
+                                  ? "text-blue-600"
+                                  : "text-gray-400"
+                              }`}
+                            />
+                          )}
+                        </button>
                       )}
-                    </button>
+                    </div>
                   ))}
                 </nav>
               </CardContent>
