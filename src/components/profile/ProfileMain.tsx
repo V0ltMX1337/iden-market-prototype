@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -10,16 +10,17 @@ const ProfileMain = () => {
   const [editingField, setEditingField] = useState<string | null>(null);
 
   const user = {
-    firstName: "Анна",
-    lastName: "Покупатель",
-    email: "anna@example.com",
-    avatar: "",
+    firstName: "Данил",
+    lastName: "Пугин",
+    email: "danil@example.com",
+    avatar:
+      "https://cdn.poehali.dev/files/740b36f9-7256-4953-8183-09393e3212d0.png",
     birthDate: "15.03.1990",
-    gender: "Женский",
+    gender: "Мужской",
     phone: "+7 912 345-67-89",
     phoneVerified: true,
-    username: "anna_buyer",
-    accountId: "237157",
+    username: "danil_pugin",
+    accountId: "297137",
   };
 
   const renderEditableField = (
@@ -81,67 +82,78 @@ const ProfileMain = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Личная информация</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex items-center space-x-6">
-          <Avatar className="w-20 h-20">
-            <AvatarImage src={user.avatar} />
-            <AvatarFallback className="text-lg">
-              {user.firstName[0]}
-              {user.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
-          <div className="space-y-1">
-            <h3 className="text-xl font-semibold">
-              {user.firstName} {user.lastName}
-            </h3>
-            <p className="text-gray-600">{user.email}</p>
-            <Button variant="outline" size="sm">
-              Изменить фото
-            </Button>
+    <Card className="border-0 shadow-sm">
+      <CardContent className="p-8">
+        {/* Profile Header */}
+        <div className="flex items-center space-x-6 mb-8">
+          <div className="relative">
+            <Avatar className="w-20 h-20 bg-blue-600">
+              <AvatarFallback className="text-white text-2xl font-bold bg-blue-600">
+                ДП
+              </AvatarFallback>
+            </Avatar>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              ID аккаунта
-            </label>
-            <div className="flex items-center space-x-2">
-              <span className="border border-gray-300 rounded-md px-3 py-2 bg-gray-50 flex-1 text-gray-600">
-                ID: {user.accountId}
-              </span>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {user.firstName} {user.lastName}
+            </h1>
+            <div className="flex items-center space-x-2 text-gray-500">
+              <span className="text-sm">ID: {user.accountId}</span>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
+                className="h-auto p-1"
                 onClick={() => navigator.clipboard.writeText(user.accountId)}
               >
-                <Icon name="Copy" size={14} />
+                <Icon name="Copy" size={14} className="text-gray-400" />
               </Button>
             </div>
           </div>
-          {renderEditableField("Имя", user.firstName, "firstName")}
-          {renderEditableField("Фамилия", user.lastName, "lastName")}
-          {renderEditableField("Имя пользователя", user.username, "username")}
-          {renderEditableField("Дата рождения", user.birthDate, "birthDate")}
-          {renderEditableField("Пол", user.gender, "gender")}
-          {renderEditableField("Номер телефона", user.phone, "phone", true)}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email адрес
-            </label>
-            <input
-              type="email"
-              value={user.email}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
-              readOnly
-            />
+        </div>
+
+        {/* Profile Information */}
+        <div className="space-y-8">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              Личная информация
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {renderEditableField("Имя", user.firstName, "firstName")}
+              {renderEditableField("Фамилия", user.lastName, "lastName")}
+              {renderEditableField(
+                "Имя пользователя",
+                user.username,
+                "username",
+              )}
+              {renderEditableField(
+                "Дата рождения",
+                user.birthDate,
+                "birthDate",
+              )}
+              {renderEditableField("Пол", user.gender, "gender")}
+              {renderEditableField("Номер телефона", user.phone, "phone", true)}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email адрес
+                </label>
+                <input
+                  type="email"
+                  value={user.email}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-6 border-t">
+            <Button variant="outline">
+              <Icon name="Camera" size={16} className="mr-2" />
+              Изменить фото
+            </Button>
+            <Button>Сохранить изменения</Button>
           </div>
         </div>
-        <Button>Сохранить изменения</Button>
       </CardContent>
     </Card>
   );
