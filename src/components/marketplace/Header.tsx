@@ -150,61 +150,102 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
-                  className="w-80 max-h-96 overflow-y-auto bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-2"
+                  className="w-96 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0"
                   sideOffset={12}
                 >
-                  <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100 mb-2">
+                  <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100">
                     ✨ Каталог товаров
                   </div>
-                  {categories.map((category, index) =>
-                    category.subcategories.length > 0 ? (
-                      <DropdownMenuSub key={index}>
-                        <DropdownMenuSubTrigger className="px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 group">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
-                            <Icon
-                              name={category.icon}
-                              size={16}
-                              className="text-blue-600 group-hover:text-purple-600 transition-colors duration-200"
-                            />
+                  <div className="flex">
+                    {/* Left panel - Main categories */}
+                    <div className="w-48 border-r border-gray-100">
+                      {categories.map((category, index) => (
+                        <div key={index} className="group relative">
+                          <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
+                            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
+                              <Icon
+                                name={category.icon}
+                                size={14}
+                                className="text-blue-600 group-hover:text-purple-600 transition-colors duration-200"
+                              />
+                            </div>
+                            <span className="font-medium text-gray-700 group-hover:text-gray-900 text-sm">
+                              {category.name}
+                            </span>
+                            {category.subcategories.length > 0 && (
+                              <Icon
+                                name="ChevronRight"
+                                size={14}
+                                className="ml-auto text-gray-400 group-hover:text-gray-600"
+                              />
+                            )}
                           </div>
-                          <span className="font-medium text-gray-700 group-hover:text-gray-900">
-                            {category.name}
-                          </span>
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent className="w-64 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl rounded-xl p-2 ml-2">
-                          {category.subcategories.map((sub, subIndex) => (
-                            <DropdownMenuItem
-                              key={subIndex}
-                              className="px-4 py-2.5 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
-                            >
-                              {sub.brand && (
-                                <div className="w-5 h-5 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md mr-3 flex-shrink-0 group-hover:from-blue-200 group-hover:to-indigo-200 transition-all duration-200"></div>
-                              )}
-                              <span className="text-gray-600 group-hover:text-gray-900 font-medium">
-                                {sub.name}
-                              </span>
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    ) : (
-                      <DropdownMenuItem
-                        key={index}
-                        className="px-4 py-3 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 group"
-                      >
-                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
-                          <Icon
-                            name={category.icon}
-                            size={16}
-                            className="text-blue-600 group-hover:text-purple-600 transition-colors duration-200"
-                          />
+
+                          {/* Right panel - Subcategories (shown on hover) */}
+                          {category.subcategories.length > 0 && (
+                            <div className="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                              <div className="p-2">
+                                <div className="px-3 py-2 text-sm font-semibold text-gray-800 border-b border-gray-100 mb-2">
+                                  {category.name}
+                                </div>
+                                {category.subcategories.map((sub, subIndex) => (
+                                  <div
+                                    key={subIndex}
+                                    className="px-3 py-2 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group/sub flex items-center justify-between"
+                                  >
+                                    <div className="flex items-center">
+                                      {sub.brand && (
+                                        <div className="w-4 h-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-sm mr-3 flex-shrink-0 group-hover/sub:from-blue-200 group-hover/sub:to-indigo-200 transition-all duration-200"></div>
+                                      )}
+                                      <span className="text-sm text-gray-600 group-hover/sub:text-gray-900 font-medium">
+                                        {sub.name}
+                                      </span>
+                                    </div>
+                                    {sub.brand && (
+                                      <div className="text-xs text-gray-400 font-normal">
+                                        {sub.name === "Apple iPhone" && "🍎"}
+                                        {sub.name === "Samsung Galaxy" && "📱"}
+                                        {sub.name === "Huawei" && "🔥"}
+                                        {sub.name === "HONOR" && "⭐"}
+                                        {sub.name === "Xiaomi" && "🚀"}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <span className="font-medium text-gray-700 group-hover:text-gray-900">
-                          {category.name}
-                        </span>
-                      </DropdownMenuItem>
-                    ),
-                  )}
+                      ))}
+                    </div>
+
+                    {/* Right panel - Featured content */}
+                    <div className="w-48 p-4 bg-gradient-to-br from-gray-50 to-blue-50">
+                      <div className="text-sm font-semibold text-gray-800 mb-3">
+                        🔥 Популярные бренды
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                          <span className="text-xs font-medium text-gray-700">
+                            Apple
+                          </span>
+                          <span className="text-lg">🍎</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                          <span className="text-xs font-medium text-gray-700">
+                            Samsung
+                          </span>
+                          <span className="text-lg">📱</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                          <span className="text-xs font-medium text-gray-700">
+                            Xiaomi
+                          </span>
+                          <span className="text-lg">🚀</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
               <h1
