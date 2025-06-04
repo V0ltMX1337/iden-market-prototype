@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import FancyText from "@carefully-coded/react-text-gradient";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const categories = [
     {
@@ -146,33 +150,39 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
-                  className="w-64 max-h-96 overflow-y-auto"
-                  sideOffset={8}
+                  className="w-80 max-h-96 overflow-y-auto bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-2"
+                  sideOffset={12}
                 >
-                  <div className="px-3 py-2 text-sm font-medium text-gray-900 border-b">
-                    Каталог
+                  <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100 mb-2">
+                    ✨ Каталог товаров
                   </div>
                   {categories.map((category, index) =>
                     category.subcategories.length > 0 ? (
                       <DropdownMenuSub key={index}>
-                        <DropdownMenuSubTrigger className="px-3 py-2">
-                          <Icon
-                            name={category.icon}
-                            size={16}
-                            className="mr-3"
-                          />
-                          <span>{category.name}</span>
+                        <DropdownMenuSubTrigger className="px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 group">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
+                            <Icon
+                              name={category.icon}
+                              size={16}
+                              className="text-blue-600 group-hover:text-purple-600 transition-colors duration-200"
+                            />
+                          </div>
+                          <span className="font-medium text-gray-700 group-hover:text-gray-900">
+                            {category.name}
+                          </span>
                         </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent className="w-52">
+                        <DropdownMenuSubContent className="w-64 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl rounded-xl p-2 ml-2">
                           {category.subcategories.map((sub, subIndex) => (
                             <DropdownMenuItem
                               key={subIndex}
-                              className="px-3 py-2 cursor-pointer"
+                              className="px-4 py-2.5 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
                             >
                               {sub.brand && (
-                                <div className="w-4 h-4 bg-gray-200 rounded mr-2 flex-shrink-0"></div>
+                                <div className="w-5 h-5 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md mr-3 flex-shrink-0 group-hover:from-blue-200 group-hover:to-indigo-200 transition-all duration-200"></div>
                               )}
-                              <span>{sub.name}</span>
+                              <span className="text-gray-600 group-hover:text-gray-900 font-medium">
+                                {sub.name}
+                              </span>
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuSubContent>
@@ -180,10 +190,18 @@ const Header = () => {
                     ) : (
                       <DropdownMenuItem
                         key={index}
-                        className="px-3 py-2 cursor-pointer"
+                        className="px-4 py-3 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 group"
                       >
-                        <Icon name={category.icon} size={16} className="mr-3" />
-                        <span>{category.name}</span>
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
+                          <Icon
+                            name={category.icon}
+                            size={16}
+                            className="text-blue-600 group-hover:text-purple-600 transition-colors duration-200"
+                          />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-gray-900">
+                          {category.name}
+                        </span>
                       </DropdownMenuItem>
                     ),
                   )}
@@ -205,10 +223,27 @@ const Header = () => {
                 beta
               </Badge>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
-              <Icon name="ChevronRight" size={16} className="mx-1" />
-              <span>Искать на PotionMarket...</span>
+            <div className="flex items-center bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300 rounded-lg px-3 py-2 transition-all duration-200 min-w-64">
+              <Icon
+                name="Globe"
+                size={16}
+                className="text-yellow-500 mr-2 flex-shrink-0"
+              />
+              <Icon
+                name="ChevronRight"
+                size={16}
+                className="mx-1 text-gray-400 flex-shrink-0"
+              />
+              <Input
+                placeholder="Искать на PotionMarket..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className={`border-0 bg-transparent placeholder:text-gray-500 text-sm focus-visible:ring-0 px-0 transition-all duration-200 ${
+                  isSearchFocused ? "placeholder:text-gray-400" : ""
+                }`}
+              />
             </div>
           </div>
 
