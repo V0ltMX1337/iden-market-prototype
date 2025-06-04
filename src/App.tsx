@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MarketplaceCategory from "./pages/marketplace/MarketplaceCategory";
 import ProductPage from "./pages/marketplace/ProductPage";
 import Login from "./pages/index/Login";
+import Help from "./pages/Help";
 import Register from "./pages/index/Register";
 import Profile from "./pages/index/Profile";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
