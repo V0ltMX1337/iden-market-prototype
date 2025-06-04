@@ -9,6 +9,8 @@ import Icon from "@/components/ui/icon";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import ProductCard from "@/components/marketplace/category/ProductCard";
+import SellerCard from "@/components/marketplace/seller/SellerCard";
+import ReviewsSection from "@/components/marketplace/product/ReviewsSection";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -244,19 +246,15 @@ const ProductPage = () => {
             </Card>
 
             {/* Seller */}
-            <Card className="bg-gray-50 border-0">
-              <CardContent className="p-4">
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-gray-900">Продавец</h3>
-                  <div className="space-y-1 text-sm">
-                    <div className="font-medium text-blue-600">
-                      ООО "Августина Прекрасная"
-                    </div>
-                    <div className="text-gray-600">ОГРН 345414823533450</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <SellerCard
+              id="1"
+              name="ООО Августина Прекрасная"
+              avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+              rating={4.9}
+              reviewsCount={1247}
+              isVerified={true}
+              responseTime="в течение часа"
+            />
           </div>
         </div>
 
@@ -341,26 +339,17 @@ const ProductPage = () => {
             </TabsContent>
 
             <TabsContent value="reviews" className="mt-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="text-center py-12">
-                    <Icon
-                      name="MessageSquare"
-                      size={48}
-                      className="text-gray-300 mx-auto mb-4"
-                    />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Отзывы пока отсутствуют
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Станьте первым, кто оставит отзыв об этом товаре
-                    </p>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                      Написать отзыв
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <ReviewsSection
+                totalReviews={314}
+                averageRating={4.9}
+                ratingDistribution={[
+                  { stars: 5, count: 306 },
+                  { stars: 4, count: 3 },
+                  { stars: 3, count: 1 },
+                  { stars: 2, count: 2 },
+                  { stars: 1, count: 2 },
+                ]}
+              />
             </TabsContent>
 
             <TabsContent value="similar" className="mt-6">
