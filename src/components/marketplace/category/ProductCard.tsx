@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
@@ -43,6 +44,12 @@ const ProductCard = ({
   features = [],
   specs = {},
 }: ProductCardProps) => {
+  const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+
   const colors = [
     { name: "Синий", color: "bg-blue-600" },
     { name: "Белый", color: "bg-gray-100 border border-gray-300" },
@@ -73,10 +80,22 @@ const ProductCard = ({
 
           {/* Product Details */}
           <div className="flex-1 p-6">
-            {/* Title */}
-            <h3 className="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2">
-              {title}
-            </h3>
+            {/* Title and Price */}
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2 flex-1 mr-4">
+                {title}
+              </h3>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-gray-900">
+                  {price.toLocaleString()} ₽
+                </div>
+                {oldPrice && (
+                  <div className="text-sm text-gray-400 line-through">
+                    {oldPrice.toLocaleString()} ₽
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Rating */}
             <div className="flex items-center mb-4">
@@ -121,41 +140,61 @@ const ProductCard = ({
               {specs.camera && <div>• Камера: {specs.camera}</div>}
             </div>
 
-            {/* Price and Actions */}
+            {/* Add to Cart Section */}
             <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center space-x-3 mb-2">
-                  <span className="text-3xl font-bold text-gray-900">
-                    {price.toLocaleString()} ₽
-                  </span>
-                  {oldPrice && (
-                    <span className="text-lg text-gray-400 line-through">
-                      {oldPrice.toLocaleString()} ₽
-                    </span>
-                  )}
+              {isDeliveryFree && (
+                <div className="flex items-center text-sm text-green-600 font-medium">
+                  <Icon name="Truck" size={14} className="mr-1" />
+                  Бесплатная доставка
                 </div>
-                {isDeliveryFree && (
-                  <div className="flex items-center text-sm text-green-600 font-medium">
-                    <Icon name="Truck" size={14} className="mr-1" />
-                    Бесплатная доставка
-                  </div>
-                )}
-              </div>
+              )}
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 ml-auto">
+                {/* Quantity Controls */}
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={decreaseQuantity}
+                    className="px-3 py-2 h-10 hover:bg-gray-100"
+                  >
+                    <Icon name="Minus" size={16} />
+                  </Button>
+                  <div className="px-4 py-2 text-center min-w-[3rem] border-x border-gray-200 bg-white">
+                    {quantity}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={increaseQuantity}
+                    className="px-3 py-2 h-10 hover:bg-gray-100"
+                  >
+                    <Icon name="Plus" size={16} />
+                  </Button>
+                </div>
+
+                {/* Add to Cart Button */}
+                <Button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold h-10">
+                  <Icon name="ShoppingCart" size={16} className="mr-2" />В
+                  корзину
+                </Button>
+
+                {/* Favorite Button */}
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full hover:bg-red-50 hover:border-red-200"
+                  className="rounded-lg hover:bg-red-50 hover:border-red-200 h-10 w-10"
+                  onClick={() => setIsFavorite(!isFavorite)}
                 >
                   <Icon
                     name="Heart"
-                    size={18}
-                    className="hover:text-red-500 transition-colors"
+                    size={16}
+                    className={`transition-colors ${
+                      isFavorite
+                        ? "text-red-500 fill-current"
+                        : "hover:text-red-500"
+                    }`}
                   />
-                </Button>
-                <Button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold">
-                  В корзину
                 </Button>
               </div>
             </div>
