@@ -1,17 +1,86 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import FancyText from '@carefully-coded/react-text-gradient';
+import FancyText from "@carefully-coded/react-text-gradient";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const categories = [
+    {
+      name: "Умный дом",
+      icon: "Wifi",
+      subcategories: [],
+    },
+    {
+      name: "Бытовая техника",
+      icon: "Zap",
+      subcategories: [],
+    },
+    {
+      name: "Смартфоны",
+      icon: "Smartphone",
+      subcategories: [
+        { name: "Apple iPhone", brand: true },
+        { name: "Samsung Galaxy", brand: true },
+        { name: "Huawei", brand: true },
+        { name: "HONOR", brand: true },
+        { name: "Xiaomi", brand: true },
+      ],
+    },
+    {
+      name: "Умные часы и браслеты",
+      icon: "Watch",
+      subcategories: [{ name: "Смарт-часы" }, { name: "Фитнес-браслеты" }],
+    },
+    {
+      name: "Аксессуары",
+      icon: "Cable",
+      subcategories: [
+        { name: "Наушники" },
+        { name: "Чехлы" },
+        { name: "Защитные стёкла" },
+        { name: "Зарядные устройства" },
+        { name: "Кабели" },
+      ],
+    },
+    {
+      name: "Планшеты",
+      icon: "Tablet",
+      subcategories: [],
+    },
+    {
+      name: "Электросамокаты",
+      icon: "Zap",
+      subcategories: [],
+    },
+    {
+      name: "Телевизоры",
+      icon: "Monitor",
+      subcategories: [],
+    },
+    {
+      name: "Развлечение",
+      icon: "Gamepad2",
+      subcategories: [],
+    },
+    {
+      name: "Модемы и ТВ",
+      icon: "Router",
+      subcategories: [],
+    },
+  ];
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -26,16 +95,16 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center space-x-6 text-gray-600">
-              <a 
-                 className="hover:text-blue-600"
-                 onClick={() => navigate("/admin/register")}
-               >
+              <a
+                className="hover:text-blue-600"
+                onClick={() => navigate("/admin/register")}
+              >
                 Создать магазин
               </a>
-               <a 
-                 className="hover:text-blue-600"
-                 onClick={() => navigate("/admin")}
-               >
+              <a
+                className="hover:text-blue-600"
+                onClick={() => navigate("/admin")}
+              >
                 Управление магазином
               </a>
               <a href="#" className="hover:text-blue-600">
@@ -65,17 +134,71 @@ const Header = () => {
           {/* Logo and breadcrumb */}
           <div className="flex items-center space-x-6">
             <div className="flex items-center">
-              <Icon name="Grid3X3" size={24} className="text-blue-600 mr-2" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-1 hover:bg-gray-100"
+                  >
+                    <Icon name="Grid3X3" size={24} className="text-blue-600" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  className="w-64 max-h-96 overflow-y-auto"
+                  sideOffset={8}
+                >
+                  <div className="px-3 py-2 text-sm font-medium text-gray-900 border-b">
+                    Каталог
+                  </div>
+                  {categories.map((category, index) =>
+                    category.subcategories.length > 0 ? (
+                      <DropdownMenuSub key={index}>
+                        <DropdownMenuSubTrigger className="px-3 py-2">
+                          <Icon
+                            name={category.icon}
+                            size={16}
+                            className="mr-3"
+                          />
+                          <span>{category.name}</span>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent className="w-52">
+                          {category.subcategories.map((sub, subIndex) => (
+                            <DropdownMenuItem
+                              key={subIndex}
+                              className="px-3 py-2 cursor-pointer"
+                            >
+                              {sub.brand && (
+                                <div className="w-4 h-4 bg-gray-200 rounded mr-2 flex-shrink-0"></div>
+                              )}
+                              <span>{sub.name}</span>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    ) : (
+                      <DropdownMenuItem
+                        key={index}
+                        className="px-3 py-2 cursor-pointer"
+                      >
+                        <Icon name={category.icon} size={16} className="mr-3" />
+                        <span>{category.name}</span>
+                      </DropdownMenuItem>
+                    ),
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <h1
-                className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
+                className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center ml-2"
                 onClick={() => navigate("/")}
               >
                 <FancyText
-                  gradient={{ from: '#7589C2', to: '#8BC2FC', type: 'linear' }}
-                  animateTo={{ from: '#0045FF', to: '#7580C2' }}
+                  gradient={{ from: "#7589C2", to: "#8BC2FC", type: "linear" }}
+                  animateTo={{ from: "#0045FF", to: "#7580C2" }}
                   animateDuration={2000}
                 >
-                POTIONMARKET
+                  POTIONMARKET
                 </FancyText>
               </h1>
               <Badge variant="secondary" className="ml-2 text-xs">
