@@ -21,36 +21,6 @@ const ProfileSettings = () => {
 
   return (
     <div className="space-y-6">
-      {/* Personal Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="User" size={20} />
-            Личная информация
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">Имя</Label>
-              <Input id="firstName" placeholder="Введите имя" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Фамилия</Label>
-              <Input id="lastName" placeholder="Введите фамилию" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="example@mail.com" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Телефон</Label>
-            <Input id="phone" placeholder="+7 (999) 999-99-99" />
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Telegram Settings */}
       <Card>
         <CardHeader>
