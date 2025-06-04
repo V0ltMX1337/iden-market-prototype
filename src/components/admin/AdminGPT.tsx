@@ -57,84 +57,41 @@ const AdminGPT = () => {
     setIsGenerating(true);
 
     try {
-      // Используем прокси сервис для обхода CORS
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-      const targetUrl = "https://api.openai.com/v1/images/generations";
-
       const prompt = generatePrompt(categoryName, style);
 
-      const response = await fetch(proxyUrl + targetUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-          "X-Requested-With": "XMLHttpRequest",
+      // Здесь будет реальный вызов OpenAI API
+      const response = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "dall-e-3",
+            prompt: prompt,
+            n: 1,
+            size: "1024x1024",
+            quality: "hd",
+            style: "vivid",
+          }),
         },
-        body: JSON.stringify({
-          model: "dall-e-3",
-          prompt: prompt,
-          n: 1,
-          size: "1024x1024",
-          quality: "hd",
-          style: "vivid",
-        }),
-      });
+      );
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `API Error: ${response.status} - ${errorData.error?.message || "Unknown error"}`,
-        );
+        throw new Error("Ошибка API");
       }
 
       const data = await response.json();
       const imageUrl = data.data[0].url;
 
       setGeneratedImages((prev) => [imageUrl, ...prev]);
-
-      // Показываем успешное уведомление
-      console.log("✅ Изображение успешно сгенерировано!");
     } catch (error) {
       console.error("Ошибка генерации:", error);
-
-      // Для демонстрации создаем изображение-заглушку с текстом категории
-      const canvas = document.createElement("canvas");
-      canvas.width = 400;
-      canvas.height = 400;
-      const ctx = canvas.getContext("2d");
-
-      if (ctx) {
-        // Создаем градиентный фон
-        const gradient = ctx.createLinearGradient(0, 0, 400, 400);
-        gradient.addColorStop(0, "#8B5CF6");
-        gradient.addColorStop(1, "#3B82F6");
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 400, 400);
-
-        // Добавляем текст
-        ctx.fillStyle = "white";
-        ctx.font = "bold 24px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(categoryName, 200, 180);
-
-        ctx.font = "16px Arial";
-        ctx.fillText("Демо изображение", 200, 220);
-        ctx.fillText(`Стиль: ${style}`, 200, 250);
-
-        // Конвертируем в URL
-        const mockImage = canvas.toDataURL("image/png");
-        setGeneratedImages((prev) => [mockImage, ...prev]);
-      } else {
-        // Fallback к случайному изображению
-        const mockImage = `https://picsum.photos/400/400?random=${Date.now()}`;
-        setGeneratedImages((prev) => [mockImage, ...prev]);
-      }
-
-      // Показываем информативное сообщение об ошибке
-      alert(
-        `Не удалось подключиться к OpenAI API. Показано демо-изображение.\n\nОшибка: ${error instanceof Error ? error.message : "Неизвестная ошибка"}\n\nДля работы с реальным API нужен серверный прокси.`,
-      );
+      // Показываем mock изображение для демонстрации
+      const mockImage = `https://picsum.photos/400/300?random=${Date.now()}`;
+      setGeneratedImages((prev) => [mockImage, ...prev]);
     } finally {
       setIsGenerating(false);
     }
@@ -311,33 +268,13 @@ const AdminGPT = () => {
                     className="w-full h-32 object-contain p-2"
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        const link = document.createElement("a");
-                        link.href = image;
-                        link.download = `category-icon-${categoryName || index + 1}.png`;
-                        link.click();
-                      }}
-                    >
+                    <Button size="sm" variant="secondary">
                       <Icon name="Download" size={14} />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        navigator.clipboard.writeText(image);
-                        alert("Ссылка на изображение скопирована!");
-                      }}
-                    >
+                    <Button size="sm" variant="secondary">
                       <Icon name="Copy" size={14} />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => window.open(image, "_blank")}
-                    >
+                    <Button size="sm" variant="secondary">
                       <Icon name="Eye" size={14} />
                     </Button>
                   </div>

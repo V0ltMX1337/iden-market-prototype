@@ -1,13 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import FancyText from '@carefully-coded/react-text-gradient';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="bg-white">
+    <header className="bg-white border-b border-gray-200">
       {/* Top navigation bar */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,21 +26,34 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center space-x-6 text-gray-600">
-              <a href="#" className="hover:text-blue-600 text-sm">
-                Акции и предложения
+              <a 
+                 className="hover:text-blue-600"
+                 onClick={() => navigate("/admin/register")}
+               >
+                Создать магазин
               </a>
-              <a href="#" className="hover:text-blue-600 text-sm">
-                Оплата и доставка
+               <a 
+                 className="hover:text-blue-600"
+                 onClick={() => navigate("/admin")}
+               >
+                Управление магазином
               </a>
-              <a href="#" className="hover:text-blue-600 text-sm">
-                Гарантия и возврат
+              <a href="#" className="hover:text-blue-600">
+                Новинки
               </a>
-              <a href="#" className="hover:text-blue-600 text-sm">
-                Контакты
+              <a href="#" className="hover:text-blue-600">
+                Для поставщиков
               </a>
-              <a href="#" className="hover:text-blue-600 text-sm">
-                О компании
+              <a href="#" className="hover:text-blue-600">
+                Помощь
               </a>
+              <a href="#" className="hover:text-blue-600">
+                Поддержка
+              </a>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-yellow-400 rounded-full mr-1 text-sm font-normal"></span>
+                <span>Светлая</span>
+              </div>
             </div>
           </div>
         </div>
@@ -42,64 +62,89 @@ const Header = () => {
       {/* Main header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <h1
-              className="text-3xl font-bold text-gray-900 cursor-pointer"
-              onClick={() => navigate("/")}
-            >
-              Krypton
-            </h1>
-          </div>
-
-          {/* Center section with catalog button and search */}
-          <div className="flex items-center space-x-4 flex-1 max-w-2xl mx-8">
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg flex items-center">
-              <Icon name="Grid3X3" size={16} className="mr-2" />
-              Каталог
-            </Button>
-
-            <div className="flex-1 relative">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="iPhone 12 Pro Max"
-                  className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                />
-                <Button className="absolute right-0 top-0 h-full px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-lg">
-                  Найти
-                </Button>
-              </div>
+          {/* Logo and breadcrumb */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center">
+              <Icon name="Grid3X3" size={24} className="text-blue-600 mr-2" />
+              <h1
+                className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
+                onClick={() => navigate("/")}
+              >
+                <FancyText
+                  gradient={{ from: '#7589C2', to: '#8BC2FC', type: 'linear' }}
+                  animateTo={{ from: '#0045FF', to: '#7580C2' }}
+                  animateDuration={2000}
+                >
+                POTIONMARKET
+                </FancyText>
+              </h1>
+              <Badge variant="secondary" className="ml-2 text-xs">
+                beta
+              </Badge>
+            </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <Icon name="Globe" size={16} className="text-yellow-500 mr-1" />
+              <Icon name="ChevronRight" size={16} className="mx-1" />
+              <span>Искать на PotionMarket...</span>
             </div>
           </div>
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <div className="flex flex-col items-center text-gray-600 hover:text-indigo-600 cursor-pointer">
-              <div className="relative">
-                <Icon name="Heart" size={24} />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="Search" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="Heart" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="Package" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Icon name="MessageCircle" size={20} />
+            </Button>
+            <Button variant="ghost" size="sm" className="p-2 relative">
+              <Icon name="ShoppingCart" size={20} />
+              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                1
+              </span>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="p-0 rounded-full">
+                  <div className="flex items-center justify-center bg-blue-600 text-white w-8 h-8 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors">
+                    АП
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile")}
+                  className="cursor-pointer"
                 >
-                  12
-                </Badge>
-              </div>
-              <span className="text-xs mt-1">Избранное</span>
-            </div>
-
-            <div className="flex flex-col items-center text-gray-600 hover:text-indigo-600 cursor-pointer">
-              <div className="relative">
-                <Icon name="ShoppingCart" size={24} />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                  <Icon name="User" size={16} className="mr-2" />
+                  Профиль
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=orders")}
+                  className="cursor-pointer"
                 >
-                  1
-                </Badge>
-              </div>
-              <span className="text-xs mt-1">Корзина</span>
-            </div>
+                  <Icon name="Package" size={16} className="mr-2" />
+                  Заказы
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=reviews")}
+                  className="cursor-pointer"
+                >
+                  <Icon name="MessageCircle" size={16} className="mr-2" />
+                  Мои отзывы
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-red-600 hover:text-red-700">
+                  <Icon name="LogOut" size={16} className="mr-2" />
+                  Выйти
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
