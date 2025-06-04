@@ -1,4 +1,5 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,6 +22,7 @@ import ProfileSettings from "@/components/profile/ProfileSettings";
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isOrdersExpanded, setIsOrdersExpanded] = useState(false);
 
   const menuItems = [
     { id: "", label: "Профиль", icon: "User", path: "/profile" },
@@ -58,6 +60,16 @@ const Profile = () => {
     },
   ];
 
+  const orderSubItems = [
+    { label: "Все", path: "/profile/orders", count: 2 },
+    { label: "Ожидают", path: "/profile/orders/pending" },
+    { label: "В пути", path: "/profile/orders/shipping" },
+    { label: "Доставлен", path: "/profile/orders/delivered", count: 1 },
+    { label: "Ждут оценки", path: "/profile/orders/rating" },
+    { label: "Отменен", path: "/profile/orders/cancelled", count: 1 },
+    { label: "Завершен", path: "/profile/orders/completed", count: 1 },
+  ];
+
   const isActive = (path: string) => {
     if (path === "/profile") {
       return location.pathname === "/profile";
@@ -79,78 +91,66 @@ const Profile = () => {
                   {menuItems.map((item) => (
                     <div key={item.id}>
                       {item.id === "orders" ? (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
-                                isActive(item.path)
-                                  ? "text-blue-600"
-                                  : "text-gray-700 hover:text-blue-600"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3">
-                                <Icon
-                                  name={item.icon as any}
-                                  size={20}
-                                  className={`${
-                                    isActive(item.path)
-                                      ? "text-blue-600"
-                                      : "text-blue-500"
-                                  }`}
-                                />
-                                <span className="font-medium">
-                                  {item.label}
-                                </span>
-                              </div>
+                        <>
+                          <button
+                            onClick={() =>
+                              setIsOrdersExpanded(!isOrdersExpanded)
+                            }
+                            className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
+                              isActive(item.path)
+                                ? "text-blue-600"
+                                : "text-gray-700 hover:text-blue-600"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
                               <Icon
-                                name="ChevronDown"
-                                size={16}
-                                className={`transition-transform ${
+                                name={item.icon as any}
+                                size={20}
+                                className={`${
                                   isActive(item.path)
                                     ? "text-blue-600"
-                                    : "text-gray-400"
+                                    : "text-blue-500"
                                 }`}
                               />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start" className="w-48">
-                            <DropdownMenuItem
-                              onClick={() => navigate("/profile/orders")}
-                            >
-                              <div className="flex items-center justify-between w-full">
-                                <span>Все</span>
-                                <span className="text-xs text-gray-400">2</span>
-                              </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <span>Ожидают</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <span>В пути</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <div className="flex items-center justify-between w-full">
-                                <span>Доставлен</span>
-                                <span className="text-xs text-gray-400">1</span>
-                              </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <span>Ждут оценки</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <div className="flex items-center justify-between w-full">
-                                <span>Отменен</span>
-                                <span className="text-xs text-gray-400">1</span>
-                              </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <div className="flex items-center justify-between w-full">
-                                <span>Завершен</span>
-                                <span className="text-xs text-gray-400">1</span>
-                              </div>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              <span className="font-medium">{item.label}</span>
+                            </div>
+                            <Icon
+                              name="ChevronDown"
+                              size={16}
+                              className={`transition-transform ${
+                                isOrdersExpanded ? "rotate-180" : ""
+                              } ${
+                                isActive(item.path)
+                                  ? "text-blue-600"
+                                  : "text-gray-400"
+                              }`}
+                            />
+                          </button>
+                          {isOrdersExpanded && (
+                            <div className="ml-8 space-y-1 pb-2">
+                              {orderSubItems.map((subItem) => (
+                                <button
+                                  key={subItem.path}
+                                  onClick={() => navigate(subItem.path)}
+                                  className={`w-full flex items-center justify-between px-0 py-2 text-left transition-colors ${
+                                    location.pathname === subItem.path
+                                      ? "text-blue-600"
+                                      : "text-gray-600 hover:text-blue-600"
+                                  }`}
+                                >
+                                  <span className="text-sm">
+                                    {subItem.label}
+                                  </span>
+                                  {subItem.count && (
+                                    <span className="text-xs text-gray-400">
+                                      {subItem.count}
+                                    </span>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
                       ) : (
                         <button
                           onClick={() => navigate(item.path)}
