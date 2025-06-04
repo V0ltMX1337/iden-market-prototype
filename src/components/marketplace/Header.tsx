@@ -203,15 +203,24 @@ const Header = () => {
                   <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100">
                     ✨ Каталог товаров
                   </div>
-                  <div className="relative">
+                  <div className="relative overflow-visible">
                     {/* Main categories list */}
                     <div className="w-full">
                       {categories.map((category, index) => (
                         <div
                           key={index}
                           className="group relative"
-                          onMouseEnter={() => setHoveredCategory(index)}
-                          onMouseLeave={() => setHoveredCategory(null)}
+                          onMouseEnter={() => {
+                            if (category.subcategories.length > 0) {
+                              setHoveredCategory(index);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            // Добавляем небольшую задержку для плавного перехода между меню
+                            setTimeout(() => {
+                              setHoveredCategory(null);
+                            }, 150);
+                          }}
                         >
                           <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
                             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
@@ -232,61 +241,61 @@ const Header = () => {
                               />
                             )}
                           </div>
-
-                          {/* Subcategories panel (shown on hover) */}
-                          {category.subcategories.length > 0 &&
-                            hoveredCategory === index && (
-                              <div
-                                className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 z-50"
-                                onMouseEnter={() => setHoveredCategory(index)}
-                                onMouseLeave={() => setHoveredCategory(null)}
-                              >
-                                <div className="p-4">
-                                  <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
-                                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
-                                      <Icon
-                                        name={category.icon}
-                                        size={16}
-                                        className="text-blue-600"
-                                      />
-                                    </div>
-                                    <span className="text-lg font-bold text-gray-800">
-                                      {category.name}
-                                    </span>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-6">
-                                    {category.subcategories.map(
-                                      (subcat, subcatIndex) => (
-                                        <div
-                                          key={subcatIndex}
-                                          className="space-y-2"
-                                        >
-                                          <h4 className="font-semibold text-gray-800 text-sm mb-2">
-                                            {subcat.name}
-                                          </h4>
-                                          <div className="space-y-1">
-                                            {subcat.items.map(
-                                              (item, itemIndex) => (
-                                                <div
-                                                  key={itemIndex}
-                                                  className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1 transition-colors duration-150"
-                                                >
-                                                  {item}
-                                                </div>
-                                              ),
-                                            )}
-                                          </div>
-                                        </div>
-                                      ),
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            )}
                         </div>
                       ))}
                     </div>
+
+                    {/* Subcategories panel - positioned outside the scroll container */}
+                    {hoveredCategory !== null &&
+                      categories[hoveredCategory]?.subcategories.length > 0 && (
+                        <div
+                          className="absolute left-full top-0 w-[500px] bg-white border border-gray-200 rounded-lg shadow-2xl ml-2 z-[60]"
+                          style={{
+                            top: `${hoveredCategory * 48}px`, // Позиционируем на уровне активной категории
+                          }}
+                          onMouseEnter={() =>
+                            setHoveredCategory(hoveredCategory)
+                          }
+                          onMouseLeave={() => setHoveredCategory(null)}
+                        >
+                          <div className="p-6">
+                            <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
+                                <Icon
+                                  name={categories[hoveredCategory].icon}
+                                  size={16}
+                                  className="text-blue-600"
+                                />
+                              </div>
+                              <span className="text-lg font-bold text-gray-800">
+                                {categories[hoveredCategory].name}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-8">
+                              {categories[hoveredCategory].subcategories.map(
+                                (subcat, subcatIndex) => (
+                                  <div key={subcatIndex} className="space-y-3">
+                                    <h4 className="font-semibold text-gray-800 text-base mb-3 border-b border-gray-100 pb-2">
+                                      {subcat.name}
+                                    </h4>
+                                    <div className="space-y-2">
+                                      {subcat.items.map((item, itemIndex) => (
+                                        <div
+                                          key={itemIndex}
+                                          className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1.5 px-2 rounded hover:bg-blue-50 transition-all duration-150"
+                                        >
+                                          {item}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ),
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
