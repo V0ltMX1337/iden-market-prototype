@@ -21,6 +21,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
+  const [clickedCategory, setClickedCategory] = useState<number | null>(null);
 
   const categories = [
     {
@@ -218,7 +219,16 @@ const Header = () => {
                             }
                           }}
                         >
-                          <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
+                          <div
+                            className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center"
+                            onClick={() => {
+                              if (category.subcategories.length > 0) {
+                                setClickedCategory(
+                                  clickedCategory === index ? null : index,
+                                );
+                              }
+                            }}
+                          >
                             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
                               <Icon
                                 name={category.icon}
@@ -242,36 +252,30 @@ const Header = () => {
                     </div>
 
                     {/* Subcategories panel - positioned outside the scroll container */}
-                    {hoveredCategory !== null &&
-                      categories[hoveredCategory]?.subcategories.length > 0 && (
+                    {clickedCategory !== null &&
+                      categories[clickedCategory]?.subcategories.length > 0 && (
                         <div
                           className="absolute left-full top-0 w-[500px] bg-white border border-gray-200 rounded-lg shadow-2xl ml-2 z-[60]"
                           style={{
-                            top: `${hoveredCategory * 48 + 48}px`,
-                          }}
-                          onMouseEnter={() => {
-                            setHoveredCategory(hoveredCategory);
-                          }}
-                          onMouseLeave={() => {
-                            setHoveredCategory(null);
+                            top: `${clickedCategory * 48 + 48}px`,
                           }}
                         >
                           <div className="p-6">
                             <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
                                 <Icon
-                                  name={categories[hoveredCategory].icon}
+                                  name={categories[clickedCategory].icon}
                                   size={16}
                                   className="text-blue-600"
                                 />
                               </div>
                               <span className="text-lg font-bold text-gray-800">
-                                {categories[hoveredCategory].name}
+                                {categories[clickedCategory].name}
                               </span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-8">
-                              {categories[hoveredCategory].subcategories.map(
+                              {categories[clickedCategory].subcategories.map(
                                 (subcat, subcatIndex) => (
                                   <div key={subcatIndex} className="space-y-3">
                                     <h4 className="font-semibold text-gray-800 text-base mb-3 border-b border-gray-100 pb-2">
