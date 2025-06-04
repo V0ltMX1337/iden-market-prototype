@@ -208,17 +208,7 @@ const Header = () => {
                     {/* Main categories list */}
                     <div className="w-full">
                       {categories.map((category, index) => (
-                        <div
-                          key={index}
-                          className="group relative"
-                          onMouseEnter={() => {
-                            if (category.subcategories.length > 0) {
-                              setHoveredCategory(index);
-                            } else {
-                              setHoveredCategory(null);
-                            }
-                          }}
-                        >
+                        <div key={index} className="group relative">
                           <div
                             className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center"
                             onClick={() => {
@@ -259,6 +249,7 @@ const Header = () => {
                           style={{
                             top: `${clickedCategory * 48 + 48}px`,
                           }}
+                          onMouseLeave={() => setClickedCategory(null)}
                         >
                           <div className="p-6">
                             <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
