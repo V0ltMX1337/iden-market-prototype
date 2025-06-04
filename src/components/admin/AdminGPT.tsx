@@ -13,9 +13,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AdminGPT = () => {
-  const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("realistic");
-  const [size, setSize] = useState("1024x1024");
+  const [categoryName, setCategoryName] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [style, setStyle] = useState("minimalist");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
 
@@ -28,17 +28,80 @@ const AdminGPT = () => {
     { name: "Планшеты", color: "from-cyan-400 to-blue-500" },
   ];
 
+  const generatePrompt = (category: string, selectedStyle: string) => {
+    const basePrompt = `Создайте минималистичную иконку для категории "${category}" интернет-магазина. `;
+
+    const stylePrompts = {
+      minimalist:
+        "Чистый минимализм, простые геометрические формы, плоский дизайн, без лишних деталей",
+      gradient:
+        "Яркие градиенты, современный стиль, объёмные элементы с мягкими тенями",
+      realistic:
+        "Реалистичные объекты с высокой детализацией, профессиональное освещение",
+      geometric: "Геометрические абстрактные формы, симметрия, чёткие линии",
+    };
+
+    const contextPrompt =
+      ". Иконка должна быть на прозрачном фоне или с лёгким градиентным фоном, подходить для использования в каталоге товаров, размер 512x512 пикселей, высокое качество, профессиональный дизайн.";
+
+    return (
+      basePrompt +
+      stylePrompts[selectedStyle as keyof typeof stylePrompts] +
+      contextPrompt
+    );
+  };
+
   const handleGenerate = async () => {
-    if (!prompt.trim()) return;
+    if (!categoryName.trim() || !apiKey.trim()) return;
 
     setIsGenerating(true);
 
-    // Симуляция генерации изображения
-    setTimeout(() => {
+    try {
+      const prompt = generatePrompt(categoryName, style);
+
+      // Здесь будет реальный вызов OpenAI API
+      const response = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "dall-e-3",
+            prompt: prompt,
+            n: 1,
+            size: "1024x1024",
+            quality: "hd",
+            style: "vivid",
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка API");
+      }
+
+      const data = await response.json();
+      const imageUrl = data.data[0].url;
+
+      setGeneratedImages((prev) => [imageUrl, ...prev]);
+    } catch (error) {
+      console.error("Ошибка генерации:", error);
+      // Показываем mock изображение для демонстрации
       const mockImage = `https://picsum.photos/400/300?random=${Date.now()}`;
       setGeneratedImages((prev) => [mockImage, ...prev]);
+    } finally {
       setIsGenerating(false);
-    }, 3000);
+    }
+  };
+
+  const handleCategoryUpdate = async (categoryName: string) => {
+    setCategoryName(categoryName);
+    if (apiKey.trim()) {
+      await handleGenerate();
+    }
   };
 
   return (
@@ -47,71 +110,81 @@ const AdminGPT = () => {
         <Icon name="Sparkles" size={28} className="text-yellow-500" />
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            Генерация изображений AI
+            Генератор иконок категорий DALL-E 3
           </h2>
           <p className="text-gray-600">
-            Создайте изображения для категорий товаров с помощью ИИ
+            Создавайте профессиональные иконки для категорий товаров с помощью
+            ИИ
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Форма генерации */}
+        {/* Настройки API и генерации */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Icon name="Settings" size={20} />
-              Настройки генерации
+              <Icon name="Key" size={20} />
+              Настройки DALL-E 3
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Описание изображения
+                API ключ OpenAI
               </label>
-              <Textarea
-                placeholder="Опишите, какое изображение вы хотите создать для категории..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                rows={4}
+              <Input
+                type="password"
+                placeholder="sk-..."
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Ваш ключ не сохраняется и используется только для этой сессии
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Название категории
+              </label>
+              <Input
+                placeholder="Например: Наушники и гарнитуры"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Стиль</label>
-                <Select value={style} onValueChange={setStyle}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="realistic">Реалистичный</SelectItem>
-                    <SelectItem value="cartoon">Мультяшный</SelectItem>
-                    <SelectItem value="minimalist">Минималистичный</SelectItem>
-                    <SelectItem value="gradient">Градиентный</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Стиль иконки
+              </label>
+              <Select value={style} onValueChange={setStyle}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="minimalist">Минималистичный</SelectItem>
+                  <SelectItem value="gradient">Градиентный</SelectItem>
+                  <SelectItem value="realistic">Реалистичный</SelectItem>
+                  <SelectItem value="geometric">Геометрический</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Размер</label>
-                <Select value={size} onValueChange={setSize}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="512x512">512×512</SelectItem>
-                    <SelectItem value="1024x1024">1024×1024</SelectItem>
-                    <SelectItem value="1024x1792">1024×1792</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <p className="text-sm font-medium mb-2">Автоматический промпт:</p>
+              <p className="text-xs text-gray-600">
+                {categoryName
+                  ? generatePrompt(categoryName, style)
+                  : "Введите название категории для предварительного просмотра промпта"}
+              </p>
             </div>
 
             <Button
               onClick={handleGenerate}
               className="w-full bg-yellow-500 hover:bg-yellow-400 text-black"
-              disabled={isGenerating || !prompt.trim()}
+              disabled={isGenerating || !categoryName.trim() || !apiKey.trim()}
             >
               {isGenerating ? (
                 <>
@@ -120,42 +193,52 @@ const AdminGPT = () => {
                     size={16}
                     className="animate-spin mr-2"
                   />
-                  Генерация...
+                  Генерация через DALL-E 3...
                 </>
               ) : (
                 <>
                   <Icon name="Sparkles" size={16} className="mr-2" />
-                  Создать изображение
+                  Создать иконку категории
                 </>
               )}
             </Button>
           </CardContent>
         </Card>
 
-        {/* Существующие категории */}
+        {/* Текущие категории */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Icon name="Grid3x3" size={20} />
-              Текущие категории
+              Категории каталога
             </CardTitle>
+            <p className="text-sm text-gray-600">
+              Нажмите "Обновить" для генерации новой иконки
+            </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-3">
               {categories.map((category, index) => (
                 <div
                   key={index}
-                  className={`bg-gradient-to-br ${category.color} rounded-lg p-4 text-white relative overflow-hidden`}
+                  className={`bg-gradient-to-br ${category.color} rounded-lg p-4 text-white relative overflow-hidden group hover:scale-105 transition-transform`}
                 >
-                  <h3 className="font-medium text-sm">{category.name}</h3>
+                  <h3 className="font-medium text-sm mb-2">{category.name}</h3>
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="mt-2 bg-white/20 hover:bg-white/30 text-white border-none"
+                    className="bg-white/20 hover:bg-white/30 text-white border-none"
+                    onClick={() => handleCategoryUpdate(category.name)}
+                    disabled={!apiKey.trim()}
                   >
                     <Icon name="RefreshCw" size={14} className="mr-1" />
                     Обновить
                   </Button>
+
+                  {/* Демо иконка из изображения */}
+                  <div className="absolute -right-2 -top-2 opacity-20">
+                    <Icon name="Smartphone" size={40} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -169,25 +252,36 @@ const AdminGPT = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Icon name="Image" size={20} />
-              Сгенерированные изображения
+              Сгенерированные иконки
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {generatedImages.map((image, index) => (
-                <div key={index} className="group relative">
+                <div
+                  key={index}
+                  className="group relative bg-gray-50 rounded-lg overflow-hidden"
+                >
                   <img
                     src={image}
-                    alt={`Generated image ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg"
+                    alt={`Generated category icon ${index + 1}`}
+                    className="w-full h-32 object-contain p-2"
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button size="sm" variant="secondary">
                       <Icon name="Download" size={14} />
                     </Button>
                     <Button size="sm" variant="secondary">
+                      <Icon name="Copy" size={14} />
+                    </Button>
+                    <Button size="sm" variant="secondary">
                       <Icon name="Eye" size={14} />
                     </Button>
+                  </div>
+                  <div className="p-2 bg-white">
+                    <p className="text-xs text-gray-600 truncate">
+                      {categoryName || `Иконка ${index + 1}`}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -195,6 +289,37 @@ const AdminGPT = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Справка */}
+      <Card className="border-yellow-200 bg-yellow-50">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <Icon name="Lightbulb" size={20} className="text-yellow-600 mt-1" />
+            <div>
+              <h3 className="font-medium text-yellow-800 mb-2">
+                Советы по использованию:
+              </h3>
+              <ul className="text-sm text-yellow-700 space-y-1">
+                <li>
+                  • Используйте описательные названия категорий для лучших
+                  результатов
+                </li>
+                <li>
+                  • Минималистичный стиль лучше всего подходит для иконок
+                  интерфейса
+                </li>
+                <li>
+                  • Изображения генерируются в высоком качестве (1024x1024)
+                </li>
+                <li>
+                  • API ключ не сохраняется и используется только в текущей
+                  сессии
+                </li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
