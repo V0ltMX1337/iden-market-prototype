@@ -88,16 +88,16 @@ const MarketplaceCategory = () => {
           <BrandFilter />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <aside className="lg:w-80 flex-shrink-0">
-            <CategoryFilter />
-          </aside>
-
+        <div className="flex gap-8">
           {/* Products Section */}
           <main className="flex-1">
             <ProductGrid />
           </main>
+
+          {/* Sidebar Filters - Moved to right */}
+          <aside className="w-72 flex-shrink-0">
+            <CategoryFilter />
+          </aside>
         </div>
       </div>
       <Footer />

@@ -49,21 +49,21 @@ const ProductCard = ({
   ];
 
   return (
-    <Card className="group hover:shadow-lg transition-shadow duration-200">
-      <CardContent className="p-6">
-        <div className="flex gap-6">
+    <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-white rounded-2xl overflow-hidden">
+      <CardContent className="p-0">
+        <div className="flex">
           {/* Product Image */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 p-6 bg-gray-50">
             <div className="relative">
               <img
                 src={image}
                 alt={title}
-                className="w-32 h-40 object-contain rounded-lg"
+                className="w-40 h-48 object-contain rounded-xl"
               />
               {discount && (
                 <Badge
                   variant="destructive"
-                  className="absolute -top-2 -right-2"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold"
                 >
                   -{discount}%
                 </Badge>
@@ -72,94 +72,91 @@ const ProductCard = ({
           </div>
 
           {/* Product Details */}
-          <div className="flex-1 min-w-0">
-            {/* Price */}
-            <div className="mb-3">
-              <div className="flex items-center space-x-2 mb-1">
-                <span className="text-2xl font-bold text-gray-900">
-                  {price.toLocaleString()} ₽
-                </span>
-                {oldPrice && (
-                  <span className="text-lg text-gray-500 line-through">
-                    {oldPrice.toLocaleString()} ₽
-                  </span>
-                )}
-              </div>
-              {isDeliveryFree && (
-                <div className="flex items-center text-sm text-green-600">
-                  <Icon name="Truck" size={14} className="mr-1" />
-                  Бесплатная доставка
-                </div>
-              )}
-            </div>
-
+          <div className="flex-1 p-6">
             {/* Title */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-primary cursor-pointer transition-colors">
+            <h3 className="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2">
               {title}
             </h3>
 
+            {/* Rating */}
+            <div className="flex items-center mb-4">
+              <div className="flex items-center mr-3">
+                {[...Array(5)].map((_, i) => (
+                  <Icon
+                    key={i}
+                    name="Star"
+                    size={16}
+                    className={
+                      i < Math.floor(rating)
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
+                    }
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600 font-medium">
+                {rating} • {reviewsCount} отзывов
+              </span>
+            </div>
+
             {/* Color Options */}
-            <div className="flex items-center space-x-2 mb-3">
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="text-sm text-gray-600 mr-2">Цвет:</span>
               {colors.map((color, index) => (
                 <button
                   key={index}
-                  className={`w-6 h-6 rounded-full ${color.color} ${
+                  className={`w-7 h-7 rounded-full ${color.color} ${
                     index === 0 ? "ring-2 ring-blue-500 ring-offset-2" : ""
-                  }`}
+                  } hover:scale-110 transition-transform`}
                   title={color.name}
                 />
               ))}
             </div>
 
-            {/* Features */}
-            <div className="flex flex-wrap gap-2 mb-3">
-              {features.map((feature, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {feature}
-                </Badge>
-              ))}
-            </div>
-
             {/* Specifications */}
-            <div className="text-sm text-gray-600 space-y-1 mb-4">
-              {specs.screen && <div>Экран: {specs.screen}</div>}
-              {specs.technology && (
-                <div>Технология экрана: {specs.technology}</div>
-              )}
-              {specs.memory && (
-                <div>Встроенная память (ROM): {specs.memory}</div>
-              )}
-              {specs.camera && <div>Основная камера МПикс: {specs.camera}</div>}
+            <div className="text-sm text-gray-600 space-y-1 mb-6">
+              {specs.screen && <div>• Экран: {specs.screen}</div>}
+              {specs.technology && <div>• Технология: {specs.technology}</div>}
+              {specs.memory && <div>• Память: {specs.memory}</div>}
+              {specs.camera && <div>• Камера: {specs.camera}</div>}
             </div>
 
-            {/* Actions */}
+            {/* Price and Actions */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Button className="px-6">В корзину</Button>
-                <Button variant="outline" size="icon">
-                  <Icon name="Heart" size={16} />
-                </Button>
+              <div>
+                <div className="flex items-center space-x-3 mb-2">
+                  <span className="text-3xl font-bold text-gray-900">
+                    {price.toLocaleString()} ₽
+                  </span>
+                  {oldPrice && (
+                    <span className="text-lg text-gray-400 line-through">
+                      {oldPrice.toLocaleString()} ₽
+                    </span>
+                  )}
+                </div>
+                {isDeliveryFree && (
+                  <div className="flex items-center text-sm text-green-600 font-medium">
+                    <Icon name="Truck" size={14} className="mr-1" />
+                    Бесплатная доставка
+                  </div>
+                )}
               </div>
 
-              {/* Rating */}
-              <div className="flex items-center">
-                <div className="flex items-center mr-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Icon
-                      key={i}
-                      name="Star"
-                      size={14}
-                      className={
-                        i < Math.floor(rating)
-                          ? "text-yellow-400 fill-current"
-                          : "text-gray-300"
-                      }
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600">
-                  {rating} ({reviewsCount})
-                </span>
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full hover:bg-red-50 hover:border-red-200"
+                >
+                  <Icon
+                    name="Heart"
+                    size={18}
+                    className="hover:text-red-500 transition-colors"
+                  />
+                </Button>
+                <Button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold">
+                  В корзину
+                </Button>
               </div>
             </div>
           </div>

@@ -12,12 +12,12 @@ const CategoryFilter = () => {
   ];
 
   const colors = [
-    { name: "Серый", color: "bg-gray-500" },
+    { name: "Темно-серый", color: "bg-slate-600" },
     { name: "Розовый", color: "bg-pink-400" },
-    { name: "Синий", color: "bg-blue-500" },
+    { name: "Синий", color: "bg-blue-600" },
     { name: "Серебристый", color: "bg-gray-300" },
     { name: "Оранжевый", color: "bg-orange-500" },
-    { name: "Голубой", color: "bg-cyan-400" },
+    { name: "Голубой", color: "bg-sky-400" },
     { name: "Зеленый", color: "bg-green-500" },
     { name: "Желтый", color: "bg-yellow-400" },
     { name: "Фиолетовый", color: "bg-purple-400" },
@@ -28,15 +28,28 @@ const CategoryFilter = () => {
   return (
     <div className="space-y-6">
       {/* Price Range */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Цена</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="bg-gray-50 p-6 rounded-xl">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Цена</h3>
+        <div className="space-y-4">
           <div className="flex space-x-2">
-            <Input placeholder="28930" className="text-sm" />
-            <span className="flex items-center text-gray-500">до</span>
-            <Input placeholder="785940" className="text-sm" />
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-2.5 text-gray-400 text-sm">
+                от
+              </span>
+              <Input
+                placeholder="28930"
+                className="pl-8 text-sm border-2 border-gray-200 rounded-lg"
+              />
+            </div>
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-2.5 text-gray-400 text-sm">
+                до
+              </span>
+              <Input
+                placeholder="785940"
+                className="pl-8 text-sm border-2 border-gray-200 rounded-lg"
+              />
+            </div>
           </div>
           <Slider
             defaultValue={[28930, 785940]}
@@ -45,68 +58,44 @@ const CategoryFilter = () => {
             step={1000}
             className="w-full"
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Color Filter */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Цвет</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-6 gap-2">
-            {colors.map((color) => (
-              <button
-                key={color.name}
-                className={`w-8 h-8 rounded-full border-2 border-gray-200 hover:border-gray-400 transition-colors ${color.color}`}
-                title={color.name}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-gray-50 p-6 rounded-xl">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Цвет</h3>
+        <div className="grid grid-cols-5 gap-3">
+          {colors.map((color) => (
+            <button
+              key={color.name}
+              className={`w-10 h-10 rounded-full border-2 border-gray-300 hover:border-gray-500 transition-colors ${color.color} hover:scale-110 transform`}
+              title={color.name}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Platform Filter */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Платформа</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+      <div className="bg-gray-50 p-6 rounded-xl">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Платформа</h3>
+        <div className="space-y-3">
           {platforms.map((platform) => (
-            <div key={platform.name} className="flex items-center space-x-2">
+            <div key={platform.name} className="flex items-center space-x-3">
               <Checkbox
                 id={platform.name}
                 defaultChecked={platform.checked}
-                className="rounded"
+                className="rounded data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
               />
               <label
                 htmlFor={platform.name}
-                className="text-sm font-medium cursor-pointer"
+                className="text-sm font-medium cursor-pointer text-gray-700"
               >
                 {platform.name}
               </label>
             </div>
           ))}
-        </CardContent>
-      </Card>
-
-      {/* Temperature Range */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Максимальная цветовая температура, K
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Input placeholder="4000" className="text-sm" />
-        </CardContent>
-      </Card>
-
-      {/* Clear filters */}
-      <Button variant="outline" className="w-full">
-        <Icon name="RotateCcw" size={16} className="mr-2" />
-        Сбросить фильтры
-      </Button>
+        </div>
+      </div>
     </div>
   );
 };
