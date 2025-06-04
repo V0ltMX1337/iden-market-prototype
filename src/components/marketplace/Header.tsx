@@ -2,17 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import FancyText from "@carefully-coded/react-text-gradient";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
@@ -165,7 +160,10 @@ const Header = () => {
               <a href="#" className="hover:text-blue-600">
                 Для поставщиков
               </a>
-              <a href="#" className="hover:text-blue-600">
+              <a
+                className="hover:text-blue-600"
+                onClick={() => navigate("/help")}
+              >
                 Помощь
               </a>
               <a href="#" className="hover:text-blue-600">
@@ -409,7 +407,7 @@ const Header = () => {
                     <span className="font-semibold text-lg">1 000 ₽</span>
                   </div>
                   <p className="text-xs text-gray-500">Без учёта Доставки</p>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button onClick={() => navigate("/cart")} className="w-full bg-blue-600 hover:bg-blue-700">
                     Перейти к оформлению
                   </Button>
                 </div>
