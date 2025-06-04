@@ -56,11 +56,11 @@ const SellersStories = () => {
   return (
     <div className="bg-white py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center space-x-4 overflow-x-auto pb-2">
+        <div className="flex items-center justify-center space-x-4 overflow-x-auto pb-2">
           {sellers.map((seller) => (
             <div key={seller.id} className="flex-shrink-0 cursor-pointer group">
               <div
-                className={`relative w-32 h-20 rounded-2xl border-3 ${seller.borderColor} overflow-hidden group-hover:scale-105 transition-transform duration-200`}
+                className={`relative w-32 h-20 rounded-2xl border-3 ${seller.borderColor} shadow-lg ring-2 ring-gray-200 ring-offset-2 overflow-hidden group-hover:scale-105 transition-transform duration-200`}
               >
                 <img
                   src={seller.avatar}
