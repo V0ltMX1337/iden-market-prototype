@@ -96,7 +96,7 @@ const mockMessages: Message[] = [
 ];
 
 const ProfileMessages = () => {
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(mockChats[0]);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
