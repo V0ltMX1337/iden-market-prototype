@@ -67,21 +67,42 @@ const Profile = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Menu */}
           <aside className="lg:w-64 flex-shrink-0">
-            <Card>
-              <CardContent className="p-0">
-                <nav className="space-y-1">
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-6">
+                <nav className="space-y-2">
                   {menuItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => navigate(item.path)}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
+                      className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
                         isActive(item.path)
-                          ? "bg-primary text-white"
-                          : "text-gray-700 hover:bg-gray-100"
+                          ? "text-blue-600"
+                          : "text-gray-700 hover:text-blue-600"
                       }`}
                     >
-                      <Icon name={item.icon as any} size={20} />
-                      <span>{item.label}</span>
+                      <div className="flex items-center space-x-3">
+                        <Icon
+                          name={item.icon as any}
+                          size={20}
+                          className={`${
+                            isActive(item.path)
+                              ? "text-blue-600"
+                              : "text-blue-500"
+                          }`}
+                        />
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      {(item.id === "orders" || item.id === "settings") && (
+                        <Icon
+                          name="ChevronDown"
+                          size={16}
+                          className={`transition-transform ${
+                            isActive(item.path)
+                              ? "text-blue-600"
+                              : "text-gray-400"
+                          }`}
+                        />
+                      )}
                     </button>
                   ))}
                 </nav>
