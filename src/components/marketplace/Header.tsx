@@ -229,7 +229,7 @@ const Header = () => {
 
                           {/* Subcategories panel (shown on hover) */}
                           {category.subcategories.length > 0 && (
-                            <div className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none group-hover:pointer-events-auto">
                               <div className="p-4">
                                 <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
