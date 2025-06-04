@@ -80,8 +80,8 @@ const ProductCard = ({
 
           {/* Product Details */}
           <div className="flex-1 p-6">
-            {/* Title and Price */}
-            <div className="flex items-start justify-between mb-3">
+            {/* Title and Price in one row */}
+            <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2 flex-1 mr-4">
                 {title}
               </h3>
@@ -95,6 +95,55 @@ const ProductCard = ({
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Cart and Favorite buttons */}
+            <div className="flex items-center space-x-3 mb-4">
+              {/* Quantity controls or Add to Cart */}
+              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={decreaseQuantity}
+                  className="px-3 py-2 h-10 hover:bg-gray-100"
+                >
+                  <Icon name="Minus" size={16} />
+                </Button>
+                <div className="px-4 py-2 text-center min-w-[3rem] border-x border-gray-200 bg-white">
+                  {quantity}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={increaseQuantity}
+                  className="px-3 py-2 h-10 hover:bg-gray-100"
+                >
+                  <Icon name="Plus" size={16} />
+                </Button>
+              </div>
+
+              {/* Add to Cart Button */}
+              <Button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold h-10">
+                <Icon name="ShoppingCart" size={16} className="mr-2" />
+              </Button>
+
+              {/* Favorite Button */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-lg hover:bg-red-50 hover:border-red-200 h-10 w-10"
+                onClick={() => setIsFavorite(!isFavorite)}
+              >
+                <Icon
+                  name="Heart"
+                  size={16}
+                  className={`transition-colors ${
+                    isFavorite
+                      ? "text-red-500 fill-current"
+                      : "hover:text-red-500"
+                  }`}
+                />
+              </Button>
             </div>
 
             {/* Rating */}
@@ -140,7 +189,7 @@ const ProductCard = ({
               {specs.camera && <div>• Камера: {specs.camera}</div>}
             </div>
 
-            {/* Add to Cart Section */}
+            {/* Delivery info */}
             <div className="flex items-center justify-between">
               {isDeliveryFree && (
                 <div className="flex items-center text-sm text-green-600 font-medium">
@@ -148,55 +197,6 @@ const ProductCard = ({
                   Бесплатная доставка
                 </div>
               )}
-
-              <div className="flex items-center space-x-3 ml-auto">
-                {/* Quantity Controls */}
-                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={decreaseQuantity}
-                    className="px-3 py-2 h-10 hover:bg-gray-100"
-                  >
-                    <Icon name="Minus" size={16} />
-                  </Button>
-                  <div className="px-4 py-2 text-center min-w-[3rem] border-x border-gray-200 bg-white">
-                    {quantity}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={increaseQuantity}
-                    className="px-3 py-2 h-10 hover:bg-gray-100"
-                  >
-                    <Icon name="Plus" size={16} />
-                  </Button>
-                </div>
-
-                {/* Add to Cart Button */}
-                <Button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold h-10">
-                  <Icon name="ShoppingCart" size={16} className="mr-2" />В
-                  корзину
-                </Button>
-
-                {/* Favorite Button */}
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-lg hover:bg-red-50 hover:border-red-200 h-10 w-10"
-                  onClick={() => setIsFavorite(!isFavorite)}
-                >
-                  <Icon
-                    name="Heart"
-                    size={16}
-                    className={`transition-colors ${
-                      isFavorite
-                        ? "text-red-500 fill-current"
-                        : "hover:text-red-500"
-                    }`}
-                  />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
