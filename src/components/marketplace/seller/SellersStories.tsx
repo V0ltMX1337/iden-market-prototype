@@ -54,9 +54,9 @@ const SellersStories = () => {
   ];
 
   return (
-    <div className="bg-white py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center space-x-6 overflow-x-auto">
+    <div className="bg-white py-8 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex items-start justify-center space-x-6 overflow-x-auto pt-4">
           {sellers.map((seller) => (
             <div
               key={seller.id}
