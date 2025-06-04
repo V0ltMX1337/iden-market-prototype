@@ -8,10 +8,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <div className="flex">
+      <div className="flex max-w-7xl mx-auto">
         <Sidebar />
-        <main className="flex-1 max-w-5xl">
-          <div className="p-6">
+        <main className="flex-1 p-6">
+          <div className="max-w-6xl">
             {/* Хлебные крошки */}
             <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
               <span className="hover:text-indigo-600 cursor-pointer">
@@ -23,10 +23,10 @@ const Index = () => {
 
             {/* Заголовок страницы */}
             <div className="flex items-center mb-8">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white text-lg">📱</span>
+              <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mr-4">
+                <span className="text-white text-xl">📱</span>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">Смартфоны</h1>
+              <h1 className="text-4xl font-bold text-gray-900">Смартфоны</h1>
             </div>
 
             <ProductStories />

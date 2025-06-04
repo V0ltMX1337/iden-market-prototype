@@ -5,7 +5,7 @@ const ProductStories = () => {
       name: "iPhone 12 Pro и Pro Max",
       image:
         "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=200&fit=crop",
-      bgColor: "bg-gradient-to-br from-blue-900 via-blue-800 to-black",
+      bgColor: "bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700",
     },
     {
       id: 2,
@@ -19,11 +19,11 @@ const ProductStories = () => {
       name: "Samsung Galaxy S21",
       image:
         "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&h=200&fit=crop",
-      bgColor: "bg-gradient-to-br from-gray-900 via-gray-800 to-black",
+      bgColor: "bg-gradient-to-br from-gray-800 via-gray-900 to-black",
     },
     {
       id: 4,
-      name: "Игровые приставки",
+      name: "Игровые консоли",
       image:
         "https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=300&h=200&fit=crop",
       bgColor: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500",
@@ -33,7 +33,7 @@ const ProductStories = () => {
       name: "iPhone 12 Pro и Pro Max",
       image:
         "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=200&fit=crop",
-      bgColor: "bg-gradient-to-br from-blue-900 via-blue-800 to-black",
+      bgColor: "bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700",
     },
     {
       id: 6,
@@ -53,23 +53,25 @@ const ProductStories = () => {
 
   return (
     <div className="mb-8">
-      <div className="flex space-x-3 overflow-x-auto pb-4">
+      <div className="flex space-x-4 overflow-x-auto pb-4">
         {products.map((product) => (
           <div key={product.id} className="flex-shrink-0 cursor-pointer group">
             <div
-              className={`relative w-32 h-20 rounded-2xl ${product.bgColor} overflow-hidden group-hover:scale-105 transition-transform duration-200 border border-gray-200`}
+              className={`relative w-36 h-24 rounded-2xl ${product.bgColor} overflow-hidden group-hover:scale-105 transition-transform duration-200 border-2 border-indigo-600`}
             >
-              <div className="absolute inset-0 p-3 flex flex-col justify-between">
-                <div className="flex-1 flex items-start">
+              <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                <div className="flex-1 flex items-start justify-end">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-8 h-8 object-cover rounded-lg opacity-80"
+                    className="w-10 h-10 object-cover rounded-lg opacity-90"
                   />
                 </div>
-                <span className="text-white text-xs font-medium leading-tight">
-                  {product.name}
-                </span>
+                <div className="text-left">
+                  <span className="text-white text-sm font-bold leading-tight block">
+                    {product.name}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -29,23 +29,21 @@ const Categories = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Категории</h2>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-6">
         {categories.map((category) => (
           <div
             key={category.id}
-            className={`relative h-32 rounded-2xl ${category.bgColor} cursor-pointer group overflow-hidden`}
+            className={`relative h-40 rounded-2xl ${category.bgColor} cursor-pointer group overflow-hidden hover:scale-105 transition-transform duration-200`}
           >
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="absolute bottom-4 left-4 right-4">
-              <h3 className="text-white text-base font-semibold">
-                {category.title}
-              </h3>
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="absolute bottom-6 left-6 right-6">
+              <h3 className="text-white text-lg font-bold">{category.title}</h3>
             </div>
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-6 right-6">
               <img
                 src={category.image}
                 alt={category.title}
-                className="w-12 h-12 object-cover rounded-lg opacity-70"
+                className="w-16 h-16 object-cover rounded-xl opacity-80"
               />
             </div>
             <div className="absolute inset-0 group-hover:bg-black/10 transition-colors duration-200"></div>

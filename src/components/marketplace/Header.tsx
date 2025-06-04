@@ -41,7 +41,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <h1
-              className="text-3xl font-bold text-gray-900 cursor-pointer"
+              className="text-3xl font-bold text-gray-900 cursor-pointer mr-8"
               onClick={() => navigate("/")}
             >
               Krypton
@@ -49,8 +49,8 @@ const Header = () => {
           </div>
 
           {/* Center section with catalog button and search */}
-          <div className="flex items-center space-x-4 flex-1 max-w-2xl mx-8">
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg flex items-center">
+          <div className="flex items-center space-x-4 flex-1 max-w-2xl">
+            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg flex items-center">
               <Icon name="Grid3X3" size={16} className="mr-2" />
               Каталог
             </Button>
@@ -60,9 +60,9 @@ const Header = () => {
                 <input
                   type="text"
                   placeholder="iPhone 12 Pro Max"
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
-                <Button className="px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-lg border-l-0">
+                <Button className="px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-lg border-l-0 py-3">
                   Найти
                 </Button>
               </div>
@@ -70,7 +70,7 @@ const Header = () => {
           </div>
 
           {/* Right side icons */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-8 ml-8">
             <div className="flex flex-col items-center text-gray-600 hover:text-indigo-600 cursor-pointer">
               <div className="relative">
                 <Icon name="Heart" size={24} />
