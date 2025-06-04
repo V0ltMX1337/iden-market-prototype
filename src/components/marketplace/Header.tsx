@@ -20,6 +20,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
 
   const categories = [
     {
@@ -206,7 +207,12 @@ const Header = () => {
                     {/* Main categories list */}
                     <div className="w-full">
                       {categories.map((category, index) => (
-                        <div key={index} className="group relative">
+                        <div
+                          key={index}
+                          className="group relative"
+                          onMouseEnter={() => setHoveredCategory(index)}
+                          onMouseLeave={() => setHoveredCategory(null)}
+                        >
                           <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
                             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100 mr-3 group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-200">
                               <Icon
@@ -228,51 +234,56 @@ const Header = () => {
                           </div>
 
                           {/* Subcategories panel (shown on hover) */}
-                          {category.subcategories.length > 0 && (
-                            <div className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none group-hover:pointer-events-auto">
-                              <div className="p-4">
-                                <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
-                                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
-                                    <Icon
-                                      name={category.icon}
-                                      size={16}
-                                      className="text-blue-600"
-                                    />
+                          {category.subcategories.length > 0 &&
+                            hoveredCategory === index && (
+                              <div
+                                className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 z-50"
+                                onMouseEnter={() => setHoveredCategory(index)}
+                                onMouseLeave={() => setHoveredCategory(null)}
+                              >
+                                <div className="p-4">
+                                  <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
+                                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
+                                      <Icon
+                                        name={category.icon}
+                                        size={16}
+                                        className="text-blue-600"
+                                      />
+                                    </div>
+                                    <span className="text-lg font-bold text-gray-800">
+                                      {category.name}
+                                    </span>
                                   </div>
-                                  <span className="text-lg font-bold text-gray-800">
-                                    {category.name}
-                                  </span>
-                                </div>
 
-                                <div className="grid grid-cols-2 gap-6">
-                                  {category.subcategories.map(
-                                    (subcat, subcatIndex) => (
-                                      <div
-                                        key={subcatIndex}
-                                        className="space-y-2"
-                                      >
-                                        <h4 className="font-semibold text-gray-800 text-sm mb-2">
-                                          {subcat.name}
-                                        </h4>
-                                        <div className="space-y-1">
-                                          {subcat.items.map(
-                                            (item, itemIndex) => (
-                                              <div
-                                                key={itemIndex}
-                                                className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1 transition-colors duration-150"
-                                              >
-                                                {item}
-                                              </div>
-                                            ),
-                                          )}
+                                  <div className="grid grid-cols-2 gap-6">
+                                    {category.subcategories.map(
+                                      (subcat, subcatIndex) => (
+                                        <div
+                                          key={subcatIndex}
+                                          className="space-y-2"
+                                        >
+                                          <h4 className="font-semibold text-gray-800 text-sm mb-2">
+                                            {subcat.name}
+                                          </h4>
+                                          <div className="space-y-1">
+                                            {subcat.items.map(
+                                              (item, itemIndex) => (
+                                                <div
+                                                  key={itemIndex}
+                                                  className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1 transition-colors duration-150"
+                                                >
+                                                  {item}
+                                                </div>
+                                              ),
+                                            )}
+                                          </div>
                                         </div>
-                                      </div>
-                                    ),
-                                  )}
+                                      ),
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       ))}
                     </div>
