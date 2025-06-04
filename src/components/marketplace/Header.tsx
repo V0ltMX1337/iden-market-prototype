@@ -36,27 +36,73 @@ const Header = () => {
       name: "Смартфоны",
       icon: "Smartphone",
       subcategories: [
-        { name: "Apple iPhone", brand: true },
-        { name: "Samsung Galaxy", brand: true },
-        { name: "Huawei", brand: true },
-        { name: "HONOR", brand: true },
-        { name: "Xiaomi", brand: true },
+        {
+          name: "Смартфоны",
+          items: [
+            "Apple iPhone",
+            "Samsung Galaxy",
+            "Huawei",
+            "HONOR",
+            "Xiaomi",
+            "Ещё▼",
+          ],
+        },
+        {
+          name: "Мобильные телефоны",
+          items: ["Кнопочные телефоны", "Домашние телефоны"],
+        },
+        {
+          name: "Аксессуары",
+          items: [
+            "Наушники",
+            "Чехлы",
+            "Защитные стёкла",
+            "Зарядные устройства",
+            "Кабели",
+          ],
+        },
+        {
+          name: "Умные часы и браслеты",
+          items: ["Смарт-часы", "Фитнес-браслеты", "Детские часы"],
+        },
       ],
     },
     {
       name: "Умные часы и браслеты",
       icon: "Watch",
-      subcategories: [{ name: "Смарт-часы" }, { name: "Фитнес-браслеты" }],
+      subcategories: [
+        {
+          name: "Смарт-часы",
+          items: ["Apple Watch", "Samsung Galaxy Watch", "Huawei Watch"],
+        },
+        {
+          name: "Фитнес-браслеты",
+          items: ["Xiaomi Mi Band", "Honor Band", "Fitbit"],
+        },
+      ],
     },
     {
       name: "Аксессуары",
       icon: "Cable",
       subcategories: [
-        { name: "Наушники" },
-        { name: "Чехлы" },
-        { name: "Защитные стёкла" },
-        { name: "Зарядные устройства" },
-        { name: "Кабели" },
+        {
+          name: "Наушники",
+          items: [
+            "Беспроводные наушники",
+            "Проводные наушники",
+            "Игровые гарнитуры",
+          ],
+        },
+        {
+          name: "Чехлы",
+          items: ["Чехлы для телефонов", "Чехлы для планшетов"],
+        },
+        { name: "Защитные стёкла", items: ["Для смартфонов", "Для планшетов"] },
+        {
+          name: "Зарядные устройства",
+          items: ["Беспроводные зарядки", "Power bank", "Автозарядки"],
+        },
+        { name: "Кабели", items: ["USB-C", "Lightning", "Micro USB"] },
       ],
     },
     {
@@ -150,15 +196,15 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
-                  className="w-96 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0"
+                  className="w-80 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0"
                   sideOffset={12}
                 >
                   <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100">
                     ✨ Каталог товаров
                   </div>
-                  <div className="flex">
-                    {/* Left panel - Main categories */}
-                    <div className="w-48 border-r border-gray-100">
+                  <div className="relative">
+                    {/* Main categories list */}
+                    <div className="w-full">
                       {categories.map((category, index) => (
                         <div key={index} className="group relative">
                           <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
@@ -181,69 +227,54 @@ const Header = () => {
                             )}
                           </div>
 
-                          {/* Right panel - Subcategories (shown on hover) */}
+                          {/* Subcategories panel (shown on hover) */}
                           {category.subcategories.length > 0 && (
-                            <div className="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                              <div className="p-2">
-                                <div className="px-3 py-2 text-sm font-semibold text-gray-800 border-b border-gray-100 mb-2">
-                                  {category.name}
-                                </div>
-                                {category.subcategories.map((sub, subIndex) => (
-                                  <div
-                                    key={subIndex}
-                                    className="px-3 py-2 cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group/sub flex items-center justify-between"
-                                  >
-                                    <div className="flex items-center">
-                                      {sub.brand && (
-                                        <div className="w-4 h-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-sm mr-3 flex-shrink-0 group-hover/sub:from-blue-200 group-hover/sub:to-indigo-200 transition-all duration-200"></div>
-                                      )}
-                                      <span className="text-sm text-gray-600 group-hover/sub:text-gray-900 font-medium">
-                                        {sub.name}
-                                      </span>
-                                    </div>
-                                    {sub.brand && (
-                                      <div className="text-xs text-gray-400 font-normal">
-                                        {sub.name === "Apple iPhone" && "🍎"}
-                                        {sub.name === "Samsung Galaxy" && "📱"}
-                                        {sub.name === "Huawei" && "🔥"}
-                                        {sub.name === "HONOR" && "⭐"}
-                                        {sub.name === "Xiaomi" && "🚀"}
-                                      </div>
-                                    )}
+                            <div className="absolute left-full top-0 w-96 bg-white border border-gray-200 rounded-lg shadow-xl ml-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                              <div className="p-4">
+                                <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
+                                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
+                                    <Icon
+                                      name={category.icon}
+                                      size={16}
+                                      className="text-blue-600"
+                                    />
                                   </div>
-                                ))}
+                                  <span className="text-lg font-bold text-gray-800">
+                                    {category.name}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-6">
+                                  {category.subcategories.map(
+                                    (subcat, subcatIndex) => (
+                                      <div
+                                        key={subcatIndex}
+                                        className="space-y-2"
+                                      >
+                                        <h4 className="font-semibold text-gray-800 text-sm mb-2">
+                                          {subcat.name}
+                                        </h4>
+                                        <div className="space-y-1">
+                                          {subcat.items.map(
+                                            (item, itemIndex) => (
+                                              <div
+                                                key={itemIndex}
+                                                className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1 transition-colors duration-150"
+                                              >
+                                                {item}
+                                              </div>
+                                            ),
+                                          )}
+                                        </div>
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
                               </div>
                             </div>
                           )}
                         </div>
                       ))}
-                    </div>
-
-                    {/* Right panel - Featured content */}
-                    <div className="w-48 p-4 bg-gradient-to-br from-gray-50 to-blue-50">
-                      <div className="text-sm font-semibold text-gray-800 mb-3">
-                        🔥 Популярные бренды
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                          <span className="text-xs font-medium text-gray-700">
-                            Apple
-                          </span>
-                          <span className="text-lg">🍎</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                          <span className="text-xs font-medium text-gray-700">
-                            Samsung
-                          </span>
-                          <span className="text-lg">📱</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                          <span className="text-xs font-medium text-gray-700">
-                            Xiaomi
-                          </span>
-                          <span className="text-lg">🚀</span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </DropdownMenuContent>
