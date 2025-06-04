@@ -49,6 +49,34 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-8">Корзина</h1>
 
+        {/* Секция профиля доставки */}
+        <div className="bg-white rounded-lg p-4 mb-6 border border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start space-x-3">
+              <Icon name="MapPin" className="text-blue-600 mt-1" size={20} />
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Профиль доставки
+                </h3>
+                <p className="text-gray-600 text-sm mb-1">
+                  Россия, Нижегородская обл., г. Дзержинск, ул. Гайдара, д. 35
+                </p>
+                <p className="text-gray-500 text-sm">
+                  Даниил Путин +79050129454
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() =>
+                (window.location.href = "/profile/deliveryProfiles")
+              }
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <Icon name="ChevronRight" size={20} />
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
