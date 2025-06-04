@@ -17,8 +17,10 @@ import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
-import AdminAnalytics from "@/components/admin/AdminAnalytics";
-import AdminFinance from "@/components/admin/AdminFinance";
+import AdminAnalytics from "@/pages/admin/AdminAnalytics";
+import AdminFinance from "@/pages/admin/AdminFinance";
+import Cart from "@/pages/Cart";
+import NotFound from "@/pages/NotFound";
 import AdminGPT from "@/components/admin/AdminGPT";
 import Index from "./pages/index/Index";
 
@@ -32,6 +34,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile/*" element={<Profile />} />
