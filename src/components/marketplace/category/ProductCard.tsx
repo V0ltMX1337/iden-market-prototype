@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductCardProps {
   id: number;
@@ -43,6 +44,32 @@ const ProductCard = ({
   features = [],
   specs = {},
 }: ProductCardProps) => {
+  const { state, dispatch } = useCart();
+
+  const cartItem = state.items.find((item) => item.id === id);
+  const isFavorite = state.favorites.includes(id);
+
+  const handleAddToCart = () => {
+    dispatch({
+      type: "ADD_TO_CART",
+      payload: { id, title, price, image },
+    });
+  };
+
+  const handleUpdateQuantity = (newQuantity: number) => {
+    dispatch({
+      type: "UPDATE_QUANTITY",
+      payload: { id, quantity: newQuantity },
+    });
+  };
+
+  const handleToggleFavorite = () => {
+    dispatch({
+      type: "TOGGLE_FAVORITE",
+      payload: id,
+    });
+  };
+
   const colors = [
     { name: "Синий", color: "bg-blue-600" },
     { name: "Белый", color: "bg-gray-100 border border-gray-300" },
@@ -146,17 +173,56 @@ const ProductCard = ({
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full hover:bg-red-50 hover:border-red-200"
+                  className={`rounded-full hover:bg-red-50 hover:border-red-200 ${
+                    isFavorite ? "bg-red-50 border-red-200" : ""
+                  }`}
+                  onClick={handleToggleFavorite}
                 >
                   <Icon
                     name="Heart"
                     size={18}
-                    className="hover:text-red-500 transition-colors"
+                    className={`transition-colors ${
+                      isFavorite
+                        ? "text-red-500 fill-current"
+                        : "hover:text-red-500"
+                    }`}
                   />
                 </Button>
-                <Button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold">
-                  В корзину
-                </Button>
+
+                {cartItem ? (
+                  <div className="flex items-center space-x-2 bg-gray-50 rounded-lg p-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 hover:bg-white"
+                      onClick={() =>
+                        handleUpdateQuantity(cartItem.quantity - 1)
+                      }
+                    >
+                      <Icon name="Minus" size={14} />
+                    </Button>
+                    <span className="font-semibold text-sm min-w-[20px] text-center">
+                      {cartItem.quantity}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 hover:bg-white"
+                      onClick={() =>
+                        handleUpdateQuantity(cartItem.quantity + 1)
+                      }
+                    >
+                      <Icon name="Plus" size={14} />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold"
+                    onClick={handleAddToCart}
+                  >
+                    В корзину
+                  </Button>
+                )}
               </div>
             </div>
           </div>

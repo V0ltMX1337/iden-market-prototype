@@ -4,6 +4,7 @@ import Icon from "@/components/ui/icon";
 import FancyText from "@carefully-coded/react-text-gradient";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useCart } from "@/hooks/useCart";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +19,13 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { state } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [clickedCategory, setClickedCategory] = useState<number | null>(null);
+
+  const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
 
   const categories = [
     {
@@ -331,20 +335,25 @@ const Header = () => {
             <Button variant="ghost" size="sm" className="p-2">
               <Icon name="Search" size={20} />
             </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="Heart" size={20} />
-            </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="Package" size={20} />
-            </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="MessageCircle" size={20} />
-            </Button>
-            <Button variant="ghost" size="sm" className="p-2 relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-gray-100 relative"
+            >
               <Icon name="ShoppingCart" size={20} />
-              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                1
-              </span>
+              {totalItems > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs h-5 w-5 flex items-center justify-center p-0 rounded-full">
+                  {totalItems}
+                </Badge>
+              )}
+            </Button>
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
+              <Icon name="Heart" size={20} />
+              {state.favorites.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs h-5 w-5 flex items-center justify-center p-0 rounded-full">
+                  {state.favorites.length}
+                </Badge>
+              )}
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
