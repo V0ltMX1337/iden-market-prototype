@@ -19,6 +19,7 @@ import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFinance from "@/components/admin/AdminFinance";
+import AdminGPT from "@/components/admin/AdminGPT";
 import Index from "./pages/index/Index";
 
 const queryClient = new QueryClient();
@@ -48,10 +49,10 @@ const App = () => (
             <Route path="/admin/profile" element={<SellerProfile />} />
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
-            <Route path="finance" element={<AdminFinance />} />
           </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
+          <Route path="/admin/finance" element={<AdminFinance />} />
+          <Route path="/admin/gpt" element={<AdminGPT />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

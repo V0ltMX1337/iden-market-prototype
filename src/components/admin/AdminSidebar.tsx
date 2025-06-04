@@ -8,6 +8,7 @@ const AdminSidebar = () => {
     { path: "/admin/orders", icon: "ShoppingCart", label: "Заказы" },
     { path: "/admin/finance", icon: "CreditCard", label: "Финансы" },
     { path: "/admin/analytics", icon: "TrendingUp", label: "Аналитика" },
+    { path: "/admin/gpt", icon: "Sparkles", label: "Генерация AI" },
     { path: "/admin/support", icon: "MessageCircle", label: "Поддержка" },
   ];
 
