@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
+import ProductCard from "@/components/marketplace/ProductCard";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -258,48 +260,182 @@ const ProductPage = () => {
           </div>
         </div>
 
-        {/* Description */}
-        <Card className="mt-12">
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Описание товара</h2>
-            <div className="prose max-w-none">
-              <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                {product.description}
-              </p>
+        {/* Product Details Tabs */}
+        <div className="mt-12">
+          <Tabs defaultValue="description" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 bg-gray-100 p-1 rounded-xl">
+              <TabsTrigger value="description" className="rounded-lg">
+                Описание
+              </TabsTrigger>
+              <TabsTrigger value="specs" className="rounded-lg">
+                Характеристики
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className="rounded-lg">
+                Отзывы
+              </TabsTrigger>
+              <TabsTrigger value="similar" className="rounded-lg">
+                Похожие товары
+              </TabsTrigger>
+            </TabsList>
 
-              <Separator className="my-6" />
+            <TabsContent value="description" className="mt-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="prose max-w-none">
+                    <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                      {product.description}
+                    </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-3">Особенности</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Голосовой помощник Алиса</li>
-                    <li>• Мощный звук 65 Вт</li>
-                    <li>• Поддержка Zigbee для умного дома</li>
-                    <li>• Встроенный хаб для управления устройствами</li>
-                  </ul>
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="font-semibold text-lg mb-3">
+                          Особенности
+                        </h3>
+                        <ul className="space-y-2 text-gray-700">
+                          <li>• Голосовой помощник Алиса</li>
+                          <li>• Мощный звук 65 Вт</li>
+                          <li>• Поддержка Zigbee для умного дома</li>
+                          <li>• Встроенный хаб для управления устройствами</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-3">
-                    Технические характеристики
-                  </h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Размеры: 23×23×11 см</li>
-                    <li>• Вес: 2.7 кг</li>
-                    <li>• Подключение: Wi-Fi, Bluetooth</li>
-                    <li>• Питание: от сети 220В</li>
-                  </ul>
+            <TabsContent value="specs" className="mt-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="font-semibold text-lg mb-4">
+                        Основные характеристики
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
+                          <span className="text-gray-600">Размеры</span>
+                          <span className="font-medium">23×23×11 см</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
+                          <span className="text-gray-600">Вес</span>
+                          <span className="font-medium">2.7 кг</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
+                          <span className="text-gray-600">Мощность звука</span>
+                          <span className="font-medium">65 Вт</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
+                          <span className="text-gray-600">Подключение</span>
+                          <span className="font-medium">Wi-Fi, Bluetooth</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Питание</span>
+                          <span className="font-medium">от сети 220В</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center py-12">
+                    <Icon
+                      name="MessageSquare"
+                      size={48}
+                      className="text-gray-300 mx-auto mb-4"
+                    />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Отзывы пока отсутствуют
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Станьте первым, кто оставит отзыв об этом товаре
+                    </p>
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      Написать отзыв
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="similar" className="mt-6">
+              <div>
+                <h2 className="text-xl font-bold mb-6">Похожие товары</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {similarProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
 
       <Footer />
     </div>
   );
 };
+
+// Similar products data
+const similarProducts = [
+  {
+    id: "2",
+    title: "Умная колонка VK Капсула Мини",
+    price: 8990,
+    oldPrice: 12990,
+    discount: 31,
+    rating: 4.6,
+    reviewsCount: 892,
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    seller: "VK",
+    sellerRating: 4.8,
+    features: ["Голосовой помощник", "Компактная", "Bluetooth"],
+  },
+  {
+    id: "3",
+    title: "Умная колонка Sber SberBox",
+    price: 11990,
+    oldPrice: 14990,
+    discount: 20,
+    rating: 4.4,
+    reviewsCount: 634,
+    image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400",
+    seller: "Сбер",
+    sellerRating: 4.7,
+    features: ["Салют", "4K видео", "Голосовые команды"],
+  },
+  {
+    id: "4",
+    title: "Умная колонка Яндекс.Станция Лайт",
+    price: 6990,
+    oldPrice: 8990,
+    discount: 22,
+    rating: 4.7,
+    reviewsCount: 1156,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+    seller: "Яндекс",
+    sellerRating: 4.9,
+    features: ["Алиса", "Компактная", "LED-подсветка"],
+  },
+  {
+    id: "5",
+    title: "Умная колонка Mail.ru Капсула",
+    price: 9990,
+    oldPrice: 13990,
+    discount: 29,
+    rating: 4.3,
+    reviewsCount: 521,
+    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400",
+    seller: "Mail.ru",
+    sellerRating: 4.5,
+    features: ["Маруся", "Умный дом", "Стриминг"],
+  },
+];
 
 export default ProductPage;
