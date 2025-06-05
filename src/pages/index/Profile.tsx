@@ -3,12 +3,6 @@ import { useState } from "react";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import Icon from "@/components/ui/icon";
 import ProfileMain from "@/components/profile/ProfileMain";
 import ProfileOrders from "@/components/profile/ProfileOrders";
@@ -207,7 +201,6 @@ const Profile = () => {
           </main>
         </div>
       </div>
-
       <Footer></Footer>
     </div>
   );

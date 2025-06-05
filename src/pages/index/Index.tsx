@@ -39,69 +39,6 @@ const Index = () => {
     { name: "Спорт", icon: "⚽", products: "3K+" },
   ];
 
-  const topSellers = [
-    {
-      name: "ElectroShop",
-      avatar:
-        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
-      rating: 4.9,
-    },
-    {
-      name: "FashionHub",
-      avatar:
-        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
-      rating: 4.8,
-    },
-    {
-      name: "HomeDecor",
-      avatar:
-        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
-      rating: 4.7,
-    },
-    {
-      name: "TechWorld",
-      avatar:
-        "https://sun9-39.userapi.com/impg/8Kj87xqIS1t-_9aLxr1ipOHkSx17UC3Ogh2MRQ/V3zLAknBMwI.jpg?size=128x128&quality=95&sign=bdef7ff83576f98d3b6ecdcca2d0e97f&type=album",
-      rating: 4.9,
-    },
-    {
-      name: "SportZone",
-      avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face",
-      rating: 4.6,
-    },
-    {
-      name: "BeautyStore",
-      avatar:
-        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face",
-      rating: 4.8,
-    },
-    {
-      name: "AutoParts",
-      avatar:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=64&h=64&fit=crop&crop=face",
-      rating: 4.5,
-    },
-    {
-      name: "BookWorld",
-      avatar:
-        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=64&h=64&fit=crop&crop=face",
-      rating: 4.7,
-    },
-    {
-      name: "KitchenPro",
-      avatar:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=face",
-      rating: 4.9,
-    },
-    {
-      name: "PetStore",
-      avatar:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop&crop=face",
-      rating: 4.6,
-    },
-  ];
-
   const saleProducts = [
     {
       id: 1,
@@ -349,36 +286,6 @@ const Index = () => {
                 <p className="text-gray-500 text-sm">
                   {category.products} товаров
                 </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Sellers */}
-        <div className="mb-8 rounded-3xl">
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Топ 10 продавцов
-          </h2>
-          <div className="grid grid-cols-10 gap-4">
-            {topSellers.map((seller, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center"
-              >
-                <img
-                  src={seller.avatar}
-                  alt={seller.name}
-                  className="w-12 h-12 rounded-full mx-auto mb-2"
-                />
-                <h4 className="font-medium text-sm mb-1">{seller.name}</h4>
-                <div className="flex items-center justify-center text-xs text-gray-500">
-                  <Icon
-                    name="Star"
-                    size={12}
-                    className="text-yellow-500 mr-1"
-                  />
-                  <span>{seller.rating}</span>
-                </div>
               </div>
             ))}
           </div>

@@ -6,7 +6,6 @@ import BrandFilter from "@/components/marketplace/category/BrandFilter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { Input } from "@/components/ui/input";
 
 const MarketplaceCategory = () => {
   return (

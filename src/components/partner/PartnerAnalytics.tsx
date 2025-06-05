@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const AdminAnalytics = () => {
+const PartnerAnalytics = () => {
   const analyticsData = {
     totalSales: 1245600,
     salesGrowth: 12.5,
@@ -163,4 +163,4 @@ const AdminAnalytics = () => {
   );
 };
 
-export default AdminAnalytics;
+export default PartnerAnalytics;

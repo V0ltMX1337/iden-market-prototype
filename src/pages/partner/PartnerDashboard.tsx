@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import PartnerSidebar from "@/components/partner/PartnerSidebar";
 
-const AdminDashboard = () => {
+const PartnerDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar />
+      <PartnerSidebar />
 
       <div className="flex-1">
         <div className="bg-white shadow-sm border-b">
@@ -33,4 +33,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default PartnerDashboard;

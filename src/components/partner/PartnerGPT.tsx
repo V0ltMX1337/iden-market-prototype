@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { Buffer } from 'buffer';
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -58,25 +58,21 @@ const AdminGPT = () => {
 
     try {
       // Используем прокси сервис для обхода CORS
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-      const targetUrl = "https://api.openai.com/v1/images/generations";
+      const targetUrl = "https://api.proxyapi.ru/openai/v1/images/generations";
 
-      const prompt = generatePrompt(categoryName, style);
+      //const prompt = generatePrompt(categoryName, style);
+      const prompt = "Создай визуалы для категорий маркетплейса по примеру на фото https://chatgpt.com/s/m_6841a90f708c81919b57bd5a833344ce. Обязательные категории: 1.умные часы и браслеты, 2.аксессуары, 3.одежда и обувь, 4.электросамокаты, 5.модемы и тв. Для каждой карточки категории свой градиент, фон сзади прозрачный, текст напиши так-же как на примере на русском!.";
 
-      const response = await fetch(proxyUrl + targetUrl, {
+      const response = await fetch(targetUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Bearer sk-a7K2ucmIOIL5H4PSlBP4zUNa79EskbeE`,
         },
         body: JSON.stringify({
           model: "dall-e-3",
           prompt: prompt,
-          n: 1,
           size: "1024x1024",
-          quality: "hd",
-          style: "vivid",
         }),
       });
 
@@ -88,9 +84,10 @@ const AdminGPT = () => {
       }
 
       const data = await response.json();
-      const imageUrl = data.data[0].url;
+      const image_base64 = data.data[0].url;
+      //downloadBase64Image(image_base64);
 
-      setGeneratedImages((prev) => [imageUrl, ...prev]);
+      setGeneratedImages((prev) => [image_base64, ...prev]);
 
       // Показываем успешное уведомление
       console.log("✅ Изображение успешно сгенерировано!");
@@ -139,6 +136,26 @@ const AdminGPT = () => {
       setIsGenerating(false);
     }
   };
+
+  const downloadBase64Image = (base64: string, filename = "image.png") => {
+  // Преобразуем base64 в Blob
+  const byteCharacters = atob(base64); // декодируем base64
+  const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) =>
+    byteCharacters.charCodeAt(i)
+  );
+  const byteArray = new Uint8Array(byteNumbers);
+
+  const blob = new Blob([byteArray], { type: "image/png" });
+
+  // Создаем ссылку и инициируем загрузку
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+
+  // Освобождаем память
+  URL.revokeObjectURL(link.href);
+};
 
   const handleCategoryUpdate = async (categoryName: string) => {
     setCategoryName(categoryName);

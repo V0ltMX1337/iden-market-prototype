@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 
-const AdminFinance = () => {
+const PartnerFinance = () => {
   const stats = [
     {
       title: "Общий доход",
@@ -222,4 +222,4 @@ const TransactionHistory = () => {
   );
 };
 
-export default AdminFinance;
+export default PartnerFinance;

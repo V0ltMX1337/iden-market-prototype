@@ -1,15 +1,15 @@
 import { NavLink } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
-const AdminSidebar = () => {
+const PartnerSidebar = () => {
   const menuItems = [
-    { path: "/admin/overview", icon: "BarChart3", label: "Сводка" },
-    { path: "/admin/products", icon: "Package", label: "Товары" },
-    { path: "/admin/orders", icon: "ShoppingCart", label: "Заказы" },
-    { path: "/admin/finance", icon: "CreditCard", label: "Финансы" },
-    { path: "/admin/analytics", icon: "TrendingUp", label: "Аналитика" },
-    { path: "/admin/gpt", icon: "Sparkles", label: "Генерация AI" },
-    { path: "/admin/support", icon: "MessageCircle", label: "Поддержка" },
+    { path: "/partner/overview", icon: "BarChart3", label: "Сводка" },
+    { path: "/partner/products", icon: "Package", label: "Товары" },
+    { path: "/partner/orders", icon: "ShoppingCart", label: "Заказы" },
+    { path: "/partner/finance", icon: "CreditCard", label: "Финансы" },
+    { path: "/partner/analytics", icon: "TrendingUp", label: "Аналитика" },
+    { path: "/partner/gpt", icon: "Sparkles", label: "Генерация AI" },
+    { path: "/partner/support", icon: "MessageCircle", label: "Поддержка" },
   ];
 
   return (
@@ -54,4 +54,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default PartnerSidebar;

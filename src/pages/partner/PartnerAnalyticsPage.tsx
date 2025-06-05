@@ -1,4 +1,4 @@
-import AdminAnalytics from "@/components/admin/AdminAnalytics";
+import AdminAnalytics from "@/components/partner/PartnerAnalytics";
 
 const AdminAnalyticsPage = () => {
   return <AdminAnalytics />;

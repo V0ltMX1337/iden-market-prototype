@@ -1,4 +1,4 @@
-import AdminFinance from "@/components/admin/AdminFinance";
+import AdminFinance from "@/components/partner/PartnerFinance";
 
 const AdminFinancePage = () => {
   return <AdminFinance />;

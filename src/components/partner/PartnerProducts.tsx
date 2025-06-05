@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import AdminProductForm from "@/components/admin/AdminProductForm";
+import PartnerProductForm from "@/components/partner/PartnerProductForm";
 
-const AdminProducts = () => {
+const PartnerProducts = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
   const [products] = useState([
@@ -106,10 +106,10 @@ const AdminProducts = () => {
         </CardContent>
       </Card>
 
-      {isFormOpen && <AdminProductForm onClose={() => setIsFormOpen(false)} />}
+      {isFormOpen && <PartnerProductForm onClose={() => setIsFormOpen(false)} />}
 
       {editingProduct && (
-        <AdminProductForm
+        <PartnerProductForm
           productId={editingProduct}
           onClose={() => setEditingProduct(null)}
         />
@@ -118,4 +118,4 @@ const AdminProducts = () => {
   );
 };
 
-export default AdminProducts;
+export default PartnerProducts;

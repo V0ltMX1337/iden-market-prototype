@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 
-const AdminOverview = () => {
+const PartnerOverview = () => {
   const metrics = [
     {
       title: "Показы товаров",
@@ -200,4 +200,4 @@ const AdminOverview = () => {
   );
 };
 
-export default AdminOverview;
+export default PartnerOverview;

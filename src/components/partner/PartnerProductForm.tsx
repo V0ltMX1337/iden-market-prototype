@@ -5,12 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 
-interface AdminProductFormProps {
+interface PartnerProductFormProps {
   onClose: () => void;
   productId?: number;
 }
 
-const AdminProductForm = ({ onClose, productId }: AdminProductFormProps) => {
+const PartnerProductForm = ({ onClose, productId }: PartnerProductFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -112,4 +112,4 @@ const AdminProductForm = ({ onClose, productId }: AdminProductFormProps) => {
   );
 };
 
-export default AdminProductForm;
+export default PartnerProductForm;

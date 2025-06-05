@@ -40,15 +40,6 @@ const ProfileOrders = () => {
       items: [
         {
           id: "1",
-          name: "Брелок стич на ключи",
-          description: "Брелок стич на ключи - Брелок стич на ключи",
-          image:
-            "https://images.unsplash.com/photo-1558618047-3c8c4d1916d4?w=80&h=80&fit=crop&crop=center",
-          quantity: 24,
-          price: 30,
-        },
-        {
-          id: "2",
           name: "Брелок Nike на ключи",
           description: "Брелок - микс",
           image:
@@ -57,7 +48,7 @@ const ProfileOrders = () => {
           price: 30,
         },
         {
-          id: "3",
+          id: "2",
           name: "Брелок космонавт",
           description: "космонавт - микс",
           image:
