@@ -271,147 +271,73 @@ const Index = () => {
         </div>
 
         {/* Categories */}
-        <div className="mb-8 px-4">
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Категории товаров
-          </h2>
-          <div className="flex justify-center gap-4 flex-wrap w-full">
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
-                alt="Категория 1"
-                className="w-[157px] h-[147px] object-cover"
-              />
+        <section className="bg-white mb-8">
+          <div className="max-w-7xl mx-auto px-6 py-16">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl font-bold mb-6">Популярные категории</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Выберите категорию и найдите именно то, что вам нужно
+              </p>
             </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
-                alt="Категория 2"
-                className="w-[157px] h-[147px] object-cover"
-              />
-            </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/pp7TQnsS/CATEGORY-3.png"
-                alt="Категория 3"
-                className="w-[157px] h-[147px] object-cover"
-              />
-            </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
-                alt="Категория 4"
-                className="w-[157px] h-[147px] object-cover"
-              />
-            </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
-                alt="Категория 5"
-                className="w-[157px] h-[147px] object-cover"
-              />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+              {categories.map((category) => (
+                <div key={category.id} className="cursor-pointer group">
+                  <div className="bg-white rounded-3xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div className="text-6xl mb-6">{category.icon}</div>
+                    <h3 className="font-bold text-xl mb-4">{category.name}</h3>
+                    <p className="text-gray-500 text-lg">{category.products}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Sale Products */}
-        <div className="px-4">
-          <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 w-full max-w-none">
-            {saleProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden border border-gray-100"
-              >
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Discount Badge */}
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                      -{product.discount}%
+        {/* Hot Offers */}
+        <section className="bg-gray-50 mb-8">
+          <div className="max-w-7xl mx-auto px-6 py-16">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl font-bold mb-6">Горячие предложения</h2>
+              <p className="text-xl text-gray-600">
+                Ограниченное время — не упустите свой шанс!
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {saleProducts.slice(0, 6).map((product) => (
+                <div key={product.id} className="cursor-pointer group">
+                  <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div className="relative">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-80 object-cover"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-red-500 text-white text-lg px-4 py-2">
+                          -{product.discount}%
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                  {/* Quality Badge */}
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-lg flex items-center">
-                      <Icon name="Check" size={12} className="mr-1" />
-                      Проверено
-                    </div>
-                  </div>
-                  {/* Quick Actions */}
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
-                      >
-                        <Icon
-                          name="Heart"
-                          size={16}
-                          className="text-gray-600"
-                        />
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
-                      >
-                        <Icon name="Eye" size={16} className="text-gray-600" />
-                      </Button>
+                    <div className="p-8">
+                      <h3 className="font-bold text-xl mb-4">
+                        {product.title}
+                      </h3>
+                      <div className="flex items-center gap-4 mb-6">
+                        <span className="text-3xl font-bold text-red-500">
+                          {product.price.toLocaleString()} ₽
+                        </span>
+                        <span className="text-xl text-gray-400 line-through">
+                          {product.oldPrice.toLocaleString()} ₽
+                        </span>
+                      </div>
+                      <Button className="w-full h-14 text-lg">В корзину</Button>
                     </div>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h4 className="font-semibold text-lg mb-3 line-clamp-2 min-h-[3.5rem] text-gray-900">
-                    {product.title}
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-baseline space-x-3">
-                      <span className="font-bold text-2xl text-gray-900">
-                        {product.price.toLocaleString()}₽
-                      </span>
-                      <span className="text-gray-400 line-through text-lg">
-                        {product.oldPrice.toLocaleString()}₽
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Icon
-                          name="Star"
-                          size={16}
-                          className="text-yellow-500 mr-1 fill-current"
-                        />
-                        <span className="font-medium">
-                          {(4.0 + Math.random() * 1).toFixed(1)}
-                        </span>
-                        <span className="text-gray-400 ml-2">
-                          ({Math.floor(Math.random() * 500 + 100)})
-                        </span>
-                      </div>
-                      <span className="text-sm text-green-600 font-medium">
-                        Продано: {Math.floor(Math.random() * 1000)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-sm text-gray-500">
-                        Быстрая доставка
-                      </span>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Icon name="Truck" size={14} className="mr-1" />
-                        <span>2-3 дня</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
       </main>
       <Footer></Footer>
     </div>

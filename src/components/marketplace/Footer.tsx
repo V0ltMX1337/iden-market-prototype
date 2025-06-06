@@ -4,20 +4,19 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      {/* Footer */}
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white py-16">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
-            <h3 className="text-lg font-bold mb-4">PotionMarket</h3>
-            <p className="text-gray-300 text-sm">
+            <h3 className="text-2xl font-bold mb-6">PotionMarket</h3>
+            <p className="text-gray-300 text-lg leading-relaxed">
               Современный маркетплейс с широким ассортиментом товаров и быстрой
               доставкой.
             </p>
           </div>
           <div>
-            <h4 className="font-medium mb-4">Покупателям</h4>
-            <ul className="space-y-2 text-sm text-gray-300">
+            <h4 className="font-medium mb-6 text-xl">Покупателям</h4>
+            <ul className="space-y-4 text-lg text-gray-300">
               <li>
                 <a href="#" className="hover:text-white">
                   Как сделать заказ
