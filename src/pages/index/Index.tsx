@@ -234,9 +234,9 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="w-full py-6">
+      <main className="container mx-auto px-4 py-6">
         {/* Banner Slider */}
-        <div className="relative mb-8">
+        <div className="relative mb-8 max-w-6xl mx-auto">
           <div className="w-full h-[400px] rounded-lg overflow-hidden">
             <img
               src={banners[currentSlide].image}
@@ -275,7 +275,7 @@ const Index = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
-          <div className="flex justify-start gap-1 flex-wrap">
+          <div className="flex justify-center gap-4 flex-wrap max-w-4xl mx-auto">
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
@@ -317,7 +317,7 @@ const Index = () => {
         {/* Sale Products */}
         <div>
           <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {saleProducts.map((product) => (
               <div
                 key={product.id}
