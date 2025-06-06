@@ -236,8 +236,8 @@ const Index = () => {
 
       <main className="w-full py-6">
         {/* Banner Slider */}
-        <div className="relative mb-8 w-full px-4">
-          <div className="w-full h-[400px] rounded-lg overflow-hidden">
+        <div className="relative mb-8 w-full">
+          <div className="w-full h-[400px] overflow-hidden">
             <img
               src={banners[currentSlide].image}
               alt={banners[currentSlide].title}
@@ -271,7 +271,7 @@ const Index = () => {
         </div>
 
         {/* Categories */}
-        <div className="mb-8 px-4">
+        <div className="mb-8 px-8">
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
@@ -315,9 +315,9 @@ const Index = () => {
         </div>
 
         {/* Sale Products */}
-        <div className="px-4">
+        <div className="px-8">
           <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 w-full max-w-none">
             {saleProducts.map((product) => (
               <div
                 key={product.id}
