@@ -234,7 +234,7 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="w-full py-6">
+      <main className="w-full">
         {/* Banner Slider */}
         <div className="relative mb-8 w-full">
           <div className="w-full h-[400px] overflow-hidden">
@@ -271,7 +271,7 @@ const Index = () => {
         </div>
 
         {/* Categories */}
-        <div className="mb-8 px-8">
+        <div className="mb-8 px-4">
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
@@ -315,7 +315,7 @@ const Index = () => {
         </div>
 
         {/* Sale Products */}
-        <div className="px-8">
+        <div className="px-4">
           <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 w-full max-w-none">
             {saleProducts.map((product) => (

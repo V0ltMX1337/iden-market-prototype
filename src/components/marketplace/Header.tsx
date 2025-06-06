@@ -133,7 +133,7 @@ const Header = () => {
     <header className="bg-white border-b border-gray-200">
       {/* Top navigation bar */}
       <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-10 text-sm">
             <div className="flex items-center space-x-6">
               <div className="flex items-center text-gray-600">
@@ -179,7 +179,7 @@ const Header = () => {
       </div>
 
       {/* Main header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo and breadcrumb */}
           <div className="flex items-center space-x-6">
@@ -407,7 +407,10 @@ const Header = () => {
                     <span className="font-semibold text-lg">1 000 ₽</span>
                   </div>
                   <p className="text-xs text-gray-500">Без учёта Доставки</p>
-                  <Button onClick={() => navigate("/cart")} className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={() => navigate("/cart")}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                  >
                     Перейти к оформлению
                   </Button>
                 </div>
