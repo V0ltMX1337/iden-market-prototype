@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Buffer } from 'buffer';
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +66,7 @@ const AdminGPT = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer sk-a7K2ucmIOIL5H4PSlBP4zUNa79EskbeE`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: "dall-e-3",
