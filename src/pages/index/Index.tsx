@@ -276,18 +276,41 @@ const Index = () => {
             Категории товаров
           </h2>
           <div className="grid grid-cols-5 gap-6">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center rounded-2xl"
-              >
-                <div className="text-4xl mb-3">{category.icon}</div>
-                <h3 className="font-semibold mb-1">{category.name}</h3>
-                <p className="text-gray-500 text-sm">
-                  {category.products} товаров
-                </p>
-              </div>
-            ))}
+            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
+                alt="Категория 1"
+                className="w-[157px] h-[147px] object-cover mx-auto"
+              />
+            </div>
+            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
+                alt="Категория 2"
+                className="w-[157px] h-[147px] object-cover mx-auto"
+              />
+            </div>
+            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src="https://i.postimg.cc/pp7TQnsS/CATEGORY-3.png"
+                alt="Категория 3"
+                className="w-[157px] h-[147px] object-cover mx-auto"
+              />
+            </div>
+            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
+                alt="Категория 4"
+                className="w-[157px] h-[147px] object-cover mx-auto"
+              />
+            </div>
+            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
+                alt="Категория 5"
+                className="w-[157px] h-[147px] object-cover mx-auto"
+              />
+            </div>
           </div>
         </div>
 
@@ -385,7 +408,6 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-
               </div>
             ))}
           </div>
