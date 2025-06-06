@@ -275,40 +275,40 @@ const Index = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-0">
+          <div className="flex justify-center gap-3 flex-wrap">
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
                 alt="Категория 1"
-                className="w-[157px] h-[147px] object-cover mx-auto"
+                className="w-[157px] h-[147px] object-cover"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
                 alt="Категория 2"
-                className="w-[157px] h-[147px] object-cover mx-auto"
+                className="w-[157px] h-[147px] object-cover"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/pp7TQnsS/CATEGORY-3.png"
                 alt="Категория 3"
-                className="w-[157px] h-[147px] object-cover mx-auto"
+                className="w-[157px] h-[147px] object-cover"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
                 alt="Категория 4"
-                className="w-[157px] h-[147px] object-cover mx-auto"
+                className="w-[157px] h-[147px] object-cover"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
                 alt="Категория 5"
-                className="w-[157px] h-[147px] object-cover mx-auto"
+                className="w-[157px] h-[147px] object-cover"
               />
             </div>
           </div>
