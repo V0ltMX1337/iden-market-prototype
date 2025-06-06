@@ -275,7 +275,7 @@ const Index = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
-          <div className="flex justify-center gap-3 flex-wrap">
+          <div className="flex justify-start gap-1 flex-wrap">
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
                 src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
