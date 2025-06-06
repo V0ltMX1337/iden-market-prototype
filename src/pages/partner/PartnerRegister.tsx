@@ -102,7 +102,7 @@ const AdminRegister = () => {
           </form>
           <div className="mt-4 text-center text-sm">
             Уже есть аккаунт?{" "}
-            <Link to="/admin/login" className="text-blue-600 hover:underline">
+            <Link to="/partner/login" className="text-blue-600 hover:underline">
               Войти
             </Link>
           </div>

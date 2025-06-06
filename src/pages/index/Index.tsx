@@ -31,14 +31,6 @@ const Index = () => {
     },
   ];
 
-  const categories = [
-    { name: "Электроника", icon: "📱", products: "12K+" },
-    { name: "Одежда", icon: "👔", products: "8K+" },
-    { name: "Дом и сад", icon: "🏠", products: "6K+" },
-    { name: "Автотовары", icon: "🚗", products: "4K+" },
-    { name: "Спорт", icon: "⚽", products: "3K+" },
-  ];
-
   const saleProducts = [
     {
       id: 1,
@@ -275,38 +267,38 @@ const Index = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">
             Категории товаров
           </h2>
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-cols-5 gap-2">
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
-                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
+                src="https://i.postimg.cc/MHxZ5XHT/CATEGORY-1.png"
                 alt="Категория 1"
                 className="w-[157px] h-[147px] object-cover mx-auto"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
-                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
+                src="https://i.postimg.cc/63C5CC9g/CATEGORY-2.png"
                 alt="Категория 2"
                 className="w-[157px] h-[147px] object-cover mx-auto"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
-                src="https://i.postimg.cc/pp7TQnsS/CATEGORY-3.png"
+                src="https://i.postimg.cc/MGCpc981/CATEGORY-3.png"
                 alt="Категория 3"
                 className="w-[157px] h-[147px] object-cover mx-auto"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
-                src="https://i.postimg.cc/kVPgzP3F/CATEGORY-1.png"
+                src="https://i.postimg.cc/R060Vj2M/CATEGORY-4.png"
                 alt="Категория 4"
                 className="w-[157px] h-[147px] object-cover mx-auto"
               />
             </div>
             <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
               <img
-                src="https://i.postimg.cc/mPHrm2qg/CATEGORY-2.png"
+                src="https://i.postimg.cc/6p13K9jj/CATEGORY-5.png"
                 alt="Категория 5"
                 className="w-[157px] h-[147px] object-cover mx-auto"
               />
