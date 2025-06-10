@@ -51,22 +51,22 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative group">
       {/* Navigation Buttons */}
       <Button
         onClick={scrollPrev}
         size="sm"
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
       >
-        <Icon name="ChevronLeft" size={24} />
+        <Icon name="ChevronLeft" size={48} className="stroke-2" />
       </Button>
 
       <Button
         onClick={scrollNext}
         size="sm"
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
       >
-        <Icon name="ChevronRight" size={24} />
+        <Icon name="ChevronRight" size={48} className="stroke-2" />
       </Button>
 
       {/* Swiper Container */}
