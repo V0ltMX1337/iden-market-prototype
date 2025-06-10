@@ -299,7 +299,7 @@ const Header = () => {
                   animateTo={{ from: "#0045FF", to: "#7580C2" }}
                   animateDuration={2000}
                 >
-                  POTIONMARKET
+                  TRIVOMARKET
                 </FancyText>
               </h1>
               <Badge variant="secondary" className="ml-2 text-xs">
@@ -318,7 +318,7 @@ const Header = () => {
               />
               <input
                 type="text"
-                placeholder="Искать на PotionMarket..."
+                placeholder="Искать на TRIVOMARKET..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>

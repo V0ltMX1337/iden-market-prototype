@@ -32,7 +32,7 @@ const Login = () => {
             className="inline-flex items-center text-2xl font-bold text-primary"
           >
             <Icon name="ArrowLeft" size={20} className="mr-2" />
-            PotionMarket
+            TRIVO ID
           </Link>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Вход в аккаунт
