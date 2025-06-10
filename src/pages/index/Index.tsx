@@ -131,7 +131,7 @@ const Index = () => {
             </div>
             <div className="relative">
               <img
-                src="https://cdn.poehali.dev/files/fd5a9f86-ad55-436b-a06b-5f061bbbdedc.png"
+                src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081"
                 alt="Беспроводные наушники"
                 className="w-full h-auto opacity-90"
               />
