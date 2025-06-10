@@ -23,13 +23,9 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     slidesToScroll: 1,
-    loop: true,
+    loop: false,
     containScroll: "trimSnaps",
     dragFree: false,
-    breakpoints: {
-      "(min-width: 768px)": { slidesToScroll: 2 },
-      "(min-width: 1024px)": { slidesToScroll: 3 },
-    },
   });
 
   const scrollPrev = useCallback(() => {
@@ -74,19 +70,11 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
 
       {/* Swiper Container */}
       <div className="overflow-hidden mx-8" ref={emblaRef}>
-        <div
-          className="flex"
-          style={{ backfaceVisibility: "hidden", perspective: "1000px" }}
-        >
+        <div className="flex">
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-shrink-0 w-56 mr-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col"
-              style={{
-                transform: "translate3d(0, 0, 0)",
-                willChange: "transform",
-                contain: "layout style paint",
-              }}
+              className="flex-shrink-0 w-56 mr-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col"
             >
               <div className="relative">
                 <img
