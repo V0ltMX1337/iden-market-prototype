@@ -156,69 +156,15 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <Header />
 
-      {/* Main Banner Section */}
-      <section className="relative h-[500px] overflow-hidden">
-        <div
-          className={`absolute inset-0 bg-gradient-to-r ${bannerSlides[currentSlide].bgColor}`}
-        >
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
-            <div className="text-white space-y-6">
-              <div className="space-y-2">
-                <p className="text-lg font-medium opacity-90">
-                  {bannerSlides[currentSlide].subtitle}
-                </p>
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  {bannerSlides[currentSlide].title}
-                </h1>
-                <p className="text-xl opacity-90">
-                  {bannerSlides[currentSlide].description}
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <Button
-                  size="lg"
-                  className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3"
-                >
-                  {bannerSlides[currentSlide].buttonText}
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/10 px-8 py-3"
-                >
-                  Узнать больше
-                </Button>
-              </div>
-            </div>
-
-            <div className="hidden lg:block">
-              <img
-                src={bannerSlides[currentSlide].image}
-                alt={bannerSlides[currentSlide].title}
-                className="w-full h-[400px] object-cover rounded-2xl shadow-2xl"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Slider dots */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {bannerSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                currentSlide === index ? "bg-white" : "bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
-      </section>
+      {/* Слайдер */}
+      <div className="w-full">
+        <img
+          src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081"
+          alt="Баннер"
+          className="w-full h-auto"
+          style={{ maxWidth: "1410px", height: "auto" }}
+        />
+      </div>
 
       {/* Categories Section */}
       <section className="py-16 bg-gray-50">
