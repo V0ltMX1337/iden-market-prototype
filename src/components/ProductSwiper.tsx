@@ -23,6 +23,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     slidesToScroll: 1,
+    loop: true,
     breakpoints: {
       "(min-width: 768px)": { slidesToScroll: 2 },
       "(min-width: 1024px)": { slidesToScroll: 3 },
@@ -98,7 +99,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                 </Button>
               </div>
               <div className="p-4 flex-1 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 mb-3">
                   <div className="text-xl font-bold text-gray-900">
                     {product.price.toLocaleString()} ₽
                   </div>
