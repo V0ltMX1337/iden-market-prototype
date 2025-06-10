@@ -235,7 +235,8 @@ const Index = () => {
 
       {/* Hero slider остается */}
 
-      <ProductSwiper products={products} />
+      {/* TODO: Удалить этот блок ProductSwiper - первый лишний */}
+      {/* <ProductSwiper products={products} /> */}
 
       {/* Бренды */}
       <section className="py-8 bg-white">
@@ -455,7 +456,8 @@ const Index = () => {
             </p>
           </div>
 
-          <ProductSwiper products={products} />
+          {/* TODO: Удалить этот блок ProductSwiper - второй лишний */}
+          {/* <ProductSwiper products={products} /> */}
         </div>
       </section>
 
