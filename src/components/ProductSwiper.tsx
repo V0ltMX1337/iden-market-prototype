@@ -40,8 +40,10 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
     if (swiperRef.current && !swipperInstance.current) {
       swipperInstance.current = new Swipper(swiperRef.current, {
         slidesPerView: 1,
-        spaceBetween: 24,
+        spaceBetween: 16,
         loop: true,
+        loopFillGroupWithBlank: true,
+        centeredSlides: false,
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
@@ -72,11 +74,11 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
   }, []);
 
   return (
-    <div className="relative group">
-      <div ref={swiperRef} className="swipper-container">
+    <div className="relative group -mx-0">
+      <div ref={swiperRef} className="swipper-container overflow-hidden">
         <div className="swipper-wrapper">
           {products.map((product) => (
-            <div key={product.id} className="swipper-slide">
+            <div key={product.id} className="swipper-slide pr-4 first:pl-0">
               <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col">
                 <div className="relative">
                   <img
