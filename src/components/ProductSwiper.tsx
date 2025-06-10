@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
@@ -8,6 +8,7 @@ import Icon from "@/components/ui/icon";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface Product {
   id: number;
@@ -38,71 +39,52 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
     ));
   };
 
-  // Fallback если нет товаров
-  if (!products || products.length === 0) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">Товары не найдены</p>
-      </div>
-    );
-  }
-
   return (
     <div className="relative group">
       <Swiper
-        modules={[Navigation, Autoplay]}
+        modules={[Navigation, Pagination]}
         spaceBetween={24}
-        slidesPerView="auto"
-        loop={products.length > 1}
-        autoplay={
-          products.length > 1
-            ? {
-                delay: 3000,
-                disableOnInteraction: false,
-              }
-            : false
-        }
+        slidesPerView={1}
+        loop={true}
         navigation={{
           prevEl: ".swiper-button-prev-custom",
           nextEl: ".swiper-button-next-custom",
         }}
-        className="px-8"
         breakpoints={{
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 16,
-          },
           640: {
             slidesPerView: 2,
-            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 3,
           },
           1024: {
-            slidesPerView: "auto",
-            spaceBetween: 24,
+            slidesPerView: 4,
+          },
+          1280: {
+            slidesPerView: 5,
           },
         }}
+        className="px-8"
       >
         {products.map((product) => (
-          <SwiperSlide key={product.id} className="!w-56 max-w-56">
-            <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
+          <SwiperSlide key={product.id}>
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col">
               <div className="relative">
                 <img
                   src={product.image}
                   alt={product.name}
                   className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
                 />
                 {product.badge && (
                   <Badge
-                    className={`absolute top-2 left-2 ${product.badgeColor || "bg-red-500"} text-white text-xs`}
+                    className={`absolute top-2 left-2 ${product.badgeColor} text-white text-xs`}
                   >
                     {product.badge}
                   </Badge>
                 )}
                 <Button
                   size="sm"
-                  variant="outline"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8 bg-white"
+                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
                 >
                   <Icon name="Heart" size={12} />
                 </Button>
@@ -118,7 +100,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                     </div>
                   )}
                 </div>
-                <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
                   {product.name}
                 </h3>
                 <div className="mt-auto space-y-3">
@@ -135,26 +117,20 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         ))}
       </Swiper>
 
-      {/* Custom Navigation Buttons - только если товаров больше 1 */}
-      {products.length > 1 && (
-        <>
-          <Button
-            className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            size="sm"
-            variant="outline"
-          >
-            <Icon name="ChevronLeft" size={24} className="stroke-2" />
-          </Button>
+      {/* Custom Navigation Buttons */}
+      <Button
+        className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        size="sm"
+      >
+        <Icon name="ChevronLeft" size={48} className="stroke-2" />
+      </Button>
 
-          <Button
-            className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            size="sm"
-            variant="outline"
-          >
-            <Icon name="ChevronRight" size={24} className="stroke-2" />
-          </Button>
-        </>
-      )}
+      <Button
+        className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        size="sm"
+      >
+        <Icon name="ChevronRight" size={48} className="stroke-2" />
+      </Button>
     </div>
   );
 };
