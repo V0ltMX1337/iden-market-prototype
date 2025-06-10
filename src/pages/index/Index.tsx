@@ -157,12 +157,12 @@ const Index = () => {
       <Header />
 
       {/* Слайдер */}
-      <div className="w-full">
+      <div className="w-full flex justify-center">
         <img
           src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081"
           alt="Баннер"
-          className="w-full h-auto"
-          style={{ maxWidth: "1410px", height: "auto" }}
+          className="max-w-full h-auto"
+          style={{ maxWidth: "1410px" }}
         />
       </div>
 
