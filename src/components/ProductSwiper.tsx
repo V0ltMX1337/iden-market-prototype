@@ -43,9 +43,12 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         slidesPerView={1}
         spaceBetween={16}
         loop={true}
+        loopAdditionalSlides={2}
+        centeredSlides={false}
         autoplay={{
           delay: 3000,
           disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
         navigation={{
           nextEl: ".swiper-button-next",
@@ -65,7 +68,8 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
             slidesPerView: 5,
           },
         }}
-        className="!overflow-visible"
+        className="!overflow-visible !mx-0 !px-0"
+        style={{ margin: 0, padding: 0 }}
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
@@ -120,17 +124,17 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
 
       {/* Navigation Buttons */}
       <Button
-        className="swiper-button-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className="swiper-button-prev absolute -left-2 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-all duration-300"
         size="sm"
       >
-        <Icon name="ChevronLeft" size={20} className="stroke-2" />
+        <Icon name="ChevronLeft" size={18} className="stroke-2" />
       </Button>
 
       <Button
-        className="swiper-button-next absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className="swiper-button-next absolute -right-2 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-all duration-300"
         size="sm"
       >
-        <Icon name="ChevronRight" size={20} className="stroke-2" />
+        <Icon name="ChevronRight" size={18} className="stroke-2" />
       </Button>
     </div>
   );
