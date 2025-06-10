@@ -235,7 +235,9 @@ const Index = () => {
 
       {/* Hero slider остается */}
 
-      {/* Остальной контент страницы */}
+      <ProductSwiper />
+
+      {/* Бренды */}
       <section className="py-8 bg-white">
         <div className="max-w-[1410px] mx-auto px-4">
           <div className="flex items-start mb-6">
