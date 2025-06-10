@@ -167,16 +167,21 @@ const Index = () => {
       </div>
 
       {/* Новинки Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Новинки</h2>
-            <p className="text-lg text-gray-600">
-              Самые свежие поступления в нашем магазине
-            </p>
+      <section className="py-8 bg-white">
+        <div
+          style={{ width: "1410px", height: "526px" }}
+          className="mx-auto px-4"
+        >
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-gray-900 text-left">
+              Новинки
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+            style={{ gap: "5px" }}
+          >
             <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
               <div className="relative">
                 <img
