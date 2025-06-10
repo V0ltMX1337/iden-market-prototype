@@ -4,62 +4,35 @@ import ProductSwiper from "@/components/ProductSwiper";
 
 const Index = () => {
 
-  const categories = [
-    {
-      name: "Смартфоны",
-      count: "124 товара",
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=200&fit=crop",
-    },
-    {
-      name: "Наушники",
-      count: "86 товаров",
-      image:
-        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=200&fit=crop",
-    },
-    {
-      name: "Ноутбуки",
-      count: "45 товаров",
-      image:
-        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop",
-    },
-    {
-      name: "Планшеты",
-      count: "67 товаров",
-      image:
-        "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=300&h=200&fit=crop",
-    },
-  ];
-
   const products = [
     {
       id: 1,
-      name: "Смарт-часы Apple Watch",
+      name: "Телевизор Sber SDX- 43F2012S, 43»(109 см), FHD",
       price: 35990,
       originalPrice: 39990,
       image:
-        "https://cdn.poehali.dev/files/bb9b2af8-e78f-4a2f-9dea-c6b6c42ace47.png",
+        "https://themes.ewonta.com/demo/350-home_default/hummingbird-vector-graphics.webp",
       rating: 5,
       badge: "ХИТ",
       badgeColor: "bg-red-500",
     },
     {
       id: 2,
-      name: "Беспроводные наушники Sony",
+      name: "Смартфон Apple iPhone 15 Pro 256GB Natural Titanium",
       price: 18990,
       originalPrice: 19990,
       image:
-        "https://cdn.poehali.dev/files/5f5dd5dd-9b36-43b1-9b6c-36e12c6d1a89.png",
+        "https://themes.ewonta.com/demo/390-home_default/brown-bear-vector-graphics.webp",
       rating: 4,
       badge: "СКИДКА",
       badgeColor: "bg-orange-500",
     },
     {
       id: 3,
-      name: "Наушники Bluetooth розовые",
+      name: "Фен Dyson HD07 1600 Вт синий, розовый",
       price: 8990,
       image:
-        "https://cdn.poehali.dev/files/f4d00396-1810-4907-9b1a-fd1239d9e135.png",
+        "https://themes.ewonta.com/demo/383-home_default/today-is-a-good-day-framed-poster.webp",
       rating: 5,
       badge: "НОВОЕ",
       badgeColor: "bg-green-500",
@@ -68,7 +41,7 @@ const Index = () => {
       id: 4,
       name: "Планшет Samsung Galaxy",
       price: 25990,
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400",
+      image: "https://themes.ewonta.com/demo/339-home_default/mountain-fox-vector-graphics.webp",
       rating: 4,
       badge: "ТОП",
       badgeColor: "bg-purple-500",
@@ -78,7 +51,7 @@ const Index = () => {
       name: "Камера GoPro Hero",
       price: 32990,
       image:
-        "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400",
+        "https://themes.ewonta.com/demo/343-home_default/brown-bear-vector-graphics.webp",
       rating: 5,
       badge: "ЭКСКЛЮЗИВ",
       badgeColor: "bg-indigo-500",
@@ -89,7 +62,7 @@ const Index = () => {
       price: 7990,
       originalPrice: 9990,
       image:
-        "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+        "https://themes.ewonta.com/demo/343-home_default/brown-bear-vector-graphics.webp",
       rating: 4,
       badge: "ГЕЙМЕР",
       badgeColor: "bg-cyan-500",
