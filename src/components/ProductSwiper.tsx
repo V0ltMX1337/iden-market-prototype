@@ -24,6 +24,8 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
     align: "start",
     slidesToScroll: 1,
     loop: true,
+    containScroll: "trimSnaps",
+    dragFree: false,
     breakpoints: {
       "(min-width: 768px)": { slidesToScroll: 2 },
       "(min-width: 1024px)": { slidesToScroll: 3 },
@@ -72,17 +74,26 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
 
       {/* Swiper Container */}
       <div className="overflow-hidden mx-8" ref={emblaRef}>
-        <div className="flex gap-6">
+        <div
+          className="flex"
+          style={{ backfaceVisibility: "hidden", perspective: "1000px" }}
+        >
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-none w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col"
+              className="flex-shrink-0 w-56 mr-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col"
+              style={{
+                transform: "translate3d(0, 0, 0)",
+                willChange: "transform",
+                contain: "layout style paint",
+              }}
             >
               <div className="relative">
                 <img
                   src={product.image}
                   alt={product.name}
                   className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
+                  style={{ transform: "translate3d(0, 0, 0)" }}
                 />
                 {product.badge && (
                   <Badge
