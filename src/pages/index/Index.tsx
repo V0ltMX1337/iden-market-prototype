@@ -1,8 +1,64 @@
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import ProductSwiper from "@/components/ProductSwiper";
+import CategorySwipper from "@/components/CategorySwipper";
+import SliderSwiper from "@/components/SliderSwipper";
 
 const Index = () => {
+
+  const sliders = [
+    {
+      id: 1,
+      name: "Слайдер 1",
+      image:
+        "https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-1-1.webp?t=1749596117",
+    },
+    {
+      id: 2,
+      name: "Слайдер 2",
+      image:
+        "https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081",
+    },
+    ];
+
+    const categories = [
+    {
+      id: 1,
+      name: "Детям",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/21.webp?t=1749592297",
+    },
+    {
+      id: 2,
+      name: "Мужчинам",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/25.webp?t=1749592297",
+    },
+    {
+      id: 3,
+      name: "Дом",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/29.webp?t=1749592297",
+    },
+    {
+      id: 4,
+      name: "Красота",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/33.webp?t=1749592297",
+    },
+    {
+      id: 5,
+      name: "Аксессуары",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/37.webp?t=1749592297",
+    },
+    {
+      id: 6,
+      name: "Электроника",
+      image:
+        "https://themes.ewonta.com/demo/modules/thememanager/views/img/category_icon/38.webp?t=1749592297",
+    },
+  ];
 
   const products = [
     {
@@ -67,6 +123,69 @@ const Index = () => {
       badge: "ГЕЙМЕР",
       badgeColor: "bg-cyan-500",
     },
+    {
+      id: 7,
+      name: "Ноутбук MacBook Air M2",
+      price: 120990,
+      originalPrice: 135990,
+      image:
+        "https://themes.ewonta.com/demo/350-home_default/hummingbird-vector-graphics.webp",
+      rating: 5,
+      badge: "ПРЕМИУМ",
+      badgeColor: "bg-gold-500",
+    },
+    {
+      id: 8,
+      name: "Наушники Sony WH-1000XM5",
+      price: 32990,
+      image:
+        "https://themes.ewonta.com/demo/390-home_default/brown-bear-vector-graphics.webp",
+      rating: 5,
+      badge: "ЗВУК",
+      badgeColor: "bg-blue-500",
+    },
+    {
+      id: 9,
+      name: "Умные часы Apple Watch Ultra",
+      price: 89990,
+      originalPrice: 99990,
+      image:
+        "https://themes.ewonta.com/demo/383-home_default/today-is-a-good-day-framed-poster.webp",
+      rating: 4,
+      badge: "СПОРТ",
+      badgeColor: "bg-red-500",
+    },
+    {
+      id: 10,
+      name: "Клавиатура механическая Corsair",
+      price: 15990,
+      image:
+        "https://themes.ewonta.com/demo/339-home_default/mountain-fox-vector-graphics.webp",
+      rating: 4,
+      badge: "RGB",
+      badgeColor: "bg-purple-500",
+    },
+    {
+      id: 11,
+      name: "Монитор LG UltraWide 34»",
+      price: 75990,
+      originalPrice: 89990,
+      image:
+        "https://themes.ewonta.com/demo/343-home_default/brown-bear-vector-graphics.webp",
+      rating: 5,
+      badge: "4K",
+      badgeColor: "bg-green-500",
+    },
+    {
+      id: 12,
+      name: "Видеокарта NVIDIA RTX 4080",
+      price: 169990,
+      image:
+        "https://themes.ewonta.com/demo/350-home_default/hummingbird-vector-graphics.webp",
+      rating: 5,
+      badge: "ГЕЙМЕР",
+      badgeColor: "bg-orange-500",
+    },
   ];
 
   return (
@@ -74,14 +193,7 @@ const Index = () => {
       <Header />
 
       {/* Слайдер */}
-      <div className="w-full flex justify-center">
-        <img
-          src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081"
-          alt="Баннер"
-          className="max-w-full h-auto"
-          style={{ maxWidth: "1410px" }}
-        />
-      </div>
+      <SliderSwiper slideres={sliders} />
 
       {/* Hero slider остается */}
 
@@ -96,6 +208,27 @@ const Index = () => {
           </div>
 
           <ProductSwiper products={products} />
+        </div>
+      </section>
+
+      {/* Баннер */}
+      <div className="w-full flex justify-center">
+        <img
+          src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/40-1-1.webp?t=1749592297"
+          alt="Баннер"
+          className="max-w-full h-auto"
+          style={{ maxWidth: "1410px" }}
+        />
+      </div>
+
+      {/* New Category Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Категории</h2>
+          </div>
+
+          <CategorySwipper products={categories} />
         </div>
       </section>
       <Footer />
