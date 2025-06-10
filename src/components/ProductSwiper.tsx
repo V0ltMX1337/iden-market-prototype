@@ -56,17 +56,17 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
       <Button
         onClick={scrollPrev}
         size="sm"
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
       >
-        <Icon name="ChevronLeft" size={20} />
+        <Icon name="ChevronLeft" size={24} />
       </Button>
 
       <Button
         onClick={scrollNext}
         size="sm"
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900"
       >
-        <Icon name="ChevronRight" size={20} />
+        <Icon name="ChevronRight" size={24} />
       </Button>
 
       {/* Swiper Container */}
@@ -75,7 +75,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-none w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden"
+              className="flex-none w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col"
             >
               <div className="relative">
                 <img
@@ -97,14 +97,14 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                   <Icon name="Heart" size={12} />
                 </Button>
               </div>
-              <div className="p-4">
+              <div className="p-4 flex-1 flex flex-col">
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">
                   {product.name}
                 </h3>
-                <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">{renderStars(product.rating)}</div>
-                </div>
-                <div className="space-y-3">
+                <div className="mt-auto space-y-3">
+                  <div className="flex items-center gap-1">
+                    <div className="flex">{renderStars(product.rating)}</div>
+                  </div>
                   <div className="flex flex-col">
                     <span className="text-xl font-bold text-gray-900">
                       {product.price.toLocaleString()} ₽
