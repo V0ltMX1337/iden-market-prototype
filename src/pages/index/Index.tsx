@@ -233,7 +233,9 @@ const Index = () => {
         />
       </div>
 
-      {/* Новинки Section */}
+      {/* Hero slider остается */}
+
+      {/* Остальной контент страницы */}
       <section className="py-8 bg-white">
         <div className="max-w-[1410px] mx-auto px-4">
           <div className="flex items-start mb-6">
