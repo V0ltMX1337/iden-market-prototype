@@ -168,30 +168,26 @@ const Index = () => {
 
       {/* Новинки Section */}
       <section className="py-8 bg-white">
-        <div
-          style={{ width: "1410px", height: "526px" }}
-          className="mx-auto px-4"
-        >
-          <div className="mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 text-left">
-              Новинки
-            </h2>
+        <div className="max-w-[1410px] mx-auto px-4">
+          <div className="flex items-start mb-6">
+            <h2 className="text-3xl font-bold text-gray-900">Новинки</h2>
           </div>
 
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-            style={{ gap: "5px" }}
+          <div 
+            className="overflow-hidden bg-gray-50 rounded-lg"
+            style={{ width: '1410px', height: '526px' }}
           >
-            <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
-              <div className="relative">
-                <img
-                  src="https://cdn.poehali.dev/files/b22099be-e4a7-4c98-8c88-c4639765fc95.png"
-                  alt="Смарт-часы Apple Watch"
-                  className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
-                  НОВОЕ
-                </Badge>
+            <div className="grid grid-cols-5 h-full" style={{ gap: '5px' }}>
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div className="relative h-full flex flex-col">
+                  <img
+                    src="https://cdn.poehali.dev/files/b22099be-e4a7-4c98-8c88-c4639765fc95.png"
+                    alt="Смарт-часы Apple Watch"
+                    className="w-full flex-1 object-cover"
+                  />
+                  <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
+                    НОВОЕ
+                  </Badge>
                 <Button
                   size="sm"
                   className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
