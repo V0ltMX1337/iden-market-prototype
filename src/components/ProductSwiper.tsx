@@ -1,8 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { Swiper as SwiperClass } from "swiper-js";
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface Product {
   id: number;
@@ -20,46 +26,6 @@ interface ProductSwiperProps {
 }
 
 const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
-  const swiperRef = useRef<HTMLDivElement>(null);
-  const swiperInstance = useRef<SwiperClass | null>(null);
-
-  useEffect(() => {
-    if (swiperRef.current && !swiperInstance.current) {
-      swiperInstance.current = new SwiperClass(swiperRef.current, {
-        slidesPerView: "auto",
-        spaceBetween: 24,
-        loop: true,
-        centeredSlides: false,
-        freeMode: false,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-        breakpoints: {
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 3,
-            spaceBetween: 24,
-          },
-          1024: {
-            slidesPerView: 4,
-            spaceBetween: 24,
-          },
-        },
-      });
-    }
-
-    return () => {
-      if (swiperInstance.current) {
-        swiperInstance.current.destroy(true, true);
-        swiperInstance.current = null;
-      }
-    };
-  }, []);
-
   const renderStars = (rating: number) => {
     return [...Array(5)].map((_, i) => (
       <Icon
@@ -75,36 +41,39 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
 
   return (
     <div className="relative group">
-      {/* Navigation Buttons */}
-      <Button
-        className="swiper-button-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        size="sm"
+      <Swiper
+        modules={[Navigation, Pagination]}
+        spaceBetween={24}
+        slidesPerView={1}
+        loop={true}
+        navigation={{
+          prevEl: ".swiper-button-prev-custom",
+          nextEl: ".swiper-button-next-custom",
+        }}
+        breakpoints={{
+          640: {
+            slidesPerView: 2,
+          },
+          768: {
+            slidesPerView: 3,
+          },
+          1024: {
+            slidesPerView: 4,
+          },
+          1280: {
+            slidesPerView: 5,
+          },
+        }}
+        className="px-8"
       >
-        <Icon name="ChevronLeft" size={24} className="stroke-2" />
-      </Button>
-
-      <Button
-        className="swiper-button-next absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        size="sm"
-      >
-        <Icon name="ChevronRight" size={24} className="stroke-2" />
-      </Button>
-
-      {/* Swiper Container */}
-      <div className="swiper mx-8" ref={swiperRef}>
-        <div className="swiper-wrapper">
-          {products.map((product, index) => (
-            <div
-              key={`${product.id}-${index}`}
-              className="swiper-slide w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col"
-              style={{ width: "224px" }}
-            >
+        {products.map((product) => (
+          <SwiperSlide key={product.id}>
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col">
               <div className="relative">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
-                  style={{ transform: "translate3d(0, 0, 0)" }}
+                  className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
                 />
                 {product.badge && (
                   <Badge
@@ -144,9 +113,24 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* Custom Navigation Buttons */}
+      <Button
+        className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        size="sm"
+      >
+        <Icon name="ChevronLeft" size={48} className="stroke-2" />
+      </Button>
+
+      <Button
+        className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 h-14 w-14 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        size="sm"
+      >
+        <Icon name="ChevronRight" size={48} className="stroke-2" />
+      </Button>
     </div>
   );
 };
