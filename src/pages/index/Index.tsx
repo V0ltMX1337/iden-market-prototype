@@ -7,405 +7,458 @@ import { useState } from "react";
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const banners = [
+  const heroSlides = [
     {
       id: 1,
       image:
-        "https://iss.s.wik-prod.top/HLpidE4K7ezx9kGBRSpD7APCy38tJM/9c/19/18/86/2c/018d3a99-9c19-7818-862c-43de4676bf8e.jpg",
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=500&fit=crop",
       title: "Летняя распродажа",
       subtitle: "Скидки до 70% на все товары",
+      buttonText: "Купить сейчас",
     },
     {
       id: 2,
       image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1416&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=500&fit=crop",
       title: "Новая коллекция",
       subtitle: "Технологии будущего уже здесь",
-    },
-    {
-      id: 3,
-      image:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1416&h=400&fit=crop",
-      title: "Товары для дома",
-      subtitle: "Создайте уют в вашем доме",
+      buttonText: "Посмотреть",
     },
   ];
 
-  const saleProducts = [
+  const categories = [
     {
       id: 1,
-      title: "iPhone 15 Pro",
+      name: "Электроника",
+      image:
+        "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop",
+      count: "1,234 товара",
+    },
+    {
+      id: 2,
+      name: "Одежда",
+      image:
+        "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=200&fit=crop",
+      count: "856 товаров",
+    },
+    {
+      id: 3,
+      name: "Дом и сад",
+      image:
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop",
+      count: "642 товара",
+    },
+    {
+      id: 4,
+      name: "Спорт",
+      image:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop",
+      count: "423 товара",
+    },
+    {
+      id: 5,
+      name: "Красота",
+      image:
+        "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=200&fit=crop",
+      count: "789 товаров",
+    },
+    {
+      id: 6,
+      name: "Игрушки",
+      image:
+        "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=300&h=200&fit=crop",
+      count: "345 товаров",
+    },
+  ];
+
+  const featuredProducts = [
+    {
+      id: 1,
+      name: "iPhone 15 Pro",
       price: 89999,
       oldPrice: 119999,
       image:
         "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop",
-      discount: 25,
+      rating: 4.8,
+      reviews: 256,
+      badge: "Хит продаж",
     },
     {
       id: 2,
-      title: "MacBook Air M2",
+      name: "MacBook Air M2",
       price: 129999,
       oldPrice: 149999,
       image:
         "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop",
-      discount: 13,
+      rating: 4.9,
+      reviews: 189,
+      badge: "Новинка",
     },
     {
       id: 3,
-      title: "Nike Air Max",
+      name: "Nike Air Max",
       price: 7999,
       oldPrice: 12999,
       image:
         "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop",
-      discount: 38,
+      rating: 4.7,
+      reviews: 342,
+      badge: "Скидка -38%",
     },
     {
       id: 4,
-      title: 'Samsung TV 55"',
+      name: 'Samsung TV 55"',
       price: 45999,
       oldPrice: 65999,
       image:
         "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&h=300&fit=crop",
-      discount: 30,
+      rating: 4.6,
+      reviews: 128,
+      badge: "Топ выбор",
+    },
+  ];
+
+  const testimonials = [
+    {
+      id: 1,
+      name: "Анна Петрова",
+      rating: 5,
+      text: "Отличный сервис! Быстрая доставка и качественные товары. Рекомендую всем!",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b743?w=100&h=100&fit=crop",
     },
     {
-      id: 5,
-      title: "Sony WH-1000XM5",
-      price: 24999,
-      oldPrice: 32999,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop",
-      discount: 24,
+      id: 2,
+      name: "Михаил Сидоров",
+      rating: 5,
+      text: "Покупаю здесь уже несколько лет. Всегда довольны качеством и ценами.",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
     },
     {
-      id: 6,
-      title: "Adidas Ultraboost",
-      price: 8999,
-      oldPrice: 14999,
-      image:
-        "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=300&h=300&fit=crop",
-      discount: 40,
-    },
-    {
-      id: 7,
-      title: "Canon EOS R6",
-      price: 159999,
-      oldPrice: 189999,
-      image:
-        "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=300&h=300&fit=crop",
-      discount: 16,
-    },
-    {
-      id: 8,
-      title: "Dyson V15",
-      price: 39999,
-      oldPrice: 54999,
-      image:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop",
-      discount: 27,
-    },
-    {
-      id: 9,
-      title: "iPad Pro 12.9",
-      price: 89999,
-      oldPrice: 109999,
-      image:
-        "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=300&fit=crop",
-      discount: 18,
-    },
-    {
-      id: 10,
-      title: "AirPods Pro",
-      price: 19999,
-      oldPrice: 24999,
-      image:
-        "https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=300&h=300&fit=crop",
-      discount: 20,
-    },
-    {
-      id: 11,
-      title: "Tesla Model Y",
-      price: 4599999,
-      oldPrice: 5199999,
-      image:
-        "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=300&h=300&fit=crop",
-      discount: 12,
-    },
-    {
-      id: 12,
-      title: "Gaming Chair",
-      price: 25999,
-      oldPrice: 35999,
-      image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop",
-      discount: 28,
-    },
-    {
-      id: 13,
-      title: "Smart Watch",
-      price: 15999,
-      oldPrice: 22999,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop",
-      discount: 30,
-    },
-    {
-      id: 14,
-      title: "Coffee Machine",
-      price: 29999,
-      oldPrice: 39999,
-      image:
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=300&fit=crop",
-      discount: 25,
-    },
-    {
-      id: 15,
-      title: "Leather Jacket",
-      price: 12999,
-      oldPrice: 19999,
-      image:
-        "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=300&fit=crop",
-      discount: 35,
-    },
-    {
-      id: 16,
-      title: "Wireless Speaker",
-      price: 8999,
-      oldPrice: 12999,
-      image:
-        "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop",
-      discount: 31,
-    },
-    {
-      id: 17,
-      title: "Gaming Laptop",
-      price: 89999,
-      oldPrice: 119999,
-      image:
-        "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=300&h=300&fit=crop",
-      discount: 25,
-    },
-    {
-      id: 18,
-      title: "Drone 4K",
-      price: 34999,
-      oldPrice: 49999,
-      image:
-        "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=300&h=300&fit=crop",
-      discount: 30,
-    },
-    {
-      id: 19,
-      title: "Electric Scooter",
-      price: 45999,
-      oldPrice: 65999,
-      image:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop",
-      discount: 30,
-    },
-    {
-      id: 20,
-      title: "Smart Home Kit",
-      price: 19999,
-      oldPrice: 29999,
-      image:
-        "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=300&h=300&fit=crop",
-      discount: 33,
+      id: 3,
+      name: "Елена Козлова",
+      rating: 4,
+      text: "Хороший выбор товаров, удобный сайт. Единственный минус - иногда долгая доставка.",
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
     },
   ];
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length);
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
+    );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Banner Slider */}
-        <div className="relative mb-8">
-          <div className="w-full h-[400px] rounded-lg overflow-hidden">
-            <img
-              src={banners[currentSlide].image}
-              alt={banners[currentSlide].title}
-              className="w-full h-full object-cover"
+      {/* Hero Section */}
+      <section className="relative h-[500px] overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroSlides[currentSlide].image}
+            alt={heroSlides[currentSlide].title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="text-center text-white max-w-2xl px-4">
+            <h1 className="text-5xl font-bold mb-4">
+              {heroSlides[currentSlide].title}
+            </h1>
+            <p className="text-xl mb-8">{heroSlides[currentSlide].subtitle}</p>
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+            >
+              {heroSlides[currentSlide].buttonText}
+            </Button>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+          onClick={prevSlide}
+        >
+          <Icon name="ChevronLeft" size={20} />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+          onClick={nextSlide}
+        >
+          <Icon name="ChevronRight" size={20} />
+        </Button>
+
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full ${
+                index === currentSlide ? "bg-white" : "bg-white/50"
+              }`}
+              onClick={() => setCurrentSlide(index)}
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <div className="text-center text-white">
-                <h2 className="text-4xl font-bold mb-2">
-                  {banners[currentSlide].title}
-                </h2>
-                <p className="text-xl">{banners[currentSlide].subtitle}</p>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Truck" size={32} className="text-blue-600" />
               </div>
+              <h3 className="text-lg font-semibold mb-2">Быстрая доставка</h3>
+              <p className="text-gray-600">
+                Доставка по всей России за 1-3 дня
+              </p>
             </div>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white"
-            onClick={prevSlide}
-          >
-            <Icon name="ChevronLeft" size={20} />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white"
-            onClick={nextSlide}
-          >
-            <Icon name="ChevronRight" size={20} />
-          </Button>
-        </div>
-
-        {/* Categories */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Категории товаров
-          </h2>
-          <div className="grid grid-cols-5 gap-2">
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/MHxZ5XHT/CATEGORY-1.png"
-                alt="Категория 1"
-                className="w-[157px] h-[147px] object-cover mx-auto"
-              />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Shield" size={32} className="text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Гарантия качества</h3>
+              <p className="text-gray-600">100% оригинальные товары</p>
             </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/63C5CC9g/CATEGORY-2.png"
-                alt="Категория 2"
-                className="w-[157px] h-[147px] object-cover mx-auto"
-              />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="CreditCard" size={32} className="text-purple-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Удобная оплата</h3>
+              <p className="text-gray-600">Различные способы оплаты</p>
             </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/MGCpc981/CATEGORY-3.png"
-                alt="Категория 3"
-                className="w-[157px] h-[147px] object-cover mx-auto"
-              />
-            </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/R060Vj2M/CATEGORY-4.png"
-                alt="Категория 4"
-                className="w-[157px] h-[147px] object-cover mx-auto"
-              />
-            </div>
-            <div className="cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform">
-              <img
-                src="https://i.postimg.cc/6p13K9jj/CATEGORY-5.png"
-                alt="Категория 5"
-                className="w-[157px] h-[147px] object-cover mx-auto"
-              />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Headphones" size={32} className="text-orange-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Поддержка 24/7</h3>
+              <p className="text-gray-600">Всегда готовы помочь</p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Sale Products */}
-        <div>
-          <h2 className="text-2xl font-bold mb-6 text-center">Распродажа</h2>
-          <div className="grid grid-cols-4 gap-8">
-            {saleProducts.map((product) => (
+      {/* Categories Section */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Популярные категории
+            </h2>
+            <p className="text-lg text-gray-600">
+              Выберите категорию и найдите именно то, что ищете
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category) => (
               <div
-                key={product.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden border border-gray-100"
+                key={category.id}
+                className="relative group overflow-hidden rounded-lg cursor-pointer transform hover:scale-105 transition-all duration-300"
               >
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Discount Badge */}
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                      -{product.discount}%
-                    </div>
-                  </div>
-                  {/* Quality Badge */}
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-lg flex items-center">
-                      <Icon name="Check" size={12} className="mr-1" />
-                      Проверено
-                    </div>
-                  </div>
-                  {/* Quick Actions */}
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
-                      >
-                        <Icon
-                          name="Heart"
-                          size={16}
-                          className="text-gray-600"
-                        />
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
-                      >
-                        <Icon name="Eye" size={16} className="text-gray-600" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h4 className="font-semibold text-lg mb-3 line-clamp-2 min-h-[3.5rem] text-gray-900">
-                    {product.title}
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-baseline space-x-3">
-                      <span className="font-bold text-2xl text-gray-900">
-                        {product.price.toLocaleString()}₽
-                      </span>
-                      <span className="text-gray-400 line-through text-lg">
-                        {product.oldPrice.toLocaleString()}₽
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Icon
-                          name="Star"
-                          size={16}
-                          className="text-yellow-500 mr-1 fill-current"
-                        />
-                        <span className="font-medium">
-                          {(4.0 + Math.random() * 1).toFixed(1)}
-                        </span>
-                        <span className="text-gray-400 ml-2">
-                          ({Math.floor(Math.random() * 500 + 100)})
-                        </span>
-                      </div>
-                      <span className="text-sm text-green-600 font-medium">
-                        Продано: {Math.floor(Math.random() * 1000)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-sm text-gray-500">
-                        Быстрая доставка
-                      </span>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Icon name="Truck" size={14} className="mr-1" />
-                        <span>2-3 дня</span>
-                      </div>
-                    </div>
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
+                <div className="absolute inset-0 flex items-center justify-center text-center text-white">
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">{category.name}</h3>
+                    <p className="text-sm opacity-90">{category.count}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </main>
-      <Footer></Footer>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Рекомендуемые товары
+            </h2>
+            <p className="text-lg text-gray-600">
+              Лучшие предложения специально для вас
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+              >
+                <div className="relative">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-2 left-2">
+                    <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                      {product.badge}
+                    </span>
+                  </div>
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="p-2 bg-white/90 hover:bg-white"
+                    >
+                      <Icon name="Heart" size={16} />
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center mb-2">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={14}
+                          className={`${
+                            i < Math.floor(product.rating)
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-600 ml-2">
+                      ({product.reviews})
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xl font-bold text-gray-900">
+                        {product.price.toLocaleString()}₽
+                      </span>
+                      {product.oldPrice && (
+                        <span className="text-sm text-gray-500 line-through ml-2">
+                          {product.oldPrice.toLocaleString()}₽
+                        </span>
+                      )}
+                    </div>
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      <Icon name="ShoppingCart" size={16} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Promo Banner */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center text-white">
+            <h2 className="text-4xl font-bold mb-4">
+              Скидки до 50% на электронику!
+            </h2>
+            <p className="text-xl mb-8">
+              Не упустите шанс купить технику мечты по выгодной цене
+            </p>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="bg-white text-blue-600 hover:bg-gray-100"
+            >
+              Посмотреть предложения
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Что говорят наши клиенты
+            </h2>
+            <p className="text-lg text-gray-600">
+              Отзывы покупателей о нашем сервисе
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-white rounded-lg p-6 shadow-md"
+              >
+                <div className="flex items-center mb-4">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h4 className="font-semibold">{testimonial.name}</h4>
+                    <div className="flex items-center">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={12}
+                          className="text-yellow-400 fill-current"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic">"{testimonial.text}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Подпишитесь на новости
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Получайте информацию о новых товарах и специальных предложениях
+          </p>
+          <div className="flex max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Введите ваш email"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <Button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-r-lg">
+              Подписаться
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };
