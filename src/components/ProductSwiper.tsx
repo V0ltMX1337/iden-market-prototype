@@ -101,19 +101,19 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">
                   {product.name}
                 </h3>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-xl font-bold text-gray-900">
+                    {product.price.toLocaleString()} ₽
+                  </div>
+                  {product.originalPrice && (
+                    <div className="text-sm text-gray-400 line-through">
+                      {product.originalPrice.toLocaleString()} ₽
+                    </div>
+                  )}
+                </div>
                 <div className="mt-auto space-y-3">
                   <div className="flex items-center gap-1">
                     <div className="flex">{renderStars(product.rating)}</div>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xl font-bold text-gray-900">
-                      {product.price.toLocaleString()} ₽
-                    </span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-gray-400 line-through">
-                        {product.originalPrice.toLocaleString()} ₽
-                      </span>
-                    )}
                   </div>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     В корзину
