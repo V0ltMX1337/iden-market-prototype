@@ -1,9 +1,11 @@
+import React, { useState } from "react";
 import Header from "@/components/marketplace/Header";
 import Footer from "@/components/marketplace/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import ProductSwiper from "@/components/ProductSwiper";
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -122,6 +124,71 @@ const Index = () => {
       rating: 4.9,
       isNew: false,
       discount: 13,
+    },
+  ];
+
+  const products = [
+    {
+      id: 1,
+      name: "Смарт-часы Apple Watch",
+      price: 35990,
+      originalPrice: 39990,
+      image:
+        "https://cdn.poehali.dev/files/bb9b2af8-e78f-4a2f-9dea-c6b6c42ace47.png",
+      rating: 5,
+      badge: "ХИТ",
+      badgeColor: "bg-red-500",
+    },
+    {
+      id: 2,
+      name: "Беспроводные наушники Sony",
+      price: 18990,
+      originalPrice: 19990,
+      image:
+        "https://cdn.poehali.dev/files/5f5dd5dd-9b36-43b1-9b6c-36e12c6d1a89.png",
+      rating: 4,
+      badge: "СКИДКА",
+      badgeColor: "bg-orange-500",
+    },
+    {
+      id: 3,
+      name: "Наушники Bluetooth розовые",
+      price: 8990,
+      image:
+        "https://cdn.poehali.dev/files/f4d00396-1810-4907-9b1a-fd1239d9e135.png",
+      rating: 5,
+      badge: "НОВОЕ",
+      badgeColor: "bg-green-500",
+    },
+    {
+      id: 4,
+      name: "Планшет Samsung Galaxy",
+      price: 25990,
+      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400",
+      rating: 4,
+      badge: "ТОП",
+      badgeColor: "bg-purple-500",
+    },
+    {
+      id: 5,
+      name: "Камера GoPro Hero",
+      price: 32990,
+      image:
+        "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400",
+      rating: 5,
+      badge: "ЭКСКЛЮЗИВ",
+      badgeColor: "bg-indigo-500",
+    },
+    {
+      id: 6,
+      name: "Игровая мышь Razer",
+      price: 7990,
+      originalPrice: 9990,
+      image:
+        "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+      rating: 4,
+      badge: "ГЕЙМЕР",
+      badgeColor: "bg-cyan-500",
     },
   ];
 
@@ -371,6 +438,20 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* New Products Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Новинки</h2>
+            <p className="text-lg text-gray-600">
+              Самые свежие поступления в нашем магазине
+            </p>
+          </div>
+
+          <ProductSwiper products={products} />
         </div>
       </section>
 
