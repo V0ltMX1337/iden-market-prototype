@@ -188,39 +188,39 @@ const Index = () => {
                   <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
                     НОВОЕ
                   </Badge>
-                <Button
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
-                >
-                  <Icon name="Heart" size={12} />
-                </Button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                  Смарт-часы Apple Watch
-                </h3>
-                <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Icon
-                        key={i}
-                        name="Star"
-                        size={14}
-                        className="text-yellow-400 fill-current"
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="text-xl font-bold text-gray-900">
-                    39 990 ₽
-                  </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    В корзину
+                  <Button
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                  >
+                    <Icon name="Heart" size={12} />
                   </Button>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                      Смарт-часы Apple Watch
+                    </h3>
+                    <div className="flex items-center gap-1 mb-3">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="Star"
+                            size={14}
+                            className="text-yellow-400 fill-current"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="text-xl font-bold text-gray-900">
+                        39 990 ₽
+                      </div>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        В корзину
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
             <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
               <div className="relative">
