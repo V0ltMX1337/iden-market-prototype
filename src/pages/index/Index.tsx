@@ -173,11 +173,11 @@ const Index = () => {
             <h2 className="text-3xl font-bold text-gray-900">Новинки</h2>
           </div>
 
-          <div 
+          <div
             className="overflow-hidden bg-gray-50 rounded-lg"
-            style={{ width: '1410px', height: '526px' }}
+            style={{ width: "1410px", height: "526px" }}
           >
-            <div className="grid grid-cols-5 h-full" style={{ gap: '5px' }}>
+            <div className="grid grid-cols-5 h-full" style={{ gap: "5px" }}>
               <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
                 <div className="relative h-full flex flex-col">
                   <img
@@ -222,148 +222,151 @@ const Index = () => {
                 </div>
               </div>
 
-            <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
-              <div className="relative">
-                <img
-                  src="https://cdn.poehali.dev/files/9cd75def-2506-4cee-9ece-5a2c67522a60.png"
-                  alt="Фен Dyson"
-                  className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
-                  НОВОЕ
-                </Badge>
-                <div className="absolute top-2 left-16">
-                  <Badge className="bg-blue-500 text-white text-xs">
-                    НЕТ В НАЛИЧИИ
+              <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
+                <div className="relative">
+                  <img
+                    src="https://cdn.poehali.dev/files/9cd75def-2506-4cee-9ece-5a2c67522a60.png"
+                    alt="Фен Dyson"
+                    className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
+                    НОВОЕ
                   </Badge>
-                </div>
-                <Button
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
-                >
-                  <Icon name="Heart" size={12} />
-                </Button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                  Фен Dyson HD07 Professional
-                </h3>
-                <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Icon
-                        key={i}
-                        name="Star"
-                        size={14}
-                        className="text-yellow-400 fill-current"
-                      />
-                    ))}
+                  <div className="absolute top-2 left-16">
+                    <Badge className="bg-blue-500 text-white text-xs">
+                      НЕТ В НАЛИЧИИ
+                    </Badge>
                   </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="text-xl font-bold text-gray-900">
-                    29 990 ₽
-                  </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    Подробнее
+                  <Button
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                  >
+                    <Icon name="Heart" size={12} />
                   </Button>
                 </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                    Фен Dyson HD07 Professional
+                  </h3>
+                  <div className="flex items-center gap-1 mb-3">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={14}
+                          className="text-yellow-400 fill-current"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="text-xl font-bold text-gray-900">
+                      29 990 ₽
+                    </div>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      Подробнее
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
-              <div className="relative">
-                <img
-                  src="https://cdn.poehali.dev/files/b726d1d2-119e-4b15-896c-9076dfb80f43.png"
-                  alt="Колонка Mountain Fox"
-                  className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
-                  НОВОЕ
-                </Badge>
-                <div className="absolute top-2 left-16">
-                  <Badge className="bg-red-500 text-white text-xs">
-                    -1 000 ₽
+              <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
+                <div className="relative">
+                  <img
+                    src="https://cdn.poehali.dev/files/b726d1d2-119e-4b15-896c-9076dfb80f43.png"
+                    alt="Колонка Mountain Fox"
+                    className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
+                    НОВОЕ
                   </Badge>
-                </div>
-                <Button
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
-                >
-                  <Icon name="Heart" size={12} />
-                </Button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                  Колонка Mountain Fox Vector
-                </h3>
-                <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">
-                    {[...Array(4)].map((_, i) => (
-                      <Icon
-                        key={i}
-                        name="Star"
-                        size={14}
-                        className="text-yellow-400 fill-current"
-                      />
-                    ))}
-                    <Icon name="Star" size={14} className="text-gray-300" />
+                  <div className="absolute top-2 left-16">
+                    <Badge className="bg-red-500 text-white text-xs">
+                      -1 000 ₽
+                    </Badge>
                   </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex flex-col">
-                    <span className="text-xl font-bold text-gray-900">
-                      18 990 ₽
-                    </span>
-                    <span className="text-sm text-gray-400 line-through">
-                      19 990 ₽
-                    </span>
-                  </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    В корзину
+                  <Button
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                  >
+                    <Icon name="Heart" size={12} />
                   </Button>
                 </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                    Колонка Mountain Fox Vector
+                  </h3>
+                  <div className="flex items-center gap-1 mb-3">
+                    <div className="flex">
+                      {[...Array(4)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={14}
+                          className="text-yellow-400 fill-current"
+                        />
+                      ))}
+                      <Icon name="Star" size={14} className="text-gray-300" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex flex-col">
+                      <span className="text-xl font-bold text-gray-900">
+                        18 990 ₽
+                      </span>
+                      <span className="text-sm text-gray-400 line-through">
+                        19 990 ₽
+                      </span>
+                    </div>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      В корзину
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
-              <div className="relative">
-                <img
-                  src="https://cdn.poehali.dev/files/f4d00396-1810-4907-9b1a-fd1239d9e135.png"
-                  alt="Наушники розовые"
-                  className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
-                  НОВОЕ
-                </Badge>
-                <Button
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
-                >
-                  <Icon name="Heart" size={12} />
-                </Button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                  Наушники Bluetooth розовые
-                </h3>
-                <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Icon
-                        key={i}
-                        name="Star"
-                        size={14}
-                        className="text-yellow-400 fill-current"
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="text-xl font-bold text-gray-900">8 990 ₽</div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    В корзину
+              <div className="w-56 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
+                <div className="relative">
+                  <img
+                    src="https://cdn.poehali.dev/files/f4d00396-1810-4907-9b1a-fd1239d9e135.png"
+                    alt="Наушники розовые"
+                    className="w-56 h-56 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <Badge className="absolute top-2 left-2 bg-green-500 text-white text-xs">
+                    НОВОЕ
+                  </Badge>
+                  <Button
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                  >
+                    <Icon name="Heart" size={12} />
                   </Button>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                    Наушники Bluetooth розовые
+                  </h3>
+                  <div className="flex items-center gap-1 mb-3">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={14}
+                          className="text-yellow-400 fill-current"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="text-xl font-bold text-gray-900">
+                      8 990 ₽
+                    </div>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      В корзину
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
