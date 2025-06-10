@@ -8,96 +8,147 @@ import { useState } from "react";
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const featuredProducts = [
+  const bannerSlides = [
     {
-      id: 1,
-      name: "iPhone 15 Pro",
-      price: 89999,
-      oldPrice: 119999,
+      title: "СМАРТФОНЫ",
+      subtitle: "Последние модели",
+      description: "Откройте для себя новейшие технологии",
       image:
-        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-      rating: 4.8,
-      reviews: 256,
-      badge: "Хит продаж",
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&h=600&fit=crop",
+      buttonText: "Смотреть все",
+      bgColor: "from-blue-600 to-purple-700",
     },
     {
-      id: 2,
-      name: "MacBook Air M2",
-      price: 129999,
-      oldPrice: 149999,
+      title: "НАУШНИКИ",
+      subtitle: "Премиум звук",
+      description: "Беспроводные и проводные модели",
       image:
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop",
-      rating: 4.9,
-      reviews: 189,
-      badge: "Новинка",
-    },
-    {
-      id: 3,
-      name: "AirPods Pro",
-      price: 24999,
-      oldPrice: 29999,
-      image:
-        "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=400&fit=crop",
-      rating: 4.7,
-      reviews: 432,
-      badge: "Скидка",
-    },
-    {
-      id: 4,
-      name: "iPad Air",
-      price: 54999,
-      oldPrice: 64999,
-      image:
-        "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop",
-      rating: 4.8,
-      reviews: 178,
-      badge: "Популярно",
+        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop",
+      buttonText: "Купить сейчас",
+      bgColor: "from-purple-600 to-pink-600",
     },
   ];
 
   const categories = [
     {
-      id: 1,
-      name: "Беспроводные наушники",
-      description: "более 100 актуальных моделей",
+      name: "Смартфоны",
+      count: "124 товара",
       image:
-        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&h=400&fit=crop",
-      gradient: "from-blue-600 to-purple-600",
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=200&fit=crop",
+    },
+    {
+      name: "Наушники",
+      count: "86 товаров",
+      image:
+        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=200&fit=crop",
+    },
+    {
+      name: "Ноутбуки",
+      count: "45 товаров",
+      image:
+        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop",
+    },
+    {
+      name: "Планшеты",
+      count: "67 товаров",
+      image:
+        "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=300&h=200&fit=crop",
+    },
+  ];
+
+  const featuredProducts = [
+    {
+      id: 1,
+      name: "iPhone 15 Pro Max",
+      price: 119999,
+      oldPrice: 139999,
+      image:
+        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop",
+      rating: 4.9,
+      isNew: true,
+      discount: 15,
     },
     {
       id: 2,
-      name: "Смартфоны",
-      description: "Последние модели от топ брендов",
+      name: "Samsung Galaxy S24",
+      price: 89999,
+      oldPrice: 99999,
       image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop",
-      gradient: "from-purple-600 to-pink-600",
+        "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&h=300&fit=crop",
+      rating: 4.8,
+      isNew: false,
+      discount: 10,
     },
     {
       id: 3,
-      name: "Ноутбуки",
-      description: "Для работы и развлечений",
+      name: "MacBook Pro M3",
+      price: 189999,
+      oldPrice: 219999,
       image:
-        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop",
-      gradient: "from-green-600 to-blue-600",
+        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop",
+      rating: 4.9,
+      isNew: true,
+      discount: 14,
+    },
+    {
+      id: 4,
+      name: "AirPods Pro 2",
+      price: 24999,
+      oldPrice: 29999,
+      image:
+        "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=300&h=300&fit=crop",
+      rating: 4.7,
+      isNew: false,
+      discount: 17,
+    },
+    {
+      id: 5,
+      name: "iPad Pro 12.9",
+      price: 134999,
+      oldPrice: 154999,
+      image:
+        "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=300&h=300&fit=crop",
+      rating: 4.8,
+      isNew: true,
+      discount: 13,
+    },
+    {
+      id: 6,
+      name: "Sony WH-1000XM5",
+      price: 34999,
+      oldPrice: 39999,
+      image:
+        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=300&fit=crop",
+      rating: 4.9,
+      isNew: false,
+      discount: 13,
     },
   ];
 
   const brands = [
     {
       name: "Apple",
-      logo: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=120&h=80&fit=crop",
+      logo: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=120&h=60&fit=crop",
     },
     {
       name: "Samsung",
-      logo: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=120&h=80&fit=crop",
+      logo: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=120&h=60&fit=crop",
     },
     {
       name: "Sony",
-      logo: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=120&h=80&fit=crop",
+      logo: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=120&h=60&fit=crop",
+    },
+    {
+      name: "Xiaomi",
+      logo: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=120&h=60&fit=crop",
+    },
+    {
+      name: "Huawei",
+      logo: "https://images.unsplash.com/photo-1559526324-593bc073d938?w=120&h=60&fit=crop",
     },
     {
       name: "LG",
-      logo: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=120&h=80&fit=crop",
+      logo: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=120&h=60&fit=crop",
     },
   ];
 
@@ -105,77 +156,101 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-transparent"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                беспроводные
-                <br />
-                <span className="text-blue-200">наушники</span>
-              </h1>
-              <div className="inline-block">
-                <Badge className="bg-blue-500/30 text-white px-6 py-2 text-lg font-medium rounded-full border border-blue-300/30">
-                  более 100 актуальных моделей
-                </Badge>
+      {/* Main Banner Section */}
+      <section className="relative h-[500px] overflow-hidden">
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${bannerSlides[currentSlide].bgColor}`}
+        >
+          <div className="absolute inset-0 bg-black/20"></div>
+        </div>
+
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
+            <div className="text-white space-y-6">
+              <div className="space-y-2">
+                <p className="text-lg font-medium opacity-90">
+                  {bannerSlides[currentSlide].subtitle}
+                </p>
+                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                  {bannerSlides[currentSlide].title}
+                </h1>
+                <p className="text-xl opacity-90">
+                  {bannerSlides[currentSlide].description}
+                </p>
               </div>
-              <Button
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-semibold"
-              >
-                Смотреть каталог
-                <Icon name="ArrowRight" className="ml-2" size={20} />
-              </Button>
+
+              <div className="flex items-center space-x-4">
+                <Button
+                  size="lg"
+                  className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3"
+                >
+                  {bannerSlides[currentSlide].buttonText}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white/10 px-8 py-3"
+                >
+                  Узнать больше
+                </Button>
+              </div>
             </div>
-            <div className="relative">
+
+            <div className="hidden lg:block">
               <img
-                src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/slider-37-2-1.webp?t=1749571081"
-                alt="Беспроводные наушники"
-                className="w-full h-auto opacity-90"
+                src={bannerSlides[currentSlide].image}
+                alt={bannerSlides[currentSlide].title}
+                className="w-full h-[400px] object-cover rounded-2xl shadow-2xl"
               />
             </div>
           </div>
         </div>
+
+        {/* Slider dots */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {bannerSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                currentSlide === index ? "bg-white" : "bg-white/50"
+              }`}
+            />
+          ))}
+        </div>
       </section>
 
-      {/* Featured Categories */}
-      <section className="py-20 bg-gray-50">
+      {/* Categories Section */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Популярные категории
             </h2>
             <p className="text-lg text-gray-600">
-              Откройте для себя лучшие товары в каждой категории
+              Найдите именно то, что вам нужно
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.map((category) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((category, index) => (
               <div
-                key={category.id}
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+                key={index}
+                className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
               >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-90`}
-                ></div>
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                  <h3 className="text-xl font-bold mb-2">{category.name}</h3>
-                  <p className="text-white/90 mb-4">{category.description}</p>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="w-fit bg-white/20 text-white border-white/30 hover:bg-white/30"
-                  >
-                    Перейти в каталог
-                  </Button>
+                <div className="relative">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-900 mb-1">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-500">{category.count}</p>
                 </div>
               </div>
             ))}
@@ -184,15 +259,15 @@ const Index = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
                 Рекомендуемые товары
               </h2>
               <p className="text-lg text-gray-600">
-                Специально отобранные для вас
+                Лучшие предложения специально для вас
               </p>
             </div>
             <Button variant="outline" size="lg">
@@ -201,7 +276,7 @@ const Index = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
             {featuredProducts.map((product) => (
               <div
                 key={product.id}
@@ -211,53 +286,102 @@ const Index = () => {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <Badge className="absolute top-3 left-3 bg-blue-600 text-white">
-                    {product.badge}
-                  </Badge>
+                  <div className="absolute top-2 left-2 flex flex-col space-y-1">
+                    {product.isNew && (
+                      <Badge className="bg-green-500 text-white text-xs">
+                        Новинка
+                      </Badge>
+                    )}
+                    <Badge className="bg-red-500 text-white text-xs">
+                      -{product.discount}%
+                    </Badge>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                  >
+                    <Icon name="Heart" size={12} />
+                  </Button>
                 </div>
 
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                <div className="p-3">
+                  <h3 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {product.name}
                   </h3>
 
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex items-center">
-                      <Icon
-                        name="Star"
-                        className="text-yellow-400 fill-current"
-                        size={16}
-                      />
-                      <span className="text-sm text-gray-600 ml-1">
-                        {product.rating}
-                      </span>
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          size={12}
+                          className={
+                            i < Math.floor(product.rating)
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }
+                        />
+                      ))}
                     </div>
-                    <span className="text-sm text-gray-500">
-                      ({product.reviews})
+                    <span className="text-xs text-gray-500">
+                      ({product.rating})
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-gray-900">
-                        {product.price.toLocaleString()} ₽
-                      </span>
-                      {product.oldPrice && (
-                        <span className="text-sm text-gray-400 line-through">
-                          {product.oldPrice.toLocaleString()} ₽
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-gray-900">
+                          {product.price.toLocaleString()} ₽
                         </span>
-                      )}
+                        {product.oldPrice && (
+                          <span className="text-xs text-gray-400 line-through">
+                            {product.oldPrice.toLocaleString()} ₽
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
-                    В корзину
-                  </Button>
+                    <Button
+                      size="sm"
+                      className="w-full text-xs bg-blue-600 hover:bg-blue-700"
+                    >
+                      В корзину
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Special Offers Banner */}
+      <section className="py-16 bg-gradient-to-r from-orange-500 to-red-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-white">
+            <h2 className="text-4xl font-bold mb-4">Скидки до 50%</h2>
+            <p className="text-xl mb-8">
+              На избранные товары. Ограниченное предложение!
+            </p>
+            <div className="flex justify-center space-x-4">
+              <Button
+                size="lg"
+                className="bg-white text-orange-600 hover:bg-gray-100"
+              >
+                Смотреть скидки
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+              >
+                Подписаться на уведомления
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -266,24 +390,24 @@ const Index = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Наши партнёры
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Наши бренды
             </h2>
-            <p className="text-gray-600">
-              Работаем только с проверенными брендами
+            <p className="text-lg text-gray-600">
+              Работаем с ведущими производителями
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {brands.map((brand, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                className="flex items-center justify-center p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-200"
+                  className="h-8 w-auto opacity-60 hover:opacity-100 transition-opacity"
                 />
               </div>
             ))}
@@ -291,28 +415,23 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      {/* Newsletter Section */}
+      <section className="py-16 bg-blue-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Готовы найти идеальный товар?
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Подпишитесь на новости
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Более 10,000 товаров с быстрой доставкой и гарантией качества
+            Получайте уведомления о новых товарах и специальных предложениях
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-white text-blue-600 hover:bg-blue-50 px-8"
-            >
-              Начать покупки
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white/10 px-8"
-            >
-              Связаться с нами
+          <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
+            <input
+              type="email"
+              placeholder="Введите ваш email"
+              className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-blue-300"
+            />
+            <Button className="bg-white text-blue-600 hover:bg-gray-100 px-8">
+              Подписаться
             </Button>
           </div>
         </div>
