@@ -53,7 +53,7 @@ const ProductPage = () => {
 
       {/* Breadcrumbs */}
       <div className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center text-sm text-gray-600 space-x-2">
             <Link to="/marketplace" className="hover:text-primary">
               Каталог
@@ -66,7 +66,7 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left Column - Images */}
           <div className="space-y-4">
