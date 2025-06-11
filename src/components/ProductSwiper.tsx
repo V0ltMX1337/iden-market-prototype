@@ -90,15 +90,15 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
       `,
         }}
       />
-      <div className="w-full max-w-[1440px] mx-auto px-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">
+      <div className="w-full max-w-[1440px] mx-auto px-8">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
           Новинки
         </h2>
         <div className="relative group overflow-hidden">
           <Swiper
             modules={[Navigation]}
             slidesPerView={1}
-            spaceBetween={16}
+            spaceBetween={24}
             loop={true}
             loopAdditionalSlides={2}
             centeredSlides={false}
@@ -106,12 +106,15 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
             breakpoints={{
               640: {
                 slidesPerView: 2,
+                spaceBetween: 20,
               },
               1024: {
                 slidesPerView: 4,
+                spaceBetween: 24,
               },
               1280: {
-                slidesPerView: 6,
+                slidesPerView: 5,
+                spaceBetween: 32,
               },
             }}
             className="!overflow-hidden !mx-0 !px-0"
@@ -126,7 +129,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-72 object-cover hover:scale-105 transition-transform duration-300"
                     />
                     {product.badge && (
                       <Badge
@@ -142,27 +145,27 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                       <Icon name="Heart" size={12} />
                     </Button>
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="text-xl font-bold text-gray-900">
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="text-2xl font-bold text-gray-900">
                         {product.price.toLocaleString()} ₽
                       </div>
                       {product.originalPrice && (
-                        <div className="text-sm text-gray-400 line-through">
+                        <div className="text-base text-gray-400 line-through">
                           {product.originalPrice.toLocaleString()} ₽
                         </div>
                       )}
                     </div>
-                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                    <h3 className="font-semibold text-xl text-gray-900 mb-3">
                       {product.name}
                     </h3>
-                    <div className="mt-auto space-y-3">
+                    <div className="mt-auto space-y-4">
                       <div className="flex items-center gap-1">
                         <div className="flex">
                           {renderStars(product.rating)}
                         </div>
                       </div>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-base">
                         В корзину
                       </Button>
                     </div>
