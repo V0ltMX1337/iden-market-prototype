@@ -130,18 +130,18 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="bg-white border-b border-gray-200 w-[1440px] h-[170px] mx-auto">
       {/* Top navigation bar */}
       <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-10 text-sm">
-            <div className="flex items-center space-x-6">
+        <div className="max-w-full mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between h-12 text-base">
+            <div className="flex items-center space-x-8">
               <div className="flex items-center text-gray-600">
-                <Icon name="MapPin" size={14} className="mr-1" />
+                <Icon name="MapPin" size={18} className="mr-2" />
                 Россия
               </div>
             </div>
-            <div className="flex items-center space-x-6 text-gray-600">
+            <div className="flex items-center space-x-8 text-gray-600">
               <a
                 className="hover:text-blue-600"
                 onClick={() => navigate("/admin/register")}
@@ -179,19 +179,19 @@ const Header = () => {
       </div>
 
       {/* Main header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-full mx-auto px-6 lg:px-10">
+        <div className="flex items-center justify-between h-32">
           {/* Logo and breadcrumb */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-8">
             <div className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    className="p-1 hover:bg-gray-100"
+                    size="lg"
+                    className="p-3 hover:bg-gray-100"
                   >
-                    <Icon name="Grid3X3" size={24} className="text-blue-600" />
+                    <Icon name="Grid3X3" size={32} className="text-blue-600" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -291,7 +291,7 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <h1
-                className="text-2xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center ml-2"
+                className="text-4xl text-blue-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center ml-4"
                 onClick={() => navigate("/")}
               >
                 <FancyText
@@ -302,47 +302,47 @@ const Header = () => {
                   TRIVOMARKET
                 </FancyText>
               </h1>
-              <Badge variant="secondary" className="ml-2 text-xs">
+              <Badge variant="secondary" className="ml-3 text-sm px-3 py-1">
                 beta
               </Badge>
             </div>
           </div>
 
           {/* Search section - full width */}
-          <div className="flex-1 px-6">
+          <div className="flex-1 px-10">
             <div className="relative w-full">
               <Icon
                 name="Search"
-                size={20}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={24}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
               />
               <input
                 type="text"
                 placeholder="Искать на TRIVOMARKET..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-6 py-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Right side icons */}
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="Search" size={20} />
+          <div className="flex items-center space-x-6">
+            <Button variant="ghost" size="lg" className="p-3">
+              <Icon name="Search" size={24} />
             </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="Heart" size={20} />
+            <Button variant="ghost" size="lg" className="p-3">
+              <Icon name="Heart" size={24} />
             </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="Package" size={20} />
+            <Button variant="ghost" size="lg" className="p-3">
+              <Icon name="Package" size={24} />
             </Button>
-            <Button variant="ghost" size="sm" className="p-2">
-              <Icon name="MessageCircle" size={20} />
+            <Button variant="ghost" size="lg" className="p-3">
+              <Icon name="MessageCircle" size={24} />
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-2 relative">
-                  <Icon name="ShoppingCart" size={20} />
-                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <Button variant="ghost" size="lg" className="p-3 relative">
+                  <Icon name="ShoppingCart" size={24} />
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center">
                     1
                   </span>
                 </Button>
@@ -407,7 +407,10 @@ const Header = () => {
                     <span className="font-semibold text-lg">1 000 ₽</span>
                   </div>
                   <p className="text-xs text-gray-500">Без учёта Доставки</p>
-                  <Button onClick={() => navigate("/cart")} className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={() => navigate("/cart")}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                  >
                     Перейти к оформлению
                   </Button>
                 </div>
@@ -416,7 +419,7 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="p-0 rounded-full">
-                  <div className="flex items-center justify-center bg-blue-600 text-white w-8 h-8 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors">
+                  <div className="flex items-center justify-center bg-blue-600 text-white w-12 h-12 rounded-full text-lg font-medium hover:bg-blue-700 transition-colors">
                     АП
                   </div>
                 </Button>
