@@ -11,6 +11,7 @@ import Footer from "@/components/marketplace/Footer";
 import ProductCard from "@/components/marketplace/category/ProductCard";
 import SellerCard from "@/components/marketplace/seller/SellerCard";
 import ReviewsSection from "@/components/marketplace/product/ReviewsSection";
+import ARTryOn from "@/components/marketplace/ar/ARTryOn";
 
 const ProductPageAR = () => {
   const { productId } = useParams();
@@ -362,6 +363,15 @@ const ProductPageAR = () => {
               </div>
             </TabsContent>
           </Tabs>
+        </div>
+
+        {/* AR Try-On Section */}
+        <div className="mt-12">
+          <ARTryOn
+            productImage={product.images[0]}
+            productTitle={product.title}
+            productType="muzzle"
+          />
         </div>
       </div>
 
