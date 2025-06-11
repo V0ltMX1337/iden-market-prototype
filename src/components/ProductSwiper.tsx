@@ -28,7 +28,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
       <Icon
         key={i}
         name="Star"
-        size={14}
+        size={18}
         className={
           i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
         }
@@ -91,7 +91,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         }}
       />
       <div className="max-w-[1440px] mx-auto px-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
           Новинки
         </h2>
       </div>
@@ -123,48 +123,48 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
           >
             {products.map((product) => (
               <SwiperSlide key={product.id} className="!h-auto">
-                <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
+                <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
                   <div className="relative">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-72 object-cover hover:scale-105 transition-transform duration-300"
                     />
                     {product.badge && (
                       <Badge
-                        className={`absolute top-2 left-2 ${product.badgeColor} text-white text-xs`}
+                        className={`absolute top-3 left-3 ${product.badgeColor} text-white text-sm px-3 py-1`}
                       >
                         {product.badge}
                       </Badge>
                     )}
                     <Button
                       size="sm"
-                      className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                      className="absolute top-3 right-3 opacity-0 hover:opacity-100 transition-opacity p-3 h-10 w-10"
                     >
-                      <Icon name="Heart" size={12} />
+                      <Icon name="Heart" size={16} />
                     </Button>
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="text-xl font-bold text-gray-900">
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="text-2xl font-bold text-gray-900">
                         {product.price.toLocaleString()} ₽
                       </div>
                       {product.originalPrice && (
-                        <div className="text-sm text-gray-400 line-through">
+                        <div className="text-base text-gray-400 line-through">
                           {product.originalPrice.toLocaleString()} ₽
                         </div>
                       )}
                     </div>
-                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                    <h3 className="font-semibold text-xl text-gray-900 mb-3">
                       {product.name}
                     </h3>
-                    <div className="mt-auto space-y-3">
-                      <div className="flex items-center gap-1">
+                    <div className="mt-auto space-y-4">
+                      <div className="flex items-center gap-2">
                         <div className="flex">
                           {renderStars(product.rating)}
                         </div>
                       </div>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-base">
                         В корзину
                       </Button>
                     </div>
