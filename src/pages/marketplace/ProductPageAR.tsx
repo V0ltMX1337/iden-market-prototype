@@ -17,6 +17,7 @@ const ProductPageAR = () => {
   const { productId } = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState("Черный");
+  const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -32,6 +33,7 @@ const ProductPageAR = () => {
     seller: "Яндекс",
     sellerRating: 4.5,
     images: [
+      "https://fordogtrainers.ru/images/stories/virtuemart/product/metallicheskij-namordnik-dlya-pudelya-kobelya-m9-12.jpg",
       "https://avatars.mds.yandex.net/get-mpic/11588019/2a0000018b44a438811bd2f8fd12f827eba4/optimize",
       "https://avatars.mds.yandex.net/get-mpic/1888674/2a0000018ac1bb0f95524450e9089de46858/optimize",
       "https://avatars.mds.yandex.net/get-mpic/4599566/2a0000018ac1bb0eca53bffe743bef2c39d9/optimize",
@@ -42,9 +44,16 @@ const ProductPageAR = () => {
       { name: "Черный", price: 15990, stock: 12 },
       { name: "Белый", price: 15990, stock: 8 },
     ],
+    sizes: [
+      { name: "L", price: 465, size: 31, stock: 12 },
+      { name: "M", price: 470, size: 22, stock: 8 },
+      { name: "S", price: 480, size: 17, stock: 8 },
+      { name: "XS", price: 490, size: 14, stock: 8 },
+      { name: "XL", price: 500, size: 12, stock: 8 },
+    ],
     description:
       "Легкий намордник для собак, специально разработан для безопасности окружающих и самой собаки. Имеет надежную продуманную конструкцию, с учетом анатомических особенностей собак. Изготовлена амуниция из нетоксичного пластика, ношение которого ни каким образом не отобразится на здоровье вашего пса. Крепится на затылке защелкиванием надежного замка - фастекса с возможностью регулировки ремешка по длине. Выпускаются намордники в семи размерах. Выполнен из материалов, легко поддающихся чистке и стирке. Есть дополнительная сетка, которая увеличивает безопасность. Благодаря специальным нейлоновым ремешкам намордник легко регулируется под особенности и размер шеи животного. Рекомендуется пристегивать намордник к ошейнику, чтобы собака не смогла снять его или случайно потерять. Другие товары для животных Вы сможете найти в нашем магазине Pet Paradise. Размер M внутренняя окружность морды 22 см; длина морды 6,5 см",
-    features: ["Размер M", "Вес 2.7 кг"],
+    features: ["Вес 2.7 кг"],
   };
 
   return (
@@ -143,9 +152,29 @@ const ProductPageAR = () => {
               </div>
             </div>
 
+            {/* Size Selection */}
+            <div className="space-y-3">
+              <div className="flex items-center space-x-4">
+                <span className="ml-1 text-gray-500">
+                    Размер
+                </span>
+                {product.sizes.map((variant) => (
+                   <button key={variant.name} onClick={() => setSelectedSize(variant.name)} className="p-0 rounded-full">
+                    <div className="flex items-center justify-center bg-blue-600 text-white w-8 h-8 rounded-full text-lg font-medium hover:bg-blue-700 transition-colors">
+                      {variant.name}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+
             {/* Color Selection */}
             <div className="space-y-3">
               <div className="flex items-center space-x-4">
+                <span className="ml-1 text-gray-500">
+                    Цвет
+                </span>
                 {product.variants.map((variant) => (
                   <button
                     key={variant.name}
@@ -207,13 +236,13 @@ const ProductPageAR = () => {
                   </h3>
                   <div className="flex items-center space-x-2 text-sm">
                     <span className="text-gray-600">Кредит от</span>
-                    <span className="font-semibold">0 756 ₽/мес</span>
+                    <span className="font-semibold">465 ₽/мес</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <span className="text-gray-600">Рассрочка от</span>
-                    <span className="font-semibold">0 756 ₽/мес</span>
+                    <span className="font-semibold">465 ₽/мес</span>
                     <Badge variant="outline" className="text-xs">
-                      Мокка
+                      TrivoBank
                     </Badge>
                     <span className="text-xs text-gray-500">
                       | оплата авансом
@@ -234,11 +263,11 @@ const ProductPageAR = () => {
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center space-x-2">
                       <Icon name="MapPin" size={16} className="text-blue-600" />
-                      <span>Самовывоз из 4 точек в Санкт-Петербург</span>
+                      <span>Самовывоз из 4 точек в Дзержинске</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Icon name="Truck" size={16} className="text-green-600" />
-                      <span>Доставка курьером • 24.04 от 390 ₽</span>
+                      <span>Доставка курьером • 14.06 от 390 ₽</span>
                     </div>
                   </div>
                 </div>

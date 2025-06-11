@@ -486,6 +486,65 @@ const ARTryOn = ({ productImage, productTitle, productType }: ARTryOnProps) => {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Icon name="Eye" size={24} className="text-green-600" />
+            <span>Пример результата</span>
+          </CardTitle>
+          <p className="text-gray-600">
+            Посмотрите, как работает наложение намордника на фото собаки
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Оригинальное фото собаки */}
+            <div className="space-y-3">
+              <h3 className="font-medium text-gray-900">До</h3>
+              <div className="aspect-square bg-gray-50 rounded-xl overflow-hidden">
+                <img
+                  src="https://i.postimg.cc/ZnrvdqXR/Chat-GPT-Image-11-2025-22-04-36.png"
+                  alt="Собака без намордника"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-sm text-gray-600">
+                Оригинальное фото собаки
+              </p>
+            </div>
+
+            {/* Результат с намордником */}
+            <div className="space-y-3">
+              <h3 className="font-medium text-gray-900">После</h3>
+              <div className="aspect-square bg-gray-50 rounded-xl overflow-hidden">
+                <img
+                  src="https://i.postimg.cc/WprkK9tv/Chat-GPT-Image-11-2025-22-04-32.png"
+                  alt="Собака с намордником"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-sm text-gray-600">
+                С наложенным намордником
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-green-50 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <Icon name="CheckCircle" size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-green-900 mb-1">
+                  Точное позиционирование
+                </h4>
+                <p className="text-sm text-green-700">
+                  Алгоритм автоматически определяет оптимальное место для размещения намордника на морде собаки
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -21,29 +21,29 @@ const ProductPage = () => {
 
   const product = {
     id: productId,
-    title: "Умная колонка Яндекс.Станция Макс",
+    title: "Умная колонка Яндекс Станция Миди с Алисой на YandexGPT, черный, Zigbee",
     sku: "WVP-43436208298",
     rating: 4.8,
-    reviewsCount: 1247,
-    price: 15990,
-    oldPrice: 18990,
-    discount: 16,
+    reviewsCount: 1,
+    price: 13256,
+    oldPrice: 13900,
+    discount: 1,
     seller: "Яндекс",
     sellerRating: 4.9,
     images: [
-      "https://cdn.poehali.dev/files/f9d8bc50-e27b-49e6-90c7-af9d4dff96f4.png",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
-      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400",
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
-      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400",
-      "https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=400",
+      "https://avatars.mds.yandex.net/get-mpic/12022975/img_id7796576580293210593.jpeg/optimize",
+      "https://avatars.mds.yandex.net/get-mpic/11375994/img_id2766794769389617093.jpeg/optimize",
+      "https://avatars.mds.yandex.net/get-mpic/11396163/img_id6929256959829280646.jpeg/optimize",
+      "https://avatars.mds.yandex.net/get-mpic/11375994/img_id3226931699529867472.jpeg/optimize",
+      "https://avatars.mds.yandex.net/get-mpic/11722550/img_id1179285727551659135.jpeg/optimize",
+      "https://avatars.mds.yandex.net/get-mpic/11368570/img_id698259707709021025.jpeg/optimize",
     ],
     variants: [
-      { name: "Черный", price: 15990, stock: 12 },
-      { name: "Белый", price: 15990, stock: 8 },
+      { name: "Черный", price: 13256, stock: 12 },
+      { name: "Белый", price: 13256, stock: 8 },
     ],
     description:
-      "Умная колонка с Алисой, мощным звуком и поддержкой всех популярных стриминговых сервисов.",
+      "Яндекс Станция Миди — новая умная колонка с виртуальным ассистентом Алисой. Мощное звучание 24 Вт в таком компактном корпусе. Благодаря переходу на нейронный процессор Станция Миди быстрее обрабатывает ваши запросы. А значит, Алиса лучше откликается на команды и точнее узнаёт людей по голосу. LED-дисплей, который показывает время, погоду и реакции Алисы, а также активная контурная LED-подсветка. Встроенный хаб управления Zigbee™¹ и голосовое управление умным домом даже без интернета². Беспроводная связь Wi-Fi (2,4–5 ГГц) и Bluetooth 5.0. Новый размер и узнаваемый дизайн — Станция Миди впишется в любое пространство вашего дома.Теперь Алиса работает с нейросетью YandexGPT, которая позволила улучшить сценарии работы виртуального ассистента №1*.\nПомогает вам придумывать идеи, объясняет сложное простыми словами, общается как интересный собеседник - теперь Алиса лучше удерживает контекст разговора и задаёт вопросы, когда хочет что-то уточнить.\nМощный звук с выраженными басами",
     features: ["Алиса живёт здесь", "Умная колонка", "Вес 2.7 кг"],
   };
 
@@ -55,13 +55,25 @@ const ProductPage = () => {
       <div className="border-b border-gray-100">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center text-sm text-gray-600 space-x-2">
-            <Link to="/marketplace" className="hover:text-primary">
+            <Link to="/marketplace/category/auto" className="hover:text-primary">
               Каталог
             </Link>
             <Icon name="ChevronRight" size={14} />
-            <span className="text-blue-600">Умная для дома</span>
+            <Link to="/marketplace/category/auto">
+              <span className="text-gray-900">Электроника</span>
+            </Link>
             <Icon name="ChevronRight" size={14} />
-            <span className="text-gray-900">Умная колонка</span>
+            <Link to="/marketplace/category/auto">
+              <span className="text-gray-900">Умные колонки</span>
+            </Link>
+            <Icon name="ChevronRight" size={14} />
+            <Link to="/marketplace/category/auto">
+              <span className="text-gray-900">Умные колонки Яндекс</span>
+            </Link>
+            <Icon name="ChevronRight" size={14} />
+            <Link to="/marketplace/category/auto">
+              <span className="text-blue-600">Яндекс</span>
+            </Link>
           </div>
         </div>
       </div>
