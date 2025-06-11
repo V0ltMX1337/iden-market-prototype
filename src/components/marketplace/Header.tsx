@@ -130,7 +130,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white border-b border-gray-200 w-[1440px] h-[170px] mx-auto">
+    <header className="bg-white border-b border-gray-200 w-[1440px] h-[140px] mx-auto">
       {/* Top navigation bar */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-full mx-auto px-6 lg:px-10">
@@ -180,7 +180,7 @@ const Header = () => {
 
       {/* Main header */}
       <div className="max-w-full mx-auto px-6 lg:px-10">
-        <div className="flex items-center justify-between h-32">
+        <div className="flex items-center justify-between h-20">
           {/* Logo and breadcrumb */}
           <div className="flex items-center space-x-8">
             <div className="flex items-center">
@@ -326,22 +326,26 @@ const Header = () => {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-6">
-            <Button variant="ghost" size="lg" className="p-3">
-              <Icon name="Search" size={24} />
+            <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
+              <Icon name="Search" size={28} />
             </Button>
-            <Button variant="ghost" size="lg" className="p-3">
-              <Icon name="Heart" size={24} />
+            <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
+              <Icon name="Heart" size={28} />
             </Button>
-            <Button variant="ghost" size="lg" className="p-3">
-              <Icon name="Package" size={24} />
+            <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
+              <Icon name="Package" size={28} />
             </Button>
-            <Button variant="ghost" size="lg" className="p-3">
-              <Icon name="MessageCircle" size={24} />
+            <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
+              <Icon name="MessageCircle" size={28} />
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="lg" className="p-3 relative">
-                  <Icon name="ShoppingCart" size={24} />
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="p-4 h-14 w-14 relative"
+                >
+                  <Icon name="ShoppingCart" size={28} />
                   <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center">
                     1
                   </span>
