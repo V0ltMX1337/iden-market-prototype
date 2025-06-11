@@ -94,7 +94,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
           Новинки
         </h2>
-        <div className="relative group overflow-hidden">
+        <div className="relative group overflow-hidden px-8">
           <Swiper
             modules={[Navigation]}
             slidesPerView={1}
@@ -114,7 +114,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
               },
               1280: {
                 slidesPerView: 5,
-                spaceBetween: 32,
+                spaceBetween: 40,
               },
             }}
             className="!overflow-hidden !mx-0 !px-0"
