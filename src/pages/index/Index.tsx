@@ -193,9 +193,9 @@ const Index = () => {
       <Header />
 
       {/* Слайдер */}
-      <SliderSwiper slideres={sliders} />
-
-      {/* Hero slider остается */}
+      <section style={{paddingTop: "1.563rem"}}>
+        <SliderSwiper slideres={sliders} />
+      </section>
 
       {/* New Products Section */}
       <section className="py-16 bg-white">
