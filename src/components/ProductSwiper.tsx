@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Button } from "@/components/ui/button";
@@ -96,7 +96,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         </h2>
         <div className="relative group overflow-hidden px-8">
           <Swiper
-            modules={[Navigation]}
+            modules={[Navigation, Autoplay]}
             slidesPerView={1}
             spaceBetween={24}
             loop={true}
@@ -129,7 +129,7 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-72 object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full flex justify-center"
                     />
                     {product.badge && (
                       <Badge

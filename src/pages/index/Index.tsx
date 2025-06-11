@@ -198,20 +198,12 @@ const Index = () => {
       </section>
 
       {/* New Products Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Новинки</h2>
-            <p className="text-lg text-gray-600">
-              Самые свежие поступления в нашем магазине
-            </p>
-          </div>
-
-          <ProductSwiper products={products} />
-        </div>
-      </section>
+      <section style={{paddingTop: "1.563rem"}}>
+         <ProductSwiper products={products} />
+       </section>
 
       {/* Баннер */}
+      <section style={{paddingTop: "1.563rem"}}>
       <div className="w-full flex justify-center">
         <img
           src="https://themes.ewonta.com/demo/modules/homeblocks/views/img/img_home/40-1-1.webp?t=1749592297"
@@ -220,17 +212,12 @@ const Index = () => {
           style={{ maxWidth: "1410px" }}
         />
       </div>
-
-      {/* New Category Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Категории</h2>
-          </div>
-
-          <CategorySwipper products={categories} />
-        </div>
       </section>
+
+       {/* New Products Section */}
+      <section style={{paddingTop: "1.563rem"}}>
+         <CategorySwipper products={categories} />
+       </section>
       <Footer />
     </div>
   );

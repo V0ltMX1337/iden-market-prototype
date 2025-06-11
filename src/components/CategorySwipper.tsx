@@ -3,8 +3,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/ui/icon";
 
 interface Product {
   id: number;
@@ -17,19 +15,6 @@ interface CategorySwipperProps {
 }
 
 const CategorySwiper: React.FC<CategorySwipperProps> = ({ products }) => {
-  const renderStars = (rating: number) => {
-    return [...Array(5)].map((_, i) => (
-      <Icon
-        key={i}
-        name="Star"
-        size={14}
-        className={
-          i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
-        }
-      />
-    ));
-  };
-
   return (
     <>
       <style dangerouslySetInnerHTML={{__html: `
@@ -80,10 +65,13 @@ const CategorySwiper: React.FC<CategorySwipperProps> = ({ products }) => {
           align-items: stretch !important;
         }
       `}} />
-      <div className="relative group overflow-hidden">
-
+      <div className="w-full max-w-[1440px] mx-auto px-8">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
+          Новинки
+        </h2>
+        <div className="relative group overflow-hidden px-8">
       <Swiper
-        modules={[Navigation]}
+        modules={[Navigation, Autoplay]}
         slidesPerView={1}
         spaceBetween={16}
         loop={true}
@@ -121,6 +109,7 @@ const CategorySwiper: React.FC<CategorySwipperProps> = ({ products }) => {
         ))}
       </Swiper>
       </div>
+    </div>
     </>
   );
 };

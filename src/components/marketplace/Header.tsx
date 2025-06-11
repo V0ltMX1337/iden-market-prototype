@@ -189,9 +189,9 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     size="lg"
-                    className="p-3 hover:bg-gray-100"
+                    className="p-1 hover:bg-gray-100"
                   >
-                    <Icon name="Grid3X3" size={32} className="text-blue-600" />
+                    <Icon name="Grid3X3" size={64} className="text-blue-600" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -327,16 +327,16 @@ const Header = () => {
           {/* Right side icons */}
           <div className="flex items-center space-x-6">
             <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
-              <Icon name="Search" size={28} />
+              <Icon name="Search" size={32} />
             </Button>
             <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
-              <Icon name="Heart" size={28} />
+              <Icon name="Heart" size={32} />
             </Button>
             <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
-              <Icon name="Package" size={28} />
+              <Icon name="Package" size={32} />
             </Button>
             <Button variant="ghost" size="lg" className="p-4 h-14 w-14">
-              <Icon name="MessageCircle" size={28} />
+              <Icon name="MessageCircle" size={32} />
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
