@@ -23,6 +23,7 @@ import PartnerFinance from "@/components/partner/PartnerFinance";
 import Cart from "@/pages/index/Cart";
 import PartnerGPT from "@/components/partner/PartnerGPT";
 import Index from "./pages/index/Index";
+import ProductPageAR from "./pages/marketplace/ProductPageAR";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,8 @@ const App = () => (
             path="/marketplace/category/:category"
             element={<MarketplaceCategory />}
           />
-          <Route path="/product/:productId" element={<ProductPage />} />
+          <Route path="/marketplace/product/:productId" element={<ProductPage />} />
+          <Route path="/marketplace/product/ar/:productId" element={<ProductPageAR />} />
           <Route path="/seller/:sellerId" element={<SellerPage />} />
           <Route path="/partner/login" element={<PartnerLogin />} />
           <Route path="/partner/register" element={<PartnerRegister />} />
