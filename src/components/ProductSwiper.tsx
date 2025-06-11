@@ -38,7 +38,9 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{__html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .swiper-button-next,
         .swiper-button-prev {
           width: 48px !important;
@@ -85,83 +87,91 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
         .swiper-wrapper {
           align-items: stretch !important;
         }
-      `}} />
-      <div className="relative group overflow-hidden">
-
-      <Swiper
-        modules={[Navigation]}
-        slidesPerView={1}
-        spaceBetween={16}
-        loop={true}
-        loopAdditionalSlides={2}
-        centeredSlides={false}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 2,
-          },
-          1024: {
-            slidesPerView: 4,
-          },
-          1280: {
-            slidesPerView: 6,
-          },
+      `,
         }}
-        className="!overflow-hidden !mx-0 !px-0"
-        style={{ margin: 0, padding: 0 }}
-        slidesOffsetBefore={0}
-        slidesOffsetAfter={0}
-      >
-        {products.map((product) => (
-          <SwiperSlide key={product.id} className="!h-auto">
-            <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
-              <div className="relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
-                />
-                {product.badge && (
-                  <Badge
-                    className={`absolute top-2 left-2 ${product.badgeColor} text-white text-xs`}
-                  >
-                    {product.badge}
-                  </Badge>
-                )}
-                <Button
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
-                >
-                  <Icon name="Heart" size={12} />
-                </Button>
-              </div>
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="text-xl font-bold text-gray-900">
-                    {product.price.toLocaleString()} ₽
+      />
+      <div className="w-full max-w-[1440px] mx-auto px-4">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">
+          Новинки
+        </h2>
+        <div className="relative group overflow-hidden">
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={1}
+            spaceBetween={16}
+            loop={true}
+            loopAdditionalSlides={2}
+            centeredSlides={false}
+            navigation={true}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: 4,
+              },
+              1280: {
+                slidesPerView: 6,
+              },
+            }}
+            className="!overflow-hidden !mx-0 !px-0"
+            style={{ margin: 0, padding: 0 }}
+            slidesOffsetBefore={0}
+            slidesOffsetAfter={0}
+          >
+            {products.map((product) => (
+              <SwiperSlide key={product.id} className="!h-auto">
+                <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
+                  <div className="relative">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                    {product.badge && (
+                      <Badge
+                        className={`absolute top-2 left-2 ${product.badgeColor} text-white text-xs`}
+                      >
+                        {product.badge}
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity p-2 h-8 w-8"
+                    >
+                      <Icon name="Heart" size={12} />
+                    </Button>
                   </div>
-                  {product.originalPrice && (
-                    <div className="text-sm text-gray-400 line-through">
-                      {product.originalPrice.toLocaleString()} ₽
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="text-xl font-bold text-gray-900">
+                        {product.price.toLocaleString()} ₽
+                      </div>
+                      {product.originalPrice && (
+                        <div className="text-sm text-gray-400 line-through">
+                          {product.originalPrice.toLocaleString()} ₽
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                  {product.name}
-                </h3>
-                <div className="mt-auto space-y-3">
-                  <div className="flex items-center gap-1">
-                    <div className="flex">{renderStars(product.rating)}</div>
+                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                      {product.name}
+                    </h3>
+                    <div className="mt-auto space-y-3">
+                      <div className="flex items-center gap-1">
+                        <div className="flex">
+                          {renderStars(product.rating)}
+                        </div>
+                      </div>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        В корзину
+                      </Button>
+                    </div>
                   </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    В корзину
-                  </Button>
                 </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </>
   );
