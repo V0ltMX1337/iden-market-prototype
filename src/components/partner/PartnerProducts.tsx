@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import PartnerProductForm from "@/components/partner/PartnerProductForm";
+import ProductWizardForm from "./ProductWizardForm";
 
 const PartnerProducts = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -106,7 +107,7 @@ const PartnerProducts = () => {
         </CardContent>
       </Card>
 
-      {isFormOpen && <PartnerProductForm onClose={() => setIsFormOpen(false)} />}
+      {isFormOpen && <ProductWizardForm onClose={() => setIsFormOpen(false)} />}
 
       {editingProduct && (
         <PartnerProductForm

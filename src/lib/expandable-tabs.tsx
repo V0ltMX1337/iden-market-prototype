@@ -86,8 +86,6 @@ export function ExpandableTabs({
     <div className="mx-1 h-[24px] w-[1.2px] bg-border" aria-hidden="true" />
   );
 
-  const location = useLocation();
-
   return (
     <div className="relative" ref={outsideClickRef}>
       <div
@@ -100,14 +98,7 @@ export function ExpandableTabs({
           if (tab.type === "separator") {
             return <Separator key={`separator-${index}`} />;
           }
-
-          const isActive = location.pathname.includes(tab.action?.arguments);
-
-          if (isActive) {
-            setSelected(index);
-            onChange?.(index);
-          }
-
+          
           const Icon = tab.icon;
           return (
             <motion.button
