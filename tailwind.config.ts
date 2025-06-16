@@ -69,6 +69,10 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				'fadeIn': {
+       				'0%': { opacity: '0', transform: 'translateX(10px)' },
+        			'100%': { opacity: '1', transform: 'translateX(0)' },
+      			},
 				'accordion-down': {
 					from: {
 						height: '0'
@@ -87,6 +91,7 @@ export default {
 				}
 			},
 			animation: {
+				'fade-in': 'fadeIn 0.2s ease-out both',
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
