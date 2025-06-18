@@ -36,6 +36,48 @@ const initialCells: StorageCell[] = [
       { id: "ORDER-111", expiryDate: "2025-06-15", status: "stored" },
     ],
   },
+  {
+    id: "cell-4",
+    name: "3",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-5",
+    name: "4",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-6",
+    name: "5",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-7",
+    name: "6",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-8",
+    name: "7",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-9",
+    name: "8",
+    purpose: "storage",
+    orders: [],
+  },
+  {
+    id: "cell-10",
+    name: "9",
+    purpose: "storage",
+    orders: [],
+  },
 ]
 
 const PvzWarehouseManagement = () => {

@@ -33,6 +33,8 @@ import PvzShipmentReceipt from "./components/pvzturbo/PvzShipmentReceipt";
 import PvzWarehouseManagement from "./components/pvzturbo/PvzWarehouseManagement";
 import PvzPlaceOrders from "./components/pvzturbo/PvzPlaceOrders";
 import PvzSupportChat from "./components/pvzturbo/PvzSupportChat";
+import PvzTrainingPage from "./components/pvzturbo/PvzTrainingPage";
+import PvzTrainingCoursePage from "./components/pvzturbo/PvzTrainingCoursePage";
 
 const queryClient = new QueryClient();
 
@@ -79,8 +81,8 @@ const App = () => (
             <Route path="/pvzturbo/returns-from-seller" element={<PvzOrders />} />
             <Route path="/pvzturbo/sklad" element={<PvzWarehouseManagement />} />
             <Route path="/pvzturbo/order-place" element={<PvzPlaceOrders />} />
-            <Route path="/pvzturbo/training" element={<PvzOrders />} />
-            <Route path="/pvzturbo/analytics" element={<PvzOrders />} />
+            <Route path="/pvzturbo/training" element={<PvzTrainingPage />} />
+            <Route path="/pvzturbo/training/:courseId" element={<PvzTrainingCoursePage />} />
             <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
           </Route>
           <Route path="*" element={<NotFound />} />
