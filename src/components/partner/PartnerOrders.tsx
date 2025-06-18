@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 
-const AdminOrders = () => {
+const PartnerOrders = () => {
   const [orders] = useState([
     {
       id: "#12345",
@@ -160,4 +160,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default PartnerOrders;

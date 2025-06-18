@@ -24,6 +24,15 @@ import Cart from "@/pages/index/Cart";
 import PartnerGPT from "@/components/partner/PartnerGPT";
 import Index from "./pages/index/Index";
 import ProductPageAR from "./pages/marketplace/ProductPageAR";
+import PvzDashboard from "./pages/pvzturbo/PvzDashboard";
+import PvzOrders from "./components/pvzturbo/PvzOrders";
+import PvzOrderIssuance from "./components/pvzturbo/PvzOrderIssuance";
+import PvzOrderIssuanceDetails from "./components/pvzturbo/PvzOrderIssuanceDetails";
+import PvzReturnsPackagingPage from "./components/pvzturbo/PvzReturnsPackagingPage";
+import PvzShipmentReceipt from "./components/pvzturbo/PvzShipmentReceipt";
+import PvzWarehouseManagement from "./components/pvzturbo/PvzWarehouseManagement";
+import PvzPlaceOrders from "./components/pvzturbo/PvzPlaceOrders";
+import PvzSupportChat from "./components/pvzturbo/PvzSupportChat";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +67,21 @@ const App = () => (
             <Route path="/partner/gpt" element={<PartnerGPT />} />
             <Route path="/partner/analytics" element={<PartnerAnalytics />} />
             <Route path="/partner/finance" element={<PartnerFinance />} />
+          </Route>
+          <Route path="/pvzturbo" element={<PvzDashboard />}>
+            <Route index element={<PvzOrders />} />
+            <Route path="/pvzturbo/overview" element={<PvzOrders />} />
+            <Route path="/pvzturbo/order-issuance" element={<PvzOrderIssuance />} />
+            <Route path="/pvzturbo/order-issuance/:barcode" element={<PvzOrderIssuanceDetails  />} />
+            <Route path="/pvzturbo/order-issuance/returns-packaging/:barcode" element={<PvzReturnsPackagingPage  />} />
+            <Route path="/pvzturbo/shipment-receipt" element={<PvzShipmentReceipt />} />
+            <Route path="/pvzturbo/returns-from-client" element={<PvzOrders />} />
+            <Route path="/pvzturbo/returns-from-seller" element={<PvzOrders />} />
+            <Route path="/pvzturbo/sklad" element={<PvzWarehouseManagement />} />
+            <Route path="/pvzturbo/order-place" element={<PvzPlaceOrders />} />
+            <Route path="/pvzturbo/training" element={<PvzOrders />} />
+            <Route path="/pvzturbo/analytics" element={<PvzOrders />} />
+            <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
