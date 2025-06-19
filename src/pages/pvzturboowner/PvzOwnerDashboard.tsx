@@ -1,11 +1,10 @@
-import PvzNotificationToast from "@/components/pvzturbo/pvz/PvzNotificationToast";
-import PvzSidebar from "@/components/pvzturbo/pvz/PvzSiderbar";
+import PvzOwnerSidebar from "@/components/pvzturbo/pvzowner/PvzOwnerSiderbar";
 import { Outlet } from "react-router-dom";
 
-const PvzDashboard = () => {
+const PvzOwnerDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <PvzSidebar />
+      <PvzOwnerSidebar />
       <div className="flex-1">
         <div className="bg-white shadow-sm border-b">
           <div className="px-8 py-6">
@@ -15,7 +14,7 @@ const PvzDashboard = () => {
                   Панель управления
                 </h1>
                 <p className="text-gray-600">
-                  Управляйте вашим пунктом выдачи
+                  Управляйте вашими пунктами выдачи
                 </p>
               </div>
               <button className="bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 transition-colors">
@@ -29,11 +28,8 @@ const PvzDashboard = () => {
           <Outlet />
         </div>
       </div>
-
-      {/* Всплывающие уведомления */}
-      <PvzNotificationToast />
     </div>
   );
 };
 
-export default PvzDashboard;
+export default PvzOwnerDashboard;

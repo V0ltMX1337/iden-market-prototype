@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useNavigate } from "react-router-dom";
 
 const STORAGE_KEY = "pvz-picked-orders";

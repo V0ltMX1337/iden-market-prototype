@@ -25,16 +25,25 @@ import PartnerGPT from "@/components/partner/PartnerGPT";
 import Index from "./pages/index/Index";
 import ProductPageAR from "./pages/marketplace/ProductPageAR";
 import PvzDashboard from "./pages/pvzturbo/PvzDashboard";
-import PvzOrders from "./components/pvzturbo/PvzOrders";
-import PvzOrderIssuance from "./components/pvzturbo/PvzOrderIssuance";
-import PvzOrderIssuanceDetails from "./components/pvzturbo/PvzOrderIssuanceDetails";
-import PvzReturnsPackagingPage from "./components/pvzturbo/PvzReturnsPackagingPage";
-import PvzShipmentReceipt from "./components/pvzturbo/PvzShipmentReceipt";
-import PvzWarehouseManagement from "./components/pvzturbo/PvzWarehouseManagement";
-import PvzPlaceOrders from "./components/pvzturbo/PvzPlaceOrders";
-import PvzSupportChat from "./components/pvzturbo/PvzSupportChat";
-import PvzTrainingPage from "./components/pvzturbo/PvzTrainingPage";
-import PvzTrainingCoursePage from "./components/pvzturbo/PvzTrainingCoursePage";
+import PvzOrders from "./components/pvzturbo/pvz/PvzOrders";
+import PvzOrderIssuance from "./components/pvzturbo/pvz/PvzOrderIssuance";
+import PvzOrderIssuanceDetails from "./components/pvzturbo/pvz/PvzOrderIssuanceDetails";
+import PvzReturnsPackagingPage from "./components/pvzturbo/pvz/PvzReturnsPackagingPage";
+import PvzShipmentReceipt from "./components/pvzturbo/pvz/PvzShipmentReceipt";
+import PvzWarehouseManagement from "./components/pvzturbo/pvz/PvzWarehouseManagement";
+import PvzPlaceOrders from "./components/pvzturbo/pvz/PvzPlaceOrders";
+import PvzSupportChat from "./components/pvzturbo/pvz/PvzSupportChat";
+import PvzTrainingPage from "./components/pvzturbo/pvz/PvzTrainingPage";
+import PvzTrainingCoursePage from "./components/pvzturbo/pvz/PvzTrainingCoursePage";
+import PvzOwnerDashboard from "./pages/pvzturboowner/PvzOwnerDashboard";
+import PvzOwnerTrainingCoursePage from "./components/pvzturbo/pvzowner/PvzOwnerTrainingCoursePage";
+import PvzOwnerTrainingPage from "./components/pvzturbo/pvzowner/PvzOwnerTrainingPage";
+import PvzOwnerSupportChat from "./components/pvzturbo/pvzowner/PvzOwnerSupportChat";
+import PvzOwnerAnalytics from "./components/pvzturbo/pvzowner/PvzOwnerAnalytics";
+import PvzOwnerListPvz from "./components/pvzturbo/pvzowner/PvzOwnerListPvz";
+import PvzOwnerManagementPage from "./components/pvzturbo/pvzowner/PvzOwnerManagementPage";
+import PvzOwnerCreateStaff from "./components/pvzturbo/pvzowner/PvzOwnerCreateStaff";
+import PvzOwnerEditStaff from "./components/pvzturbo/pvzowner/PvzOwnerEditStaff";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +93,19 @@ const App = () => (
             <Route path="/pvzturbo/training" element={<PvzTrainingPage />} />
             <Route path="/pvzturbo/training/:courseId" element={<PvzTrainingCoursePage />} />
             <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
+          </Route>
+
+          <Route path="/pvzturboowner" element={<PvzOwnerDashboard />}>
+            <Route index element={<PvzOwnerAnalytics />} />
+            <Route path="/pvzturboowner/overview" element={<PvzOwnerAnalytics />} />
+            <Route path="/pvzturboowner/overview/:pvz" element={<PvzOwnerManagementPage />} />
+            <Route path="/pvzturboowner/staff/overview/:id" element={<PvzOwnerEditStaff />} />
+            <Route path="/pvzturboowner/staff/create/" element={<PvzOwnerCreateStaff />} />
+            <Route path="/pvzturboowner/points" element={<PvzOwnerListPvz />} />
+            <Route path="/pvzturboowner/sklad" element={<PvzWarehouseManagement />} />
+            <Route path="/pvzturboowner/training" element={<PvzOwnerTrainingCoursePage />} />
+            <Route path="/pvzturboowner/training/:courseId" element={<PvzOwnerTrainingPage />} />
+            <Route path="/pvzturboowner/support" element={<PvzOwnerSupportChat />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
