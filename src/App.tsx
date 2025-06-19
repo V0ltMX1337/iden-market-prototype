@@ -44,6 +44,7 @@ import PvzOwnerListPvz from "./components/pvzturbo/pvzowner/PvzOwnerListPvz";
 import PvzOwnerManagementPage from "./components/pvzturbo/pvzowner/PvzOwnerManagementPage";
 import PvzOwnerCreateStaff from "./components/pvzturbo/pvzowner/PvzOwnerCreateStaff";
 import PvzOwnerEditStaff from "./components/pvzturbo/pvzowner/PvzOwnerEditStaff";
+import PvzAdminCreateWizard from "./components/pvzturbo/pvzowner/PvzAdminCreateWizard";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ const App = () => (
             <Route path="/pvzturboowner/staff/overview/:id" element={<PvzOwnerEditStaff />} />
             <Route path="/pvzturboowner/staff/create/" element={<PvzOwnerCreateStaff />} />
             <Route path="/pvzturboowner/points" element={<PvzOwnerListPvz />} />
+            <Route path="/pvzturboowner/point/create" element={<PvzAdminCreateWizard />} />
             <Route path="/pvzturboowner/sklad" element={<PvzWarehouseManagement />} />
             <Route path="/pvzturboowner/training" element={<PvzOwnerTrainingCoursePage />} />
             <Route path="/pvzturboowner/training/:courseId" element={<PvzOwnerTrainingPage />} />

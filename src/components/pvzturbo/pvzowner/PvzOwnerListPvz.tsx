@@ -23,6 +23,11 @@ const PvzOwnerListPvz = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold">Мои ПВЗ</h2>
+
+      <Button onClick={() => navigation("/pvzturboowner/point/create")} className="mb-4">
+        Создать ПВЗ
+      </Button>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {myPvz.map((pvz) => (
           <Card key={pvz.id}>
