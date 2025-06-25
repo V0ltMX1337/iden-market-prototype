@@ -75,7 +75,7 @@ const AvitoMain = () => {
       <AvitoHeader />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#00A046] to-emerald-600 text-white py-20 pt-32">
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 text-white py-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Найдите всё, что нужно
@@ -86,7 +86,7 @@ const AvitoMain = () => {
           <Button
             size="lg"
             onClick={() => navigate("/avito/sell")}
-            className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4 h-auto"
+            className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 h-auto"
           >
             <Icon name="Plus" size={20} className="mr-2" />
             Подать объявление бесплатно
@@ -104,9 +104,9 @@ const AvitoMain = () => {
             {categories.map((category) => (
               <Card
                 key={category.name}
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-32"
               >
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                   <div
                     className={`w-16 h-16 ${category.color} rounded-full flex items-center justify-center mx-auto mb-4`}
                   >

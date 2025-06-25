@@ -11,6 +11,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { ExpandableTabs } from "@/lib/expandable-tabs";
+import {
+  User,
+  Package,
+  Heart,
+  MessageCircle,
+  ShoppingBag,
+  ShoppingCart,
+  HelpCircle,
+  Info,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
@@ -37,51 +49,64 @@ const AvitoHeader = () => {
   const authorizedTabs = [
     {
       title: "Главная профиля",
-      icon: "User",
+      icon: User,
       action: () => navigate("/avito/profile"),
     },
     {
       title: "Мои объявления",
-      icon: "Package",
+      icon: Package,
       action: () => navigate("/avito/profile/ads"),
     },
     {
       title: "Избранное",
-      icon: "Heart",
+      icon: Heart,
       action: () => navigate("/avito/profile/favorites"),
     },
     {
       title: "Сообщения",
-      icon: "MessageCircle",
+      icon: MessageCircle,
       action: () => navigate("/avito/profile/messages"),
     },
     { type: "separator" },
     {
       title: "Заказы",
-      icon: "ShoppingBag",
+      icon: ShoppingBag,
       action: () => navigate("/avito/profile/orders"),
     },
     {
       title: "Корзина",
-      icon: "ShoppingCart",
+      icon: ShoppingCart,
       action: () => navigate("/avito/profile/cart"),
     },
     { type: "separator" },
     {
       title: "Поддержка",
-      icon: "HelpCircle",
+      icon: HelpCircle,
       action: () => navigate("/avito/support"),
     },
     {
       title: "О нас",
-      icon: "Info",
+      icon: Info,
       action: () => navigate("/avito/about"),
+    },
+  ];
+
+  const guestTabs = [
+    {
+      title: "Войти",
+      icon: LogIn,
+      action: () => navigate("/avito/login"),
+    },
+    {
+      title: "Регистрация",
+      icon: UserPlus,
+      action: () => navigate("/avito/register"),
     },
   ];
 
   return (
     <div className="h-[80px]">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#00A046] shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between h-20">
             {/* Левая часть: Лого */}
@@ -91,8 +116,8 @@ const AvitoHeader = () => {
                 onClick={() => navigate("/avito")}
               >
                 <FancyText
-                  gradient={{ from: "#ffffff", to: "#f0fdf4", type: "linear" }}
-                  animateTo={{ from: "#dcfce7", to: "#ffffff" }}
+                  gradient={{ from: "#ffffff", to: "#f0f9ff", type: "linear" }}
+                  animateTo={{ from: "#dbeafe", to: "#ffffff" }}
                   animateDuration={2000}
                 >
                   AVITO
@@ -129,62 +154,52 @@ const AvitoHeader = () => {
 
             {/* Правая часть */}
             <div className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <ExpandableTabs
-                    tabs={authorizedTabs}
-                    className="text-white"
-                    activeColor="#ffffff"
-                  />
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div className="p-1 rounded-full cursor-pointer hover:bg-white/10 transition">
-                        <div className="flex items-center justify-center bg-white text-[#00A046] w-10 h-10 rounded-full text-sm font-bold hover:bg-gray-100 transition-colors">
-                          {user.firstName?.charAt(0) || "U"}
-                          {user.lastName?.charAt(0) || ""}
-                        </div>
+              <ExpandableTabs
+                tabs={user ? authorizedTabs : guestTabs}
+                className="text-white"
+                activeColor="#ffffff"
+              />
+
+              {user && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="p-1 rounded-full cursor-pointer hover:bg-white/10 transition">
+                      <div className="flex items-center justify-center bg-white text-blue-600 w-10 h-10 rounded-full text-sm font-bold hover:bg-gray-100 transition-colors">
+                        {user.firstName?.charAt(0) || "U"}
+                        {user.lastName?.charAt(0) || ""}
                       </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        onClick={() => navigate("/avito/profile")}
-                        className="cursor-pointer"
-                      >
-                        <Icon name="User" size={16} className="mr-2" />
-                        Профиль
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => navigate("/avito/sell")}
-                        className="cursor-pointer"
-                      >
-                        <Icon name="Package" size={16} className="mr-2" />
-                        Подать объявление
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer text-red-600 hover:text-red-700">
-                        <Icon name="LogOut" size={16} className="mr-2" />
-                        Выйти
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
-              ) : (
-                <div className="flex items-center space-x-4">
-                  <Button
-                    variant="ghost"
-                    onClick={() => navigate("/avito/login")}
-                    className="text-white hover:bg-white/10 hover:text-white"
-                  >
-                    Войти
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/avito/sell")}
-                    className="bg-white text-[#00A046] hover:bg-gray-100 font-medium"
-                  >
-                    <Icon name="Plus" size={16} className="mr-2" />
-                    Подать объявление
-                  </Button>
-                </div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem
+                      onClick={() => navigate("/avito/profile")}
+                      className="cursor-pointer"
+                    >
+                      <Icon name="User" size={16} className="mr-2" />
+                      Профиль
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/avito/sell")}
+                      className="cursor-pointer"
+                    >
+                      <Icon name="Package" size={16} className="mr-2" />
+                      Подать объявление
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer text-red-600 hover:text-red-700">
+                      <Icon name="LogOut" size={16} className="mr-2" />
+                      Выйти
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
+
+              <Button
+                onClick={() => navigate("/avito/sell")}
+                className="bg-white text-blue-600 hover:bg-gray-100 font-medium"
+              >
+                <Icon name="Plus" size={16} className="mr-2" />
+                Подать объявление
+              </Button>
             </div>
           </div>
         </div>
