@@ -1,66 +1,77 @@
 import { NavLink } from "react-router-dom";
-import {
-  BarChart3,
-  Truck,
-  Inbox,
-  LayoutGrid,
-  Undo2,
-  RotateCcw,
-  Boxes,
-  BookOpenCheck,
-  MessageCircleQuestion,
-} from "lucide-react";
+import Icon from "@/components/ui/icon";
 
 const PvzOwnerSidebar = () => {
   const menuItems = [
-    { path: "/pvzturboowner/overview", icon: BarChart3, label: "Сводка" },
-    { path: "/pvzturboowner/points", icon: Boxes, label: "Мои ПВЗ" },
-    { path: "/pvzturboowner/training", icon: BookOpenCheck, label: "Обучение" },
-    { path: "/pvzturboowner/support", icon: MessageCircleQuestion, label: "Поддержка" },
+    { path: "/pvzturboowner/overview", icon: "BarChart3", label: "Сводка" },
+    { path: "/pvzturboowner/points", icon: "Boxes", label: "Мои ПВЗ" },
+    {
+      path: "/pvzturboowner/training",
+      icon: "BookOpenCheck",
+      label: "Обучение",
+    },
+    {
+      path: "/pvzturboowner/support",
+      icon: "MessageCircleQuestion",
+      label: "Поддержка",
+    },
   ];
 
   return (
-    <div className="w-64 bg-gray-900 text-white min-h-screen relative">
-      <div className="p-6 border-b border-gray-700">
-        <h1 className="text-xl font-bold">TrivoPoints</h1>
-        <p className="text-sm text-gray-400">Панель управления ПВЗ</p>
+    <aside className="w-72 bg-white border-r border-slate-200/60 min-h-screen flex flex-col shadow-sm">
+      <div className="p-6 border-b border-slate-200/60">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center">
+            <Icon name="Crown" size={20} className="text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-slate-900">TrivoPoints</h1>
+            <p className="text-xs text-slate-500">Панель владельца</p>
+          </div>
+        </div>
       </div>
 
-      <nav className="mt-6">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          return (
+      <nav className="flex-1 p-3">
+        <div className="space-y-1">
+          {menuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-6 py-3 text-sm hover:bg-gray-800 transition-colors ${
-                  isActive ? "bg-yellow-500 text-black" : ""
+                `flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all duration-200 group ${
+                  isActive
+                    ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md"
+                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                 }`
               }
             >
-              <Icon size={20} />
-              {item.label}
+              <Icon name={item.icon as any} size={18} />
+              <span className="font-medium">{item.label}</span>
             </NavLink>
-          );
-        })}
+          ))}
+        </div>
       </nav>
 
-      <div className="absolute bottom-0 left-0 w-64 p-6 border-t border-gray-700">
+      <div className="p-4 border-t border-slate-200/60">
         <NavLink
           to="/pvzturboprofile/profile"
-          className="flex items-center gap-3 hover:bg-gray-800 transition-colors p-2 rounded-lg w-fit"
+          className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl transition-all duration-200"
         >
-          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-            <span className="text-black text-sm font-bold">А</span>
+          <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-sm font-bold">А</span>
           </div>
-          <div>
-            <p className="text-sm font-medium">Александр Волков</p>
-            <p className="text-xs text-gray-400">admin@potionshop.ru</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-slate-900 truncate">
+              Александр Волков
+            </p>
+            <p className="text-xs text-slate-500 truncate">
+              admin@potionshop.ru
+            </p>
           </div>
+          <Icon name="ChevronRight" size={16} className="text-slate-400" />
         </NavLink>
       </div>
-    </div>
+    </aside>
   );
 };
 
