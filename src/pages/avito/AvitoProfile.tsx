@@ -1,7 +1,7 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import AvitoProfileMain from "@/components/avito/profile/AvitoProfileMain";
 import AvitoProfileAds from "@/components/avito/profile/AvitoProfileAds";
@@ -60,31 +60,9 @@ const AvitoProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/avito")}
-              className="flex items-center space-x-2"
-            >
-              <Icon name="ArrowLeft" size={20} />
-              <span className="text-2xl font-bold text-blue-600">AVITO</span>
-            </Button>
+      <AvitoHeader />
 
-            <Button
-              onClick={() => navigate("/avito/sell")}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <Icon name="Plus" size={16} className="mr-2" />
-              Подать объявление
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-[160px]">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="lg:w-64 flex-shrink-0">
@@ -97,8 +75,8 @@ const AvitoProfile = () => {
                       onClick={() => navigate(item.path)}
                       className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
                         isActive(item.path)
-                          ? "text-blue-600"
-                          : "text-gray-700 hover:text-blue-600"
+                          ? "text-green-600"
+                          : "text-gray-700 hover:text-green-600"
                       }`}
                     >
                       <div className="flex items-center space-x-3">
@@ -107,14 +85,14 @@ const AvitoProfile = () => {
                           size={20}
                           className={`${
                             isActive(item.path)
-                              ? "text-blue-600"
-                              : "text-blue-500"
+                              ? "text-green-600"
+                              : "text-green-500"
                           }`}
                         />
                         <span className="font-medium">{item.label}</span>
                       </div>
                       {item.count && (
-                        <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                        <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
                           {item.count}
                         </span>
                       )}
@@ -138,6 +116,8 @@ const AvitoProfile = () => {
           </main>
         </div>
       </div>
+
+      <AvitoFooter />
     </div>
   );
 };
