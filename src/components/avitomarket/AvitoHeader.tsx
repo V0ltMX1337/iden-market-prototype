@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ExpandableTabs } from "@/lib/expandable-tabs";
 import {
   User,
@@ -26,25 +26,12 @@ import {
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Проверяем авторизацию из куков
-  const getUserFromCookies = () => {
-    const userCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("trivo_user="));
-
-    if (userCookie) {
-      try {
-        return JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  };
-
-  const user = getUserFromCookies();
+  // Симулируем авторизованного пользователя для профиля
+  const isProfilePage = location.pathname.startsWith("/avito/profile");
+  const user = isProfilePage ? { firstName: "Иван", lastName: "Петров" } : null;
 
   const authorizedTabs = [
     {

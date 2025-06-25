@@ -59,61 +59,63 @@ const AvitoProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
       <AvitoHeader />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <aside className="lg:w-64 flex-shrink-0">
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-6">
-                <nav className="space-y-2">
-                  {menuItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => navigate(item.path)}
-                      className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
-                        isActive(item.path)
-                          ? "text-green-600"
-                          : "text-gray-700 hover:text-green-600"
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Icon
-                          name={item.icon as any}
-                          size={20}
-                          className={`${
-                            isActive(item.path)
-                              ? "text-green-600"
-                              : "text-green-500"
-                          }`}
-                        />
-                        <span className="font-medium">{item.label}</span>
-                      </div>
-                      {item.count && (
-                        <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                          {item.count}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </nav>
-              </CardContent>
-            </Card>
-          </aside>
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar */}
+            <aside className="lg:w-64 flex-shrink-0">
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <nav className="space-y-2">
+                    {menuItems.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => navigate(item.path)}
+                        className={`w-full flex items-center justify-between px-0 py-3 text-left transition-colors group ${
+                          isActive(item.path)
+                            ? "text-blue-600"
+                            : "text-gray-700 hover:text-blue-600"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon
+                            name={item.icon as any}
+                            size={20}
+                            className={`${
+                              isActive(item.path)
+                                ? "text-blue-600"
+                                : "text-purple-500"
+                            }`}
+                          />
+                          <span className="font-medium">{item.label}</span>
+                        </div>
+                        {item.count && (
+                          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                            {item.count}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </nav>
+                </CardContent>
+              </Card>
+            </aside>
 
-          {/* Main Content */}
-          <main className="flex-1">
-            <Routes>
-              <Route index element={<AvitoProfileMain />} />
-              <Route path="ads" element={<AvitoProfileAds />} />
-              <Route path="messages" element={<AvitoProfileMessages />} />
-              <Route path="favorites" element={<AvitoProfileFavorites />} />
-              <Route path="reviews" element={<AvitoProfileReviews />} />
-              <Route path="settings" element={<AvitoProfileSettings />} />
-            </Routes>
-          </main>
+            {/* Main Content */}
+            <main className="flex-1">
+              <Routes>
+                <Route index element={<AvitoProfileMain />} />
+                <Route path="ads" element={<AvitoProfileAds />} />
+                <Route path="messages" element={<AvitoProfileMessages />} />
+                <Route path="favorites" element={<AvitoProfileFavorites />} />
+                <Route path="reviews" element={<AvitoProfileReviews />} />
+                <Route path="settings" element={<AvitoProfileSettings />} />
+              </Routes>
+            </main>
+          </div>
         </div>
       </div>
 

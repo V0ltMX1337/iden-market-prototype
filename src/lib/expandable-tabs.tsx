@@ -60,12 +60,15 @@ const ExpandableTabs = React.forwardRef<HTMLDivElement, ExpandableTabsProps>(
     ref,
   ) => {
     const [selected, setSelected] = React.useState<number | null>(null);
+    const [dropdownContent, setDropdownContent] =
+      React.useState<React.ReactNode>(null);
     const divRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
     const location = useLocation();
 
     useOnClickOutside(divRef, () => {
       setSelected(null);
+      setDropdownContent(null);
       onChange?.(null);
     });
 
@@ -74,9 +77,11 @@ const ExpandableTabs = React.forwardRef<HTMLDivElement, ExpandableTabsProps>(
 
       if (selected === index) {
         setSelected(null);
+        setDropdownContent(null);
         onChange?.(null);
       } else {
         setSelected(index);
+        setDropdownContent(tab.content || null);
         onChange?.(index);
         if (tab.action) {
           tab.action();
@@ -85,59 +90,75 @@ const ExpandableTabs = React.forwardRef<HTMLDivElement, ExpandableTabsProps>(
     };
 
     return (
-      <div
-        ref={divRef}
-        className={cn(
-          "flex h-fit items-center rounded-lg border border-white/20 bg-white/10 p-1 shadow-sm backdrop-blur-sm",
-          className,
-        )}
-      >
-        {tabs.map((tab, index) => {
-          if (tab.type === "separator") {
+      <div className="relative">
+        <div
+          ref={divRef}
+          className={cn(
+            "flex h-fit items-center rounded-lg border border-white/20 bg-white/10 p-1 shadow-sm backdrop-blur-sm",
+            className,
+          )}
+        >
+          {tabs.map((tab, index) => {
+            if (tab.type === "separator") {
+              return (
+                <div
+                  key={`separator-${index}`}
+                  className="mx-1 h-6 w-px bg-white/20"
+                />
+              );
+            }
+
+            const isSelected = selected === index;
+            const IconComponent = tab.icon;
+
             return (
-              <div
-                key={`separator-${index}`}
-                className="mx-1 h-6 w-px bg-white/20"
-              />
-            );
-          }
-
-          const isSelected = selected === index;
-          const IconComponent = tab.icon;
-
-          return (
-            <motion.button
-              key={index}
-              variants={buttonVariants}
-              initial="initial"
-              animate="animate"
-              custom={isSelected}
-              onClick={() => handleTabClick(index, tab)}
-              className={cn(
-                "relative flex items-center rounded-md p-2 text-sm font-medium transition-colors",
-                isSelected
-                  ? "bg-white/20 text-white"
-                  : "text-white/80 hover:bg-white/10 hover:text-white",
-              )}
-            >
-              <IconComponent size={16} />
-              <AnimatePresence>
-                {isSelected && (
-                  <motion.span
-                    variants={spanVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="initial"
-                    custom={isSelected}
-                    className="overflow-hidden whitespace-nowrap text-sm"
-                  >
-                    {tab.title}
-                  </motion.span>
+              <motion.button
+                key={index}
+                variants={buttonVariants}
+                initial="initial"
+                animate="animate"
+                custom={isSelected}
+                onClick={() => handleTabClick(index, tab)}
+                className={cn(
+                  "relative flex items-center rounded-md p-2 text-sm font-medium transition-colors",
+                  isSelected
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white",
                 )}
-              </AnimatePresence>
-            </motion.button>
-          );
-        })}
+              >
+                <IconComponent size={16} />
+                <AnimatePresence>
+                  {isSelected && (
+                    <motion.span
+                      variants={spanVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="initial"
+                      custom={isSelected}
+                      className="overflow-hidden whitespace-nowrap text-sm"
+                    >
+                      {tab.title}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Dropdown Content */}
+        <AnimatePresence>
+          {selected !== null && dropdownContent && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute top-full right-0 mt-2 z-50"
+            >
+              {dropdownContent}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   },

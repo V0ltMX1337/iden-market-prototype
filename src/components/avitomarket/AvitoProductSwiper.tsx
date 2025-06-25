@@ -63,12 +63,12 @@ const AvitoProductSwiper: React.FC<AvitoProductSwiperProps> = ({
       `,
         }}
       />
-      <div className="group bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+      <div className="group bg-white rounded-3xl p-8 shadow-lg border border-gray-100 min-h-[400px]">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
           <Button
             variant="outline"
-            className="text-green-600 border-green-600 hover:bg-green-50"
+            className="text-blue-600 border-blue-600 hover:bg-blue-50"
           >
             Все объявления
             <Icon name="ArrowRight" size={16} className="ml-2" />
@@ -94,7 +94,7 @@ const AvitoProductSwiper: React.FC<AvitoProductSwiperProps> = ({
         >
           {ads.map((ad) => (
             <SwiperSlide key={ad.id}>
-              <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group/card">
+              <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group/card h-80">
                 <div className="aspect-[4/3] overflow-hidden relative">
                   <img
                     src={ad.image}
@@ -119,7 +119,7 @@ const AvitoProductSwiper: React.FC<AvitoProductSwiperProps> = ({
                   <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm">
                     {ad.title}
                   </h3>
-                  <p className="text-xl font-bold text-green-600 mb-2">
+                  <p className="text-xl font-bold text-blue-600 mb-2">
                     {ad.price.toLocaleString()} ₽
                   </p>
                   <div className="flex items-center justify-between text-xs text-gray-500">

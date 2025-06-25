@@ -71,11 +71,11 @@ const AvitoMain = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
       <AvitoHeader />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 text-white py-20 pt-32">
+      <section className="text-white py-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Найдите всё, что нужно
@@ -94,37 +94,39 @@ const AvitoMain = () => {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
-        {/* Categories */}
-        <section>
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            Популярные категории
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
-            {categories.map((category) => (
-              <Card
-                key={category.name}
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-32"
-              >
-                <CardContent className="p-6 text-center h-full flex flex-col justify-center">
-                  <div
-                    className={`w-16 h-16 ${category.color} rounded-full flex items-center justify-center mx-auto mb-4`}
-                  >
-                    <Icon
-                      name={category.icon as any}
-                      size={28}
-                      className="text-white"
-                    />
-                  </div>
-                  <h3 className="font-medium text-sm">{category.name}</h3>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+          {/* Categories */}
+          <section>
+            <h2 className="text-3xl font-bold mb-12 text-center">
+              Популярные категории
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+              {categories.map((category) => (
+                <Card
+                  key={category.name}
+                  className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-40"
+                >
+                  <CardContent className="p-6 text-center h-full flex flex-col justify-center">
+                    <div
+                      className={`w-16 h-16 ${category.color} rounded-full flex items-center justify-center mx-auto mb-4`}
+                    >
+                      <Icon
+                        name={category.icon as any}
+                        size={28}
+                        className="text-white"
+                      />
+                    </div>
+                    <h3 className="font-medium text-sm">{category.name}</h3>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-        {/* Product Swiper */}
-        <AvitoProductSwiper ads={recentAds} title="🔥 Горячие предложения" />
+          {/* Product Swiper */}
+          <AvitoProductSwiper ads={recentAds} title="🔥 Горячие предложения" />
+        </div>
       </div>
 
       <AvitoFooter />
