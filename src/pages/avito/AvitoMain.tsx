@@ -75,7 +75,7 @@ const AvitoMain = () => {
       <AvitoHeader />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-600 to-emerald-700 text-white py-20 mt-[160px]">
+      <section className="bg-gradient-to-br from-[#00A046] to-emerald-600 text-white py-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Найдите всё, что нужно

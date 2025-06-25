@@ -10,17 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
-import {
-  HelpCircle,
-  Shield,
-  Heart,
-  MessagesSquareIcon,
-  Package,
-  ShoppingCart,
-  User,
-  Settings,
-  Star,
-} from "lucide-react";
 import { ExpandableTabs } from "@/lib/expandable-tabs";
 
 const AvitoHeader = () => {
@@ -45,97 +34,85 @@ const AvitoHeader = () => {
 
   const user = getUserFromCookies();
 
-  const tabs = [
+  const authorizedTabs = [
+    {
+      title: "Главная профиля",
+      icon: "User",
+      action: () => navigate("/avito/profile"),
+    },
+    {
+      title: "Мои объявления",
+      icon: "Package",
+      action: () => navigate("/avito/profile/ads"),
+    },
     {
       title: "Избранное",
-      icon: Heart,
+      icon: "Heart",
       action: () => navigate("/avito/profile/favorites"),
     },
     {
       title: "Сообщения",
-      icon: MessagesSquareIcon,
+      icon: "MessageCircle",
       action: () => navigate("/avito/profile/messages"),
-    },
-    {
-      title: "Объявления",
-      icon: Package,
-      action: () => navigate("/avito/profile/ads"),
     },
     { type: "separator" },
     {
-      title: "Отзывы",
-      icon: Star,
-      action: () => navigate("/avito/profile/reviews"),
+      title: "Заказы",
+      icon: "ShoppingBag",
+      action: () => navigate("/avito/profile/orders"),
     },
     {
-      title: "Настройки",
-      icon: Settings,
-      action: () => navigate("/avito/profile/settings"),
+      title: "Корзина",
+      icon: "ShoppingCart",
+      action: () => navigate("/avito/profile/cart"),
+    },
+    { type: "separator" },
+    {
+      title: "Поддержка",
+      icon: "HelpCircle",
+      action: () => navigate("/avito/support"),
+    },
+    {
+      title: "О нас",
+      icon: "Info",
+      action: () => navigate("/avito/about"),
     },
   ];
 
   return (
-    <div className="h-[160px]">
-      <header className="fixed top-0 left-0 right-0 z-50 flex justify-center bg-transparent">
-        <div className="bg-white w-full max-w-[1440px] rounded-b-2xl shadow-lg border border-gray-200">
-          {/* Верхняя панель */}
-          <div className="bg-gray-50 border-b border-gray-200 px-6 lg:px-10">
-            <div className="flex items-center justify-between h-12 text-base">
-              <div className="flex items-center text-gray-600 space-x-8">
-                <div className="flex items-center">
-                  <Icon name="MapPin" size={18} className="mr-2" />
-                  Вся Россия
-                </div>
-              </div>
-              <div className="flex items-center space-x-8 text-gray-600">
-                <a href="#" className="hover:text-green-600">
-                  Бизнес
-                </a>
-                <a href="#" className="hover:text-green-600">
-                  Безопасность
-                </a>
-                <a href="#" className="hover:text-green-600">
-                  Помощь
-                </a>
-                <a href="#" className="hover:text-green-600">
-                  Реклама
-                </a>
-                <div className="flex items-center">
-                  <span className="w-2 h-2 bg-green-400 rounded-full mr-1" />
-                  <span>Светлая</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Нижняя панель */}
-          <div className="px-6 lg:px-10 py-4 flex items-center justify-between">
+    <div className="h-[80px]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#00A046] shadow-lg">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between h-20">
             {/* Левая часть: Лого */}
             <div className="flex items-center">
               <h1
-                className="text-3xl text-green-600 cursor-pointer px-[1px] my-1 py-0 mx-0 font-extrabold text-center"
+                className="text-3xl text-white cursor-pointer font-extrabold"
                 onClick={() => navigate("/avito")}
               >
                 <FancyText
-                  gradient={{ from: "#059669", to: "#10b981", type: "linear" }}
-                  animateTo={{ from: "#047857", to: "#059669" }}
+                  gradient={{ from: "#ffffff", to: "#f0fdf4", type: "linear" }}
+                  animateTo={{ from: "#dcfce7", to: "#ffffff" }}
                   animateDuration={2000}
                 >
                   AVITO
                 </FancyText>
               </h1>
-              <Badge variant="secondary" className="ml-3 text-sm px-3 py-1">
+              <Badge
+                variant="secondary"
+                className="ml-3 text-sm px-3 py-1 bg-white/20 text-white border-0"
+              >
                 объявления
               </Badge>
             </div>
 
             {/* Центр: Поиск */}
-            <div className="flex-1 px-10">
+            <div className="flex-1 px-10 max-w-2xl">
               <div className="relative w-full">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   <Icon name="Search" size={20} />
                 </Button>
@@ -143,26 +120,28 @@ const AvitoHeader = () => {
                 <input
                   type="text"
                   placeholder="Поиск по объявлениям..."
-                  className="w-full pl-4 pr-6 py-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full pl-4 pr-12 py-3 text-base border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Правая часть: Иконки */}
-            <div className="flex items-center space-x-2">
+            {/* Правая часть */}
+            <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <div className="flex flex-col gap-4">
-                    <ExpandableTabs tabs={tabs} />
-                  </div>
+                  <ExpandableTabs
+                    tabs={authorizedTabs}
+                    className="text-white"
+                    activeColor="#ffffff"
+                  />
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <div className="p-2 rounded-full cursor-pointer hover:bg-gray-100 transition">
-                        <div className="flex items-center justify-center bg-green-600 text-white w-11 h-11 rounded-full text-lg font-medium hover:bg-green-700 transition-colors">
-                          {user.firstName?.charAt(0)}
-                          {user.lastName?.charAt(0)}
+                      <div className="p-1 rounded-full cursor-pointer hover:bg-white/10 transition">
+                        <div className="flex items-center justify-center bg-white text-[#00A046] w-10 h-10 rounded-full text-sm font-bold hover:bg-gray-100 transition-colors">
+                          {user.firstName?.charAt(0) || "U"}
+                          {user.lastName?.charAt(0) || ""}
                         </div>
                       </div>
                     </DropdownMenuTrigger>
@@ -193,12 +172,13 @@ const AvitoHeader = () => {
                   <Button
                     variant="ghost"
                     onClick={() => navigate("/avito/login")}
+                    className="text-white hover:bg-white/10 hover:text-white"
                   >
                     Войти
                   </Button>
                   <Button
                     onClick={() => navigate("/avito/sell")}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-white text-[#00A046] hover:bg-gray-100 font-medium"
                   >
                     <Icon name="Plus" size={16} className="mr-2" />
                     Подать объявление
