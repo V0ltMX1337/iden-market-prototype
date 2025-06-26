@@ -2,15 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import FancyText from "@carefully-coded/react-text-gradient";
-import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ExpandableTabs } from "@/lib/expandable-tabs";
+import { ExpandableTabsAvito } from "@/lib/expandable-tabs-avito";
 import {
   User,
   Package,
@@ -29,52 +23,53 @@ const AvitoHeader = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Симулируем авторизованного пользователя для профиля
-  const isProfilePage = location.pathname.startsWith("/avito/profile");
-  const user = isProfilePage ? { firstName: "Иван", lastName: "Петров" } : null;
+  // Храним индекс активного таба, синхронизируем с URL
+  const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
+
+  const user = location.pathname.startsWith("/avito/profile") ? { firstName: "Иван", lastName: "Петров" } : null;
 
   const authorizedTabs = [
     {
       title: "Главная профиля",
       icon: User,
-      action: () => navigate("/avito/profile"),
+      path: "/avito/profile",
     },
     {
       title: "Мои объявления",
       icon: Package,
-      action: () => navigate("/avito/profile/ads"),
-    },
-    {
-      title: "Избранное",
-      icon: Heart,
-      action: () => navigate("/avito/profile/favorites"),
+      path: "/avito/profile/ads",
     },
     {
       title: "Сообщения",
       icon: MessageCircle,
-      action: () => navigate("/avito/profile/messages"),
+      path: "/avito/profile/messages",
+    },
+    {
+      title: "Избранное",
+      icon: Heart,
+      path: "/avito/profile/favorites",
     },
     { type: "separator" },
     {
       title: "Заказы",
       icon: ShoppingBag,
-      action: () => navigate("/avito/profile/orders"),
+      path: "/avito/profile/orders",
     },
     {
       title: "Корзина",
       icon: ShoppingCart,
-      action: () => navigate("/avito/profile/cart"),
+      path: "/avito/profile/cart",
     },
     { type: "separator" },
     {
       title: "Поддержка",
       icon: HelpCircle,
-      action: () => navigate("/avito/support"),
+      path: "/avito/support",
     },
     {
       title: "О нас",
       icon: Info,
-      action: () => navigate("/avito/about"),
+      path: "/avito/about",
     },
   ];
 
@@ -82,14 +77,47 @@ const AvitoHeader = () => {
     {
       title: "Войти",
       icon: LogIn,
-      action: () => navigate("/avito/login"),
+      path: "/avito/login",
     },
     {
       title: "Регистрация",
       icon: UserPlus,
-      action: () => navigate("/avito/register"),
+      path: "/avito/register",
     },
   ];
+
+  // Синхронизируем activeTabIndex с URL при смене location.pathname
+useEffect(() => {
+  const tabs = user ? authorizedTabs : guestTabs;
+
+  const foundIndex = tabs.findIndex((tab) => {
+    if (!("path" in tab) || !tab.path) return false;
+
+    if (tab.path === "/avito/profile") {
+      // Активен только при точном совпадении
+      return location.pathname === tab.path;
+    }
+
+    // Для остальных — если путь начинается с tab.path
+    return location.pathname.startsWith(tab.path);
+  });
+
+  setActiveTabIndex(foundIndex !== -1 ? foundIndex : null);
+}, [location.pathname, user]);
+
+
+  // Обработчик изменения таба
+  const handleTabChange = (index: number | null) => {
+    if (index === null) return;
+    const tabs = user ? authorizedTabs : guestTabs;
+    const tab = tabs[index];
+    if ("path" in tab && tab.path) {
+      navigate(tab.path);
+    }
+    setActiveTabIndex(index);
+  };
+
+  const tabs = user ? authorizedTabs : guestTabs;
 
   return (
     <div className="h-[80px]">
@@ -107,7 +135,7 @@ const AvitoHeader = () => {
                   animateTo={{ from: "#dbeafe", to: "#ffffff" }}
                   animateDuration={2000}
                 >
-                  AVITO
+                  TRIVO
                 </FancyText>
               </h1>
               <Badge
@@ -140,53 +168,14 @@ const AvitoHeader = () => {
             </div>
 
             {/* Правая часть */}
-            <div className="flex items-center space-x-4">
-              <ExpandableTabs
-                tabs={user ? authorizedTabs : guestTabs}
+            <div className="flex flex-col gap-4">
+              <ExpandableTabsAvito
+                tabs={tabs}
                 className="text-white"
                 activeColor="#ffffff"
+                activeIndex={activeTabIndex}
+                onChange={handleTabChange}
               />
-
-              {user && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="p-1 rounded-full cursor-pointer hover:bg-white/10 transition">
-                      <div className="flex items-center justify-center bg-white text-blue-600 w-10 h-10 rounded-full text-sm font-bold hover:bg-gray-100 transition-colors">
-                        {user.firstName?.charAt(0) || "U"}
-                        {user.lastName?.charAt(0) || ""}
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem
-                      onClick={() => navigate("/avito/profile")}
-                      className="cursor-pointer"
-                    >
-                      <Icon name="User" size={16} className="mr-2" />
-                      Профиль
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => navigate("/avito/sell")}
-                      className="cursor-pointer"
-                    >
-                      <Icon name="Package" size={16} className="mr-2" />
-                      Подать объявление
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer text-red-600 hover:text-red-700">
-                      <Icon name="LogOut" size={16} className="mr-2" />
-                      Выйти
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-
-              <Button
-                onClick={() => navigate("/avito/sell")}
-                className="bg-white text-blue-600 hover:bg-gray-100 font-medium"
-              >
-                <Icon name="Plus" size={16} className="mr-2" />
-                Подать объявление
-              </Button>
             </div>
           </div>
         </div>

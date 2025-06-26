@@ -6,7 +6,7 @@ const AvitoFooter = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <div className="text-2xl font-bold mb-4 text-white">AVITO</div>
+            <div className="text-2xl font-bold mb-4 text-white">TRIVO</div>
             <p className="text-blue-100 mb-4">
               Крупнейшая площадка объявлений в России
             </p>
@@ -66,7 +66,7 @@ const AvitoFooter = () => {
 
         <div className="border-t border-blue-700 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <p className="text-blue-100">© 2024 Avito. Все права защищены.</p>
+            <p className="text-blue-100">© 2025 Trivo обьявления. Все права защищены.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-blue-100 hover:text-white">
                 Политика конфиденциальности

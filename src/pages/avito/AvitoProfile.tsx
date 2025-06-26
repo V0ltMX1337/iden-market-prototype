@@ -63,7 +63,7 @@ const AvitoProfile = () => {
       <AvitoHeader />
 
       <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <div className="max-w-[94rem] mx-auto px-6 sm:px-8 lg:px-12 pt-10 pb-6">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
             <aside className="lg:w-64 flex-shrink-0">
