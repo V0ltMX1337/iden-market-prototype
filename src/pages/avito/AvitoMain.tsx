@@ -146,11 +146,12 @@ const AvitoMain = () => {
 
       {/* Баннер */}
       <section style={{ paddingTop: "1.563rem" }}>
-        <div className="w-full max-w-[1440px] mx-auto px-8">
+        <div className="w-full flex justify-center">
           <img
             src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1410&h=200&fit=crop"
             alt="Баннер"
-            className="w-full h-[200px] object-cover rounded-2xl"
+            className="max-w-full h-auto rounded-2xl"
+            style={{ maxWidth: "1410px" }}
           />
         </div>
       </section>
