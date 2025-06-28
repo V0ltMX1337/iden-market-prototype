@@ -29,7 +29,7 @@ import AvitoLogin from "./pages/avito/AvitoLogin";
 import AvitoRegister from "./pages/avito/AvitoRegister";
 import AvitoProfile from "./pages/avito/AvitoProfile";
 import AvitoProduct from "./pages/avito/AvitoProduct";
-import AvitoSell from "./pages/avito/AvitoSell";
+import AvitoSell from "./components/avito/profile/AvitoSell";
 import PvzDashboard from "./pages/pvzturbo/PvzDashboard";
 import PvzOrders from "./components/pvzturbo/pvz/PvzOrders";
 import PvzOrderIssuance from "./components/pvzturbo/pvz/PvzOrderIssuance";
@@ -121,7 +121,6 @@ const App = () => {
             <Route path="/avito/login" element={<AvitoLogin />} />
             <Route path="/avito/register" element={<AvitoRegister />} />
             <Route path="/avito/product/:id" element={<AvitoProduct />} />
-            <Route path="/avito/sell" element={<AvitoSell />} />
             <Route path="/avito/profile/*" element={<AvitoProfile />} />
 
             <Route path="*" element={<NotFound />} />

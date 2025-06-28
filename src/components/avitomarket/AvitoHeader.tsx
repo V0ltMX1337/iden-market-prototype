@@ -16,6 +16,8 @@ import {
   Info,
   LogIn,
   UserPlus,
+  Home,
+  UserCircle,
 } from "lucide-react";
 
 const AvitoHeader = () => {
@@ -26,12 +28,17 @@ const AvitoHeader = () => {
   // Храним индекс активного таба, синхронизируем с URL
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
 
-  const user = location.pathname.startsWith("/avito/profile") ? { firstName: "Иван", lastName: "Петров" } : null;
+  const user = location.pathname.startsWith("/avito/") ? { firstName: "Иван", lastName: "Петров" } : null;
 
   const authorizedTabs = [
     {
-      title: "Главная профиля",
-      icon: User,
+      title: "Главная",
+      icon: Home,
+      path: "/avito/",
+    },
+    {
+      title: "Профиль",
+      icon: UserCircle,
       path: "/avito/profile",
     },
     {
@@ -87,29 +94,29 @@ const AvitoHeader = () => {
   ];
 
   // Синхронизируем activeTabIndex с URL при смене location.pathname
-useEffect(() => {
-  const tabs = user ? authorizedTabs : guestTabs;
+  useEffect(() => {
+  const tabs = authorizedTabs;
 
-  const foundIndex = tabs.findIndex((tab) => {
-    if (!("path" in tab) || !tab.path) return false;
+  let bestMatchIndex: number | null = null;
+  let bestMatchLength = -1;
 
-    if (tab.path === "/avito/profile") {
-      // Активен только при точном совпадении
-      return location.pathname === tab.path;
+  tabs.forEach((tab, index) => {
+    if (!("path" in tab) || !tab.path) return;
+
+    if (location.pathname.startsWith(tab.path) && tab.path.length > bestMatchLength) {
+      bestMatchIndex = index;
+      bestMatchLength = tab.path.length;
     }
-
-    // Для остальных — если путь начинается с tab.path
-    return location.pathname.startsWith(tab.path);
   });
 
-  setActiveTabIndex(foundIndex !== -1 ? foundIndex : null);
-}, [location.pathname, user]);
+  setActiveTabIndex(bestMatchIndex);
+}, [location.pathname]);
 
 
   // Обработчик изменения таба
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
-    const tabs = user ? authorizedTabs : guestTabs;
+    const tabs =authorizedTabs;
     const tab = tabs[index];
     if ("path" in tab && tab.path) {
       navigate(tab.path);
@@ -117,7 +124,7 @@ useEffect(() => {
     setActiveTabIndex(index);
   };
 
-  const tabs = user ? authorizedTabs : guestTabs;
+  const tabs = authorizedTabs;
 
   return (
     <div className="h-[80px]">

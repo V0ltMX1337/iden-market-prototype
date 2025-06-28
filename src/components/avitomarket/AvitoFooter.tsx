@@ -46,9 +46,7 @@ const AvitoFooter = () => {
             <ul className="space-y-2 text-blue-100">
               <li className="hover:text-white cursor-pointer">Как продавать</li>
               <li className="hover:text-white cursor-pointer">Тарифы</li>
-              <li className="hover:text-white cursor-pointer">
-                Реклама на Avito
-              </li>
+              <li className="hover:text-white cursor-pointer">Реклама на TRIVO </li>
               <li className="hover:text-white cursor-pointer">Помощь</li>
             </ul>
           </div>
