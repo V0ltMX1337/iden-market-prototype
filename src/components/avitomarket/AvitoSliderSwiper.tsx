@@ -60,33 +60,32 @@ const AvitoSliderSwiper: React.FC<AvitoSliderSwiperProps> = ({ slideres }) => {
       `,
         }}
       />
-      <div className="relative group overflow-hidden">
-        <Swiper
-          modules={[Navigation]}
-          slidesPerView={1}
-          spaceBetween={8}
-          loop={true}
-          loopAdditionalSlides={2}
-          centeredSlides={false}
-          navigation={true}
-          className="!overflow-hidden !mx-0 !px-0"
-          style={{ margin: 0, padding: 0 }}
-        >
-          {slideres.map((slider) => (
-            <SwiperSlide key={slider.id} className="!h-auto">
-              <div className="w-full flex justify-center">
+      <div className="w-full max-w-[1440px] mx-auto px-8">
+        <div className="relative group overflow-hidden">
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={1}
+            spaceBetween={8}
+            loop={true}
+            loopAdditionalSlides={2}
+            centeredSlides={false}
+            navigation={true}
+            className="!overflow-hidden !mx-0 !px-0"
+            style={{ margin: 0, padding: 0 }}
+          >
+            {slideres.map((slider) => (
+              <SwiperSlide key={slider.id} className="!h-auto">
                 <div className="relative">
                   <img
                     src={slider.image}
                     alt={slider.name}
-                    className="max-w-full h-auto rounded-2xl"
-                    style={{ maxWidth: "1410px" }}
+                    className="w-full h-[300px] object-cover rounded-2xl"
                   />
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </>
   );

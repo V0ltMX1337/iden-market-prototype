@@ -66,7 +66,7 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
           Популярные категории
         </h2>
-        <div className="relative group overflow-hidden px-8">
+        <div className="relative group overflow-hidden">
           <Swiper
             modules={[Navigation, Autoplay]}
             slidesPerView={1}
