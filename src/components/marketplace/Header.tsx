@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { HelpCircle, Shield, Heart, MessagesSquareIcon, Package, ShoppingCart } from "lucide-react";
+import { ExpandableTabs } from "@/lib/expandable-tabs";
 import DropdownCartContent from "../customcomponent/DropdownCartContent";
 import { CategoryMenu } from "../customcomponent/CategoryMenu";
-import { ExpandableTabs } from "@/lib/expandable-tabs";
 
 const Header = () => {
   const navigate = useNavigate();

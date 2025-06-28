@@ -92,10 +92,7 @@ const AvitoProfileMain = () => {
                   Проверен
                 </Badge>
               </div>
-              <div
-                className="flex items-center space-x-2 cursor-pointer hover:opacity-80"
-                onClick={() => navigate("/avito/profile/reviews")}
-              >
+              <div className="flex items-center space-x-2">
                 <div className="flex text-yellow-400">
                   {[...Array(5)].map((_, i) => (
                     <Icon

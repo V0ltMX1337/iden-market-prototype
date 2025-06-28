@@ -9,7 +9,6 @@ import AvitoProfileMessages from "@/components/avito/profile/AvitoProfileMessage
 import AvitoProfileFavorites from "@/components/avito/profile/AvitoProfileFavorites";
 import AvitoProfileReviews from "@/components/avito/profile/AvitoProfileReviews";
 import AvitoProfileSettings from "@/components/avito/profile/AvitoProfileSettings";
-import AvitoSell from "@/components/avito/profile/AvitoSell";
 
 const AvitoProfile = () => {
   const navigate = useNavigate();
@@ -39,6 +38,12 @@ const AvitoProfile = () => {
       count: 5,
     },
     {
+      id: "reviews",
+      label: "Отзывы",
+      icon: "Star",
+      path: "/avito/profile/reviews",
+    },
+    {
       id: "settings",
       label: "Настройки",
       icon: "Settings",
@@ -58,7 +63,7 @@ const AvitoProfile = () => {
       <AvitoHeader />
 
       <div className="bg-white">
-        <div className="max-w-[94rem] mx-auto px-6 sm:px-8 lg:px-12 pt-10 pb-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
             <aside className="lg:w-64 flex-shrink-0">
@@ -103,7 +108,6 @@ const AvitoProfile = () => {
             <main className="flex-1">
               <Routes>
                 <Route index element={<AvitoProfileMain />} />
-                <Route path="sell" element={<AvitoSell />} />
                 <Route path="ads" element={<AvitoProfileAds />} />
                 <Route path="messages" element={<AvitoProfileMessages />} />
                 <Route path="favorites" element={<AvitoProfileFavorites />} />

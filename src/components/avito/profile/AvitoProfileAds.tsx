@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
 
 const AvitoProfileAds = () => {
   const myAds = [
@@ -32,7 +31,7 @@ const AvitoProfileAds = () => {
       id: 3,
       title: "Диван угловой",
       price: 25000,
-      status: "active",
+      status: "inactive",
       views: 89,
       favorites: 3,
       image:
@@ -40,8 +39,6 @@ const AvitoProfileAds = () => {
       createdAt: "3 дня назад",
     },
   ];
-
-  const [activeTab, setActiveTab] = useState<"sold" | "active">("active");
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -69,53 +66,18 @@ const AvitoProfileAds = () => {
     }
   };
 
-  // Фильтруем объявления по выбранной вкладке
-  const filteredAds = myAds.filter((ad) =>
-    activeTab === "active" ? ad.status === "active" : ad.status === "sold"
-  );
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Мои объявления</h1>
-        <Button className="rounded-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-5 py-2.5 font-semibold shadow-lg transition-all duration-300 flex items-center">
+        <Button className="bg-green-600 hover:bg-green-700">
           <Icon name="Plus" size={16} className="mr-2" />
           Подать объявление
         </Button>
       </div>
 
-      {/* Табы */}
-      <div className="flex space-x-4 border-b border-gray-200 mb-4">
-        <button
-          className={`py-2 px-4 font-semibold ${
-            activeTab === "active"
-              ? "border-b-2 border-blue-600"
-              : "text-gray-600 hover:text-blue-600"
-          }`}
-          onClick={() => setActiveTab("active")}
-        >
-          Активные
-        </button>
-         <button
-          className={`py-2 px-4 font-semibold ${
-            activeTab === "sold"
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-blue-600"
-          }`}
-          onClick={() => setActiveTab("sold")}
-        >
-          Проданные
-        </button>
-      </div>
-
-      {/* Объявления */}
       <div className="grid gap-6">
-        {filteredAds.length === 0 && (
-          <p className="text-center text-gray-500">
-            Объявлений в этой категории пока нет.
-          </p>
-        )}
-        {filteredAds.map((ad) => (
+        {myAds.map((ad) => (
           <Card key={ad.id}>
             <CardContent className="p-6">
               <div className="flex gap-6">

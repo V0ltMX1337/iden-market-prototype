@@ -48,97 +48,122 @@ const buttonVariants = {
 
 const spanVariants = {
   initial: { width: 0, opacity: 0 },
-  animate: { width: "auto", opacity: 1 },
-  exit: { width: 0, opacity: 0 },
+  animate: (isSelected: boolean) => ({
+    width: isSelected ? "auto" : 0,
+    opacity: isSelected ? 1 : 0,
+  }),
 };
 
-const transition = { delay: 0.1, type: "spring", bounce: 0, duration: 0.6 };
+const ExpandableTabs = React.forwardRef<HTMLDivElement, ExpandableTabsProps>(
+  (
+    { tabs, className, activeColor = "#00A046", defaultTabId, onChange },
+    ref,
+  ) => {
+    const [selected, setSelected] = React.useState<number | null>(null);
+    const [dropdownContent, setDropdownContent] =
+      React.useState<React.ReactNode>(null);
+    const divRef = React.useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-export function ExpandableTabs({
-  tabs,
-  className,
-  activeColor = "text-primary",
-  onChange,
-}: ExpandableTabsProps) {
-  const [selected, setSelected] = React.useState<number | null>(null);
-  const outsideClickRef = React.useRef(null);
-
-  useOnClickOutside(outsideClickRef, () => {
-    setSelected(null);
-    onChange?.(null);
-  });
-
-  const handleClick = (index: number, tab: Tab) => {
-    if (selected === index) {
-      setSelected(null); // toggle off
+    useOnClickOutside(divRef, () => {
+      setSelected(null);
+      setDropdownContent(null);
       onChange?.(null);
-    } else {
-      setSelected(index);
-      onChange?.(index);
-    }
+    });
 
-    if (tab.action) {
-      tab.action(); // run provided action
-    }
-  };
+    const handleTabClick = (index: number, tab: TabItem) => {
+      if (tab.type === "separator") return;
 
-  const Separator = () => (
-    <div className="mx-1 h-[24px] w-[1.2px] bg-border" aria-hidden="true" />
-  );
+      if (selected === index) {
+        setSelected(null);
+        setDropdownContent(null);
+        onChange?.(null);
+      } else {
+        setSelected(index);
+        setDropdownContent(tab.content || null);
+        onChange?.(index);
+        if (tab.action) {
+          tab.action();
+        }
+      }
+    };
 
-  return (
-    <div className="relative" ref={outsideClickRef}>
-      <div
-        className={cn(
-          "flex flex-wrap items-center gap-2 rounded-2xl border bg-background p-1 shadow-sm",
-          className
-        )}
-      >
-        {tabs.map((tab, index) => {
-          if (tab.type === "separator") {
-            return <Separator key={`separator-${index}`} />;
-          }
-          
-          const Icon = tab.icon;
-          return (
-            <motion.button
-              key={tab.title}
-              variants={buttonVariants}
-              initial={false}
-              animate="animate"
-              custom={selected === index}
-              onClick={() => handleClick(index, tab)}
-              transition={transition}
-              className={cn(
-                "relative flex items-center rounded-xl px-4 py-2 text-sm font-medium transition-colors duration-300",
-                selected === index
-                  ? cn("bg-muted", activeColor)
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Icon size={20} />
-              <AnimatePresence initial={false}>
-                {selected === index && (
-                  <motion.span
-                    variants={spanVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={transition}
-                    className="overflow-hidden"
-                  >
-                    {tab.title}
-                  </motion.span>
+    return (
+      <div className="relative">
+        <div
+          ref={divRef}
+          className={cn(
+            "flex h-fit items-center rounded-lg border border-white/20 bg-white/10 p-1 shadow-sm backdrop-blur-sm",
+            className,
+          )}
+        >
+          {tabs.map((tab, index) => {
+            if (tab.type === "separator") {
+              return (
+                <div
+                  key={`separator-${index}`}
+                  className="mx-1 h-6 w-px bg-white/20"
+                />
+              );
+            }
+
+            const isSelected = selected === index;
+            const IconComponent = tab.icon;
+
+            return (
+              <motion.button
+                key={index}
+                variants={buttonVariants}
+                initial="initial"
+                animate="animate"
+                custom={isSelected}
+                onClick={() => handleTabClick(index, tab)}
+                className={cn(
+                  "relative flex items-center rounded-md p-2 text-sm font-medium transition-colors",
+                  isSelected
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white",
                 )}
-              </AnimatePresence>
-            </motion.button>
-          );
-        })}
-      </div>
+              >
+                <IconComponent size={16} />
+                <AnimatePresence>
+                  {isSelected && (
+                    <motion.span
+                      variants={spanVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="initial"
+                      custom={isSelected}
+                      className="overflow-hidden whitespace-nowrap text-sm"
+                    >
+                      {tab.title}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            );
+          })}
+        </div>
 
-      {selected !== null && "content" in tabs[selected] && tabs[selected].content && (
-        <div className="absolute z-50 mt-2 w-full">{tabs[selected].content}</div>
-      )}
-    </div>
-  );
-}
+        {/* Dropdown Content */}
+        <AnimatePresence>
+          {selected !== null && dropdownContent && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute top-full right-0 mt-2 z-50"
+            >
+              {dropdownContent}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  },
+);
+
+ExpandableTabs.displayName = "ExpandableTabs";
+
+export { ExpandableTabs };
