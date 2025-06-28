@@ -1,34 +1,14 @@
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import AvitoProductSwiper from "@/components/avitomarket/AvitoProductSwiper";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/ui/icon";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import AvitoStories from "@/components/avitomarket/AvitoStories";
 import AvitoRecommendations from "@/components/avitomarket/AvitoRecommendations";
-import AvitoSliderSwiper from "@/components/avitomarket/AvitoSliderSwiper";
 import AvitoCategorySwiper from "@/components/avitomarket/AvitoCategorySwiper";
 
 const AvitoMain = () => {
   const navigate = useNavigate();
-
-  const sliders = [
-    {
-      id: 1,
-      name: "Слайдер 1",
-      image:
-        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1410&h=400&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Слайдер 2",
-      image:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1410&h=400&fit=crop",
-    },
-  ];
 
   const categories = [
     {
@@ -117,53 +97,28 @@ const AvitoMain = () => {
     },
   ];
 
-  const [ads, setAds] = useState(initialAds);
-  const [hasMore, setHasMore] = useState(true);
-
-  const fetchMoreAds = () => {
-    setTimeout(() => {
-      setAds((prev) => [
-        ...prev,
-        ...prev.map((ad, index) => ({ ...ad, id: prev.length + index + 1 })),
-      ]);
-      if (ads.length > 20) setHasMore(false);
-    }, 1500);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <AvitoHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Слайдер */}
-        <section className="pt-6">
-          <AvitoSliderSwiper slideres={sliders} />
-        </section>
-
-        {/* Горячие предложения */}
-        <section className="pt-8">
-          <AvitoProductSwiper ads={initialAds} title="🔥 Горячие предложения" />
-        </section>
-
-        {/* Баннер */}
-        <section className="pt-8">
-          <img
-            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=200&fit=crop"
-            alt="Баннер"
-            className="w-full h-[200px] object-cover rounded-lg"
-          />
-        </section>
-
-        {/* Категории */}
-        <section className="pt-8">
-          <AvitoCategorySwiper products={categories} />
-        </section>
-
-        {/* Сторис */}
+         {/* Сторис */}
         <section className="pt-8">
           <AvitoStories />
         </section>
+      </div>
 
+      {/* Категории */}
+      <section className="pt-8">
+        <AvitoCategorySwiper products={categories} />
+      </section>
+      
+      {/* Горячие предложения */}
+      <section className="pt-8">
+        <AvitoProductSwiper ads={initialAds} title="🔥 Горячие предложения" />
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Рекомендации */}
         <section className="pt-8 pb-8">
           <AvitoRecommendations />

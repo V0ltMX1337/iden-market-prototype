@@ -1,60 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import FancyText from "@carefully-coded/react-text-gradient";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ExpandableTabsAvito } from "@/lib/expandable-tabs-avito";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  User,
+  Package,
+  Heart,
+  MessageCircle,
+  ShoppingBag,
+  ShoppingCart,
+  HelpCircle,
+  Info,
+  LogIn,
+  UserPlus,
+  Home,
+  UserCircle,
+} from "lucide-react";
 import { AvitoCategroyMenu } from "../customcomponent/AvitoCategroyMenu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Простые табы без навигации
-  const tabs = [
-    { title: "Главная", icon: "Home", path: "/avito/" },
-    { title: "Избранное", icon: "Heart", path: "/avito/profile/favorites" },
-    {
-      title: "Сообщения",
-      icon: "MessageCircle",
-      path: "/avito/profile/messages",
-    },
-  ];
-
-  const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    let bestMatchIndex: number | null = null;
-    let bestMatchLength = -1;
-
-    tabs.forEach((tab, index) => {
-      if (
-        location.pathname.startsWith(tab.path) &&
-        tab.path.length > bestMatchLength
-      ) {
-        bestMatchIndex = index;
-        bestMatchLength = tab.path.length;
-      }
-    });
-
-    setActiveTabIndex(bestMatchIndex);
-  }, [location.pathname]);
-
-  const handleTabChange = (index: number | null) => {
-    if (index === null) return;
-    const tab = tabs[index];
-    if (tab?.path) {
-      navigate(tab.path);
-    }
-    setActiveTabIndex(index);
-  };
 
   const avitoCategories = [
     {
@@ -100,112 +71,178 @@ const AvitoHeader = () => {
     },
   ];
 
-  return (
-    <div className="h-[160px]">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-        {/* Верхняя панель */}
-        <div className="bg-gray-50 border-b border-gray-200 px-6 lg:px-10">
-          <div className="flex items-center justify-between h-12 text-sm">
-            <div className="flex items-center text-gray-600 space-x-6">
-              <div className="flex items-center">
-                <Icon name="MapPin" size={16} className="mr-2" />
-                Россия
-              </div>
-            </div>
-            <div className="flex items-center space-x-6 text-gray-600">
-              <a href="#" className="hover:text-blue-600">
-                Разместить объявление
-              </a>
-              <a href="#" className="hover:text-blue-600">
-                Мой Avito
-              </a>
-              <a href="#" className="hover:text-blue-600">
-                Для бизнеса
-              </a>
-              <a href="#" className="hover:text-blue-600">
-                Помощь
-              </a>
-            </div>
-          </div>
-        </div>
+  // Храним индекс активного таба, синхронизируем с URL
+  const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
 
-        {/* Основная панель */}
-        <div className="px-6 lg:px-10 py-3 flex items-center justify-between">
-          {/* Лого и Категории */}
-          <div className="flex items-center space-x-6">
+  const user = location.pathname.startsWith("/avito/") ? { firstName: "Иван", lastName: "Петров" } : null;
+
+  const authorizedTabs = [
+    {
+      title: "Главная",
+      icon: Home,
+      path: "/avito/",
+    },
+    {
+      title: "Профиль",
+      icon: UserCircle,
+      path: "/avito/profile",
+    },
+    {
+      title: "Мои объявления",
+      icon: Package,
+      path: "/avito/profile/ads",
+    },
+    {
+      title: "Сообщения",
+      icon: MessageCircle,
+      path: "/avito/profile/messages",
+    },
+    {
+      title: "Избранное",
+      icon: Heart,
+      path: "/avito/profile/favorites",
+    },
+    { type: "separator" },
+    {
+      title: "Заказы",
+      icon: ShoppingBag,
+      path: "/avito/profile/orders",
+    },
+    {
+      title: "Корзина",
+      icon: ShoppingCart,
+      path: "/avito/profile/cart",
+    },
+    { type: "separator" },
+    {
+      title: "Поддержка",
+      icon: HelpCircle,
+      path: "/avito/support",
+    },
+    {
+      title: "О нас",
+      icon: Info,
+      path: "/avito/about",
+    },
+  ];
+
+  const guestTabs = [
+    {
+      title: "Войти",
+      icon: LogIn,
+      path: "/avito/login",
+    },
+    {
+      title: "Регистрация",
+      icon: UserPlus,
+      path: "/avito/register",
+    },
+  ];
+
+  // Синхронизируем activeTabIndex с URL при смене location.pathname
+  useEffect(() => {
+  const tabs = authorizedTabs;
+
+  let bestMatchIndex: number | null = null;
+  let bestMatchLength = -1;
+
+  tabs.forEach((tab, index) => {
+    if (!("path" in tab) || !tab.path) return;
+
+    if (location.pathname.startsWith(tab.path) && tab.path.length > bestMatchLength) {
+      bestMatchIndex = index;
+      bestMatchLength = tab.path.length;
+    }
+  });
+
+  setActiveTabIndex(bestMatchIndex);
+}, [location.pathname]);
+
+
+  // Обработчик изменения таба
+  const handleTabChange = (index: number | null) => {
+    if (index === null) return;
+    const tabs =authorizedTabs;
+    const tab = tabs[index];
+    if ("path" in tab && tab.path) {
+      navigate(tab.path);
+    }
+    setActiveTabIndex(index);
+  };
+
+  const tabs = authorizedTabs;
+
+  return (
+    <div className="h-[80px]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between h-20">
+            {/* Левая часть: Лого */}
+            <div className="flex items-center space-x-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                  <Icon name="Grid3X3" size={20} className="text-blue-600" />
+                <div className="p-2 hover:bg-white/10 rounded-lg cursor-pointer">
+                  <Icon name="Grid3X3" size={20} className="text-white" />
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[20rem] p-0">
+              <DropdownMenuContent align="start" className="w-[20rem] p-0 overflow-visible z-[999]">
                 <div className="px-4 py-3 text-sm font-semibold border-b">
                   Категории
                 </div>
                 <AvitoCategroyMenu categories={avitoCategories} />
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <h1
-              className="text-2xl font-bold text-blue-600 cursor-pointer"
-              onClick={() => navigate("/avito")}
-            >
-              Avito
-            </h1>
-          </div>
-
-          {/* Поиск */}
-          <div className="flex-1 px-8">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Поиск по объявлениям"
-                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              <h1
+                className="text-3xl text-white cursor-pointer font-extrabold"
+                onClick={() => navigate("/avito")}
               >
-                <Icon name="Search" size={20} />
-              </Button>
-            </div>
-          </div>
-
-          {/* Правая часть */}
-          <div className="flex items-center space-x-4">
-            <ExpandableTabsAvito
-              tabs={tabs}
-              activeIndex={activeTabIndex}
-              onChange={handleTabChange}
-            />
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700">
-                  ИП
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => navigate("/avito/profile")}>
-                  <Icon name="User" size={16} className="mr-2" />
-                  Профиль
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate("/avito/profile/ads")}
+                <FancyText
+                  gradient={{ from: "#ffffff", to: "#f0f9ff", type: "linear" }}
+                  animateTo={{ from: "#dbeafe", to: "#ffffff" }}
+                  animateDuration={2000}
                 >
-                  <Icon name="Package" size={16} className="mr-2" />
-                  Мои объявления
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-600">
-                  <Icon name="LogOut" size={16} className="mr-2" />
-                  Выйти
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  TRIVO
+                </FancyText>
+              </h1>
+              <Badge
+                variant="secondary"
+                className="ml-3 text-sm px-3 py-1 bg-white/20 text-white border-0"
+              >
+                объявления
+              </Badge>
+            </div>
+
+            {/* Центр: Поиск */}
+            <div className="flex-1 px-10 max-w-2xl">
+              <div className="relative w-full">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <Icon name="Search" size={20} />
+                </Button>
+
+                <input
+                  type="text"
+                  placeholder="Поиск по объявлениям..."
+                  className="w-full pl-4 pr-12 py-3 text-base border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Правая часть */}
+            <div className="flex flex-col gap-4">
+              <ExpandableTabsAvito
+                tabs={tabs}
+                className="text-white"
+                activeColor="#ffffff"
+                activeIndex={activeTabIndex}
+                onChange={handleTabChange}
+              />
+            </div>
           </div>
         </div>
       </header>
