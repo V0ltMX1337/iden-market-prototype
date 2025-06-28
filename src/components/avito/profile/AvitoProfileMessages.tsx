@@ -111,7 +111,9 @@ const AvitoProfileMessages = () => {
       <div className="w-80 border-r bg-gray-50">
         <div className="p-4 border-b bg-white">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-lg">Диалоги</h3>
+            <h3 className="font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Диалоги
+            </h3>
             <Button variant="ghost" size="sm" className="p-1">
               <Icon name="RotateCcw" size={18} />
             </Button>
@@ -137,7 +139,7 @@ const AvitoProfileMessages = () => {
               key={chat.id}
               className={`flex items-center p-4 hover:bg-white cursor-pointer transition-colors ${
                 selectedChat?.id === chat.id
-                  ? "bg-white border-r-2 border-green-500"
+                  ? "bg-white border-r-2 border-gradient-to-b from-blue-500 to-purple-600"
                   : ""
               }`}
               onClick={() => setSelectedChat(chat)}
@@ -145,7 +147,7 @@ const AvitoProfileMessages = () => {
               <div className="relative mr-3">
                 <Avatar className="w-12 h-12">
                   <AvatarImage src={chat.avatar} />
-                  <AvatarFallback className="bg-green-600 text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                     {chat.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -170,7 +172,7 @@ const AvitoProfileMessages = () => {
                 </p>
               </div>
               {chat.unread && (
-                <div className="ml-2 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <div className="ml-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {chat.unread}
                 </div>
               )}
@@ -185,11 +187,11 @@ const AvitoProfileMessages = () => {
           /* Стартовый экран */
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             <div className="text-center max-w-sm">
-              <div className="w-24 h-24 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <Icon
                   name="MessageCircle"
                   size={32}
-                  className="text-green-600"
+                  className="text-blue-600"
                 />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -208,7 +210,7 @@ const AvitoProfileMessages = () => {
               <div className="relative">
                 <Avatar className="w-10 h-10">
                   <AvatarImage src={selectedChat.avatar} />
-                  <AvatarFallback className="bg-green-600 text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                     {selectedChat.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -242,7 +244,7 @@ const AvitoProfileMessages = () => {
                   <div
                     className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
                       message.isMine
-                        ? "bg-green-600 text-white"
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
                         : "bg-white text-gray-900 shadow-sm"
                     }`}
                   >
@@ -280,7 +282,7 @@ const AvitoProfileMessages = () => {
                 <Button
                   onClick={handleSendMessage}
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700 text-white rounded-full w-10 h-10 p-0"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-full w-10 h-10 p-0"
                 >
                   <Icon name="Send" size={16} />
                 </Button>

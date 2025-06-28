@@ -109,7 +109,10 @@ const AvitoProfileMain = () => {
                 <span className="text-sm text-gray-600">4.2 (8 отзывов)</span>
               </div>
             </div>
-            <Button onClick={() => navigate("/avito/profile/settings")}>
+            <Button
+              onClick={() => navigate("/avito/profile/settings")}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            >
               Редактировать профиль
             </Button>
           </div>
@@ -148,7 +151,7 @@ const AvitoProfileMain = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button
               variant="outline"
-              className="h-16 flex-col space-y-2"
+              className="h-16 flex-col space-y-2 border-blue-200 text-blue-600 hover:bg-blue-50"
               onClick={() => navigate("/avito/sell")}
             >
               <Icon name="Plus" size={24} />
@@ -156,7 +159,7 @@ const AvitoProfileMain = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-16 flex-col space-y-2"
+              className="h-16 flex-col space-y-2 border-purple-200 text-purple-600 hover:bg-purple-50"
               onClick={() => navigate("/avito/profile/ads")}
             >
               <Icon name="Package" size={24} />
@@ -164,7 +167,7 @@ const AvitoProfileMain = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-16 flex-col space-y-2"
+              className="h-16 flex-col space-y-2 border-blue-200 text-blue-600 hover:bg-blue-50"
               onClick={() => navigate("/avito/profile/messages")}
             >
               <Icon name="MessageCircle" size={24} />

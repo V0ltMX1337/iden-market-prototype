@@ -42,6 +42,18 @@ const AvitoProfileAds = () => {
   ];
 
   const [activeTab, setActiveTab] = useState<"sold" | "active">("active");
+  const [editingAd, setEditingAd] = useState<number | null>(null);
+  const [adsList, setAdsList] = useState(myAds);
+
+  const handleRemoveFromSale = (adId: number) => {
+    setAdsList((prev) =>
+      prev.map((ad) => (ad.id === adId ? { ...ad, status: "inactive" } : ad)),
+    );
+  };
+
+  const handleEditAd = (adId: number) => {
+    setEditingAd(adId);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -70,15 +82,15 @@ const AvitoProfileAds = () => {
   };
 
   // Фильтруем объявления по выбранной вкладке
-  const filteredAds = myAds.filter((ad) =>
-    activeTab === "active" ? ad.status === "active" : ad.status === "sold"
+  const filteredAds = adsList.filter((ad) =>
+    activeTab === "active" ? ad.status === "active" : ad.status === "sold",
   );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Мои объявления</h1>
-        <Button className="rounded-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-5 py-2.5 font-semibold shadow-lg transition-all duration-300 flex items-center">
+        <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
           <Icon name="Plus" size={16} className="mr-2" />
           Подать объявление
         </Button>
@@ -96,7 +108,7 @@ const AvitoProfileAds = () => {
         >
           Активные
         </button>
-         <button
+        <button
           className={`py-2 px-4 font-semibold ${
             activeTab === "sold"
               ? "border-b-2 border-blue-600 text-blue-600"
@@ -148,15 +160,29 @@ const AvitoProfileAds = () => {
                     <span>{ad.createdAt}</span>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditAd(ad.id)}
+                      className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                    >
                       Редактировать
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                    >
                       Статистика
                     </Button>
                     {ad.status === "active" && (
-                      <Button variant="outline" size="sm">
-                        Снять с публикации
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRemoveFromSale(ad.id)}
+                        className="border-red-200 text-red-600 hover:bg-red-50"
+                      >
+                        Снять с продажи
                       </Button>
                     )}
                   </div>

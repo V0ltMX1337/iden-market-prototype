@@ -131,44 +131,44 @@ const AvitoMain = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <AvitoHeader />
 
-      {/* Слайдер */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <AvitoSliderSwiper slideres={sliders} />
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Слайдер */}
+        <section className="pt-6">
+          <AvitoSliderSwiper slideres={sliders} />
+        </section>
 
-      {/* Горячие предложения */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <AvitoProductSwiper ads={initialAds} title="🔥 Горячие предложения" />
-      </section>
+        {/* Горячие предложения */}
+        <section className="pt-8">
+          <AvitoProductSwiper ads={initialAds} title="🔥 Горячие предложения" />
+        </section>
 
-      {/* Баннер */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <div className="w-full max-w-[1440px] mx-auto px-8">
+        {/* Баннер */}
+        <section className="pt-8">
           <img
-            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1410&h=200&fit=crop"
+            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=200&fit=crop"
             alt="Баннер"
-            className="w-full h-[200px] object-cover rounded-2xl"
+            className="w-full h-[200px] object-cover rounded-lg"
           />
-        </div>
-      </section>
+        </section>
 
-      {/* Категории */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <AvitoCategorySwiper products={categories} />
-      </section>
+        {/* Категории */}
+        <section className="pt-8">
+          <AvitoCategorySwiper products={categories} />
+        </section>
 
-      {/* Сторис */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <AvitoStories />
-      </section>
+        {/* Сторис */}
+        <section className="pt-8">
+          <AvitoStories />
+        </section>
 
-      {/* Рекомендации */}
-      <section style={{ paddingTop: "1.563rem" }}>
-        <AvitoRecommendations />
-      </section>
+        {/* Рекомендации */}
+        <section className="pt-8 pb-8">
+          <AvitoRecommendations />
+        </section>
+      </div>
 
       <AvitoFooter />
     </div>

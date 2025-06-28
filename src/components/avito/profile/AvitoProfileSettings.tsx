@@ -83,7 +83,9 @@ const AvitoProfileSettings = () => {
               onChange={(e) => handleInputChange("city", e.target.value)}
             />
           </div>
-          <Button>Сохранить изменения</Button>
+          <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+            Сохранить изменения
+          </Button>
         </CardContent>
       </Card>
 
@@ -158,15 +160,24 @@ const AvitoProfileSettings = () => {
           <CardTitle>Безопасность</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full justify-start">
+          <Button
+            variant="outline"
+            className="w-full justify-start border-blue-200 text-blue-600 hover:bg-blue-50"
+          >
             <Icon name="Key" size={16} className="mr-2" />
             Изменить пароль
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button
+            variant="outline"
+            className="w-full justify-start border-purple-200 text-purple-600 hover:bg-purple-50"
+          >
             <Icon name="Shield" size={16} className="mr-2" />
             Двухфакторная аутентификация
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button
+            variant="outline"
+            className="w-full justify-start border-blue-200 text-blue-600 hover:bg-blue-50"
+          >
             <Icon name="Download" size={16} className="mr-2" />
             Скачать мои данные
           </Button>
