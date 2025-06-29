@@ -20,14 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -41,6 +33,7 @@ import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
+import { City, User, Category } from "@/lib/types";
 
 const AvitoAdmin = () => {
   const store = storeApi;

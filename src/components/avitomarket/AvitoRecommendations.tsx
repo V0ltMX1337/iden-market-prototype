@@ -1,14 +1,24 @@
-import InfiniteScroll from "react-infinite-scroll-component";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { storeApi } from "@/lib/store";
+import type { Category } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { storeApi } from "@/lib/store";
-import type { Category } from "@/lib/types";
+
+type Ad = {
+  id: number;
+  title: string;
+  price: number;
+  location: string;
+  image: string;
+  time: string;
+  isVip: boolean;
+};
 
 const AvitoRecommendations = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [ads, setAds] = useState<Ad[]>([]);
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeUsers: 0,
@@ -16,16 +26,32 @@ const AvitoRecommendations = () => {
     totalCities: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [categoriesData, statsData] = await Promise.all([
-          storeApi.getCategories(),
-          storeApi.getStats(),
-        ]);
+        // Получаем категории
+        const categoriesData = await storeApi.getCategories();
         setCategories(categoriesData);
-        setStats(statsData);
+
+        // Получаем статистику с бэка, если есть такой эндпоинт (иначе можно убрать)
+        const statsData = await storeApi.getStats?.(); // пример, если есть
+        if (statsData) {
+          setStats(statsData);
+        } else {
+          setStats({
+            totalUsers: 100, // можно убрать или заменить реальными данными
+            activeUsers: 50,
+            totalCategories: categoriesData.length,
+            totalCities: 10,
+          });
+        }
+
+        // Получаем объявления с бэка
+        const adsData = await storeApi.getAds({ limit: 8 }); // предположим, есть такой метод с лимитом
+        setAds(adsData);
+
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       } finally {
@@ -44,36 +70,6 @@ const AvitoRecommendations = () => {
     );
   }
 
-  // Генерируем реальные объявления на основе категорий
-  const generateAdsFromCategories = () => {
-    const mockAds = [];
-    const imageIds = [
-      "592750475338-74b7b21085ab", // phone
-      "517336714731-489689fd1ca8", // laptop
-      "586769135042-13d6fea7c425", // car
-      "549406564-beb7ffc4b4b6", // furniture
-      "571019031-34b6e4a7c3f2", // clothing
-    ];
-
-    categories.slice(0, 8).forEach((category, index) => {
-      const price = Math.floor(Math.random() * 100000) + 5000;
-      mockAds.push({
-        id: index + 1,
-        title: `${category.name} - отличное состояние`,
-        price,
-        location: "Москва",
-        image: `https://images.unsplash.com/photo-1${imageIds[index % imageIds.length]}?w=300&h=200&fit=crop`,
-        time: `${Math.floor(Math.random() * 24) + 1} час назад`,
-        isVip: Math.random() > 0.7,
-      });
-    });
-
-    return mockAds;
-  };
-
-  const ads = generateAdsFromCategories();
-  const navigate = useNavigate();
-
   return (
     <section className="py-10 px-4">
       <h2 className="text-2xl font-bold mb-6">Рекомендации для вас</h2>
@@ -91,6 +87,7 @@ const AvitoRecommendations = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 console.log("Добавлено в избранное:", ad.id);
+                // Здесь можешь добавить вызов API для избранного
               }}
             >
               <Heart className="w-5 h-5 text-red-500" />

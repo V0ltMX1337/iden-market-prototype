@@ -31,7 +31,6 @@ import AvitoLogin from "./pages/avito/AvitoLogin";
 import AvitoRegister from "./pages/avito/AvitoRegister";
 import AvitoProfile from "./pages/avito/AvitoProfile";
 import AvitoProduct from "./pages/avito/AvitoProduct";
-import AvitoSell from "./components/avito/profile/AvitoSell";
 import AvitoAdmin from "./pages/avito/AvitoAdmin";
 import PvzDashboard from "./pages/pvzturbo/PvzDashboard";
 import PvzOrders from "./components/pvzturbo/pvz/PvzOrders";
@@ -63,201 +62,106 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <AuthProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile/*" element={<Profile />} />
+        <Router>
+          <Routes>
+            {/* Все маршруты вне AuthProvider */}
+            <Route path="/" element={<Index />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile/*" element={<Profile />} />
+            <Route
+              path="/marketplace/category/:category"
+              element={<MarketplaceCategory />}
+            />
+            <Route path="/marketplace/product/:productId" element={<ProductPage />} />
+            <Route path="/marketplace/product/ar/:productId" element={<ProductPageAR />} />
+            <Route path="/seller/:sellerId" element={<SellerPage />} />
+            <Route path="/partner/login" element={<PartnerLogin />} />
+            <Route path="/partner/register" element={<PartnerRegister />} />
+            <Route path="/partner" element={<PartnerDashboard />}>
+              <Route index element={<PartnerOverview />} />
+              <Route path="/partner/overview" element={<PartnerOverview />} />
+              <Route path="/partner/profile" element={<SellerProfile />} />
+              <Route path="/partner/products" element={<PartnerProducts />} />
+              <Route path="/partner/orders" element={<PartnerOrders />} />
+              <Route path="/partner/gpt" element={<PartnerGPT />} />
+              <Route path="/partner/analytics" element={<PartnerAnalytics />} />
+              <Route path="/partner/finance" element={<PartnerFinance />} />
+            </Route>
+            <Route path="/pvzturbo" element={<PvzDashboard />}>
+              <Route index element={<PvzOrders />} />
+              <Route path="/pvzturbo/overview" element={<PvzOrders />} />
+              <Route path="/pvzturbo/order-issuance" element={<PvzOrderIssuance />} />
               <Route
-                path="/marketplace/category/:category"
-                element={<MarketplaceCategory />}
+                path="/pvzturbo/order-issuance/:barcode"
+                element={<PvzOrderIssuanceDetails />}
               />
               <Route
-                path="/marketplace/product/:productId"
-                element={<ProductPage />}
+                path="/pvzturbo/order-issuance/returns-packaging/:barcode"
+                element={<PvzReturnsPackagingPage />}
               />
+              <Route path="/pvzturbo/shipment-receipt" element={<PvzShipmentReceipt />} />
+              <Route path="/pvzturbo/returns-from-client" element={<PvzOrders />} />
+              <Route path="/pvzturbo/returns-from-seller" element={<PvzOrders />} />
+              <Route path="/pvzturbo/sklad" element={<PvzWarehouseManagement />} />
+              <Route path="/pvzturbo/order-place" element={<PvzPlaceOrders />} />
+              <Route path="/pvzturbo/training" element={<PvzTrainingPage />} />
+              <Route path="/pvzturbo/training/:courseId" element={<PvzTrainingCoursePage />} />
+              <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
+            </Route>
+            <Route path="/pvzturboowner" element={<PvzOwnerDashboard />}>
+              <Route index element={<PvzOwnerAnalytics />} />
+              <Route path="/pvzturboowner/overview" element={<PvzOwnerAnalytics />} />
               <Route
-                path="/marketplace/product/ar/:productId"
-                element={<ProductPageAR />}
+                path="/pvzturboowner/overview/:pvz"
+                element={<PvzOwnerManagementPage />}
               />
-              <Route path="/seller/:sellerId" element={<SellerPage />} />
-              <Route path="/partner/login" element={<PartnerLogin />} />
-              <Route path="/partner/register" element={<PartnerRegister />} />
+              <Route path="/pvzturboowner/staff/overview/:id" element={<PvzOwnerEditStaff />} />
+              <Route path="/pvzturboowner/staff/create/" element={<PvzOwnerCreateStaff />} />
+              <Route path="/pvzturboowner/points" element={<PvzOwnerListPvz />} />
+              <Route path="/pvzturboowner/point/create" element={<PvzAdminCreateWizard />} />
+              <Route path="/pvzturboowner/sklad" element={<PvzWarehouseManagement />} />
+              <Route path="/pvzturboowner/training" element={<PvzOwnerTrainingCoursePage />} />
+              <Route path="/pvzturboowner/training/:courseId" element={<PvzOwnerTrainingPage />} />
+              <Route path="/pvzturboowner/support" element={<PvzOwnerSupportChat />} />
+            </Route>
 
-              <Route path="/partner" element={<PartnerDashboard />}>
-                <Route index element={<PartnerOverview />} />
-                <Route path="/partner/overview" element={<PartnerOverview />} />
-                <Route path="/partner/profile" element={<SellerProfile />} />
-                <Route path="/partner/products" element={<PartnerProducts />} />
-                <Route path="/partner/orders" element={<PartnerOrders />} />
-                <Route path="/partner/gpt" element={<PartnerGPT />} />
-                <Route
-                  path="/partner/analytics"
-                  element={<PartnerAnalytics />}
-                />
-                <Route path="/partner/finance" element={<PartnerFinance />} />
-              </Route>
+            {/* Все маршруты /avito/* с AuthProvider */}
+            <Route
+              path="/avito/*"
+              element={
+                <AuthProvider>
+                  <Routes>
+                    <Route path="" element={<AvitoMain />} />
+                    <Route path="login" element={<AvitoLogin />} />
+                    <Route path="register" element={<AvitoRegister />} />
+                    <Route path="product/:id" element={<AvitoProduct />} />
+                    <Route
+                      path="profile/*"
+                      element={
+                        <ProtectedRoute>
+                          <AvitoProfile />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="admin/*"
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AvitoAdmin />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </AuthProvider>
+              }
+            />
 
-              <Route path="/avito" element={<AvitoMain />} />
-              <Route path="/avito/login" element={<AvitoLogin />} />
-              <Route path="/avito/register" element={<AvitoRegister />} />
-
-              {/* Защищенные маршруты профиля */}
-              <Route
-                path="/avito/profile"
-                element={
-                  <ProtectedRoute>
-                    <AvitoProfile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/avito/profile/*"
-                element={
-                  <ProtectedRoute>
-                    <AvitoProfile />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Защищенные админ маршруты */}
-              <Route
-                path="/avito/admin"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <AvitoAdmin />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/avito/admin/*"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <AvitoAdmin />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route path="/pvzturbo" element={<PvzDashboard />}>
-                <Route index element={<PvzOrders />} />
-                <Route path="/pvzturbo/overview" element={<PvzOrders />} />
-                <Route
-                  path="/pvzturbo/order-issuance"
-                  element={<PvzOrderIssuance />}
-                />
-                <Route
-                  path="/pvzturbo/order-issuance/:barcode"
-                  element={<PvzOrderIssuanceDetails />}
-                />
-                <Route
-                  path="/pvzturbo/order-issuance/returns-packaging/:barcode"
-                  element={<PvzReturnsPackagingPage />}
-                />
-                <Route
-                  path="/pvzturbo/shipment-receipt"
-                  element={<PvzShipmentReceipt />}
-                />
-                <Route
-                  path="/pvzturbo/returns-from-client"
-                  element={<PvzOrders />}
-                />
-                <Route
-                  path="/pvzturbo/returns-from-seller"
-                  element={<PvzOrders />}
-                />
-                <Route
-                  path="/pvzturbo/sklad"
-                  element={<PvzWarehouseManagement />}
-                />
-                <Route
-                  path="/pvzturbo/order-place"
-                  element={<PvzPlaceOrders />}
-                />
-                <Route
-                  path="/pvzturbo/training"
-                  element={<PvzTrainingPage />}
-                />
-                <Route
-                  path="/pvzturbo/training/:courseId"
-                  element={<PvzTrainingCoursePage />}
-                />
-                <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
-              </Route>
-
-              <Route path="/pvzturboowner" element={<PvzOwnerDashboard />}>
-                <Route index element={<PvzOwnerAnalytics />} />
-                <Route
-                  path="/pvzturboowner/overview"
-                  element={<PvzOwnerAnalytics />}
-                />
-                <Route
-                  path="/pvzturboowner/overview/:pvz"
-                  element={<PvzOwnerManagementPage />}
-                />
-                <Route
-                  path="/pvzturboowner/staff/overview/:id"
-                  element={<PvzOwnerEditStaff />}
-                />
-                <Route
-                  path="/pvzturboowner/staff/create/"
-                  element={<PvzOwnerCreateStaff />}
-                />
-                <Route
-                  path="/pvzturboowner/points"
-                  element={<PvzOwnerListPvz />}
-                />
-                <Route
-                  path="/pvzturboowner/point/create"
-                  element={<PvzAdminCreateWizard />}
-                />
-                <Route
-                  path="/pvzturboowner/sklad"
-                  element={<PvzWarehouseManagement />}
-                />
-                <Route
-                  path="/pvzturboowner/training"
-                  element={<PvzOwnerTrainingCoursePage />}
-                />
-                <Route
-                  path="/pvzturboowner/training/:courseId"
-                  element={<PvzOwnerTrainingPage />}
-                />
-                <Route
-                  path="/pvzturboowner/support"
-                  element={<PvzOwnerSupportChat />}
-                />
-              </Route>
-
-              {/* Avito Routes */}
-              <Route path="/avito" element={<AvitoMain />} />
-              <Route path="/avito/login" element={<AvitoLogin />} />
-              <Route path="/avito/register" element={<AvitoRegister />} />
-              <Route path="/avito/product/:id" element={<AvitoProduct />} />
-              <Route
-                path="/avito/profile/*"
-                element={
-                  <ProtectedRoute>
-                    <AvitoProfile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/avito/admin"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <AvitoAdmin />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Router>
-        </AuthProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
       </TooltipProvider>
     </QueryClientProvider>
   );

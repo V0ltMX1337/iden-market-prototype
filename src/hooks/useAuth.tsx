@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import type { User } from "../lib/types";
 
@@ -6,24 +6,55 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
+  logout: () => void;
   isAdmin: () => boolean;
   isModerator: () => boolean;
 }
 
+axios.defaults.baseURL = "http://94.156.112.180:7000";
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = "http://94.156.112.180:7000"; // тот же, что и в storeApi
+const API_BASE = "http://94.156.112.180:7000";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Сохраняем токен в localStorage
+  const saveToken = (token: string) => {
+    localStorage.setItem("accessToken", token);
+  };
+
+  const getToken = () => {
+    return localStorage.getItem("accessToken");
+  };
+
+  const removeToken = () => {
+    localStorage.removeItem("accessToken");
+  };
+
+  // Настраиваем axios interceptor для подстановки токена в каждый запрос
+  useEffect(() => {
+    const interceptor = axios.interceptors.request.use((config) => {
+      const token = getToken();
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+
+    return () => {
+      axios.interceptors.request.eject(interceptor);
+    };
+  }, []);
+
   const fetchUser = async () => {
+    setIsLoading(true);
     try {
-      const res = await axios.get(`${API_BASE}/api/auth/me`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(`${API_BASE}/api/auth/me`);
       setUser(res.data);
     } catch {
       setUser(null);
@@ -33,58 +64,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    const token = getToken();
+    if (token) {
+      fetchUser();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const res = await axios.post(
-        `${API_BASE}/api/auth/login`,
-        { email, password },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      setUser(res.data);
+      const res = await axios.post(`${API_BASE}/api/auth/login`, { email, password }, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const { accessToken, user } = res.data;
+      saveToken(accessToken);
+      setUser(user);
       return true;
     } catch {
       return false;
     }
   };
 
-  const logout = async () => {
-    await axios.post(
-      `${API_BASE}/api/auth/logout`,
-      {},
-      {
-        withCredentials: true,
-      },
-    );
+  const logout = () => {
+    removeToken();
     setUser(null);
   };
 
   const isAdmin = () => user?.role === "Администратор";
-  const isModerator = () =>
-    user?.role === "Модератор" || user?.role === "Администратор";
+  const isModerator = () => user?.role === "Модератор" || user?.role === "Администратор";
 
   return (
-    <AuthContext.Provider
-      value={{ user, isLoading, login, logout, isAdmin, isModerator }}
-    >
+    <AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isModerator }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-const useAuth = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
-
-export { useAuth };
