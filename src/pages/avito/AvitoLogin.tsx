@@ -66,7 +66,7 @@ const AvitoLogin = () => {
               </div>
               <CardTitle className="text-xl">Добро пожаловать!</CardTitle>
               <CardDescription className="text-base">
-                Вы уже авторизованы как {user.name}
+                Вы уже авторизованы как {user.firstName} {user.lastName}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -74,7 +74,7 @@ const AvitoLogin = () => {
                 onClick={handleLoginAsUser}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-12"
               >
-                Войти как {user.name}
+                Войти как {user.firstName} {user.lastName}
               </Button>
               <Button
                 variant="outline"

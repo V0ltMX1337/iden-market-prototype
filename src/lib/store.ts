@@ -1,303 +1,99 @@
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  role: "Пользователь" | "Модератор" | "Администратор";
-  registrationDate: string;
-  status: "active" | "blocked";
-}
+import axios from "axios";
+import type { User, Category, City, SystemSettings } from "../lib/types";
 
-interface Category {
-  id: string;
-  name: string;
-  icon: string;
-  subcategories: Array<{
-    name: string;
-    items: string[];
-  }>;
-}
+const API_BASE = "/api"; // или полный путь, если нужен: http://localhost:3000/api
 
-interface City {
-  id: string;
-  name: string;
-  region: string;
-}
+export const storeApi = {
+  // USERS
+  async getUsers(): Promise<User[]> {
+    const res = await axios.get(`${API_BASE}/users`, { withCredentials: true });
+    return res.data;
+  },
 
-interface SystemSettings {
-  siteName: string;
-  siteDescription: string;
-  seoTitle: string;
-  seoDescription: string;
-  commission: number;
-}
+  async getUserByEmail(email: string): Promise<User | null> {
+    const res = await axios.get(`${API_BASE}/users?email=${email}`, { withCredentials: true });
+    return res.data || null;
+  },
 
-interface StoreData {
-  users: User[];
-  categories: Category[];
-  cities: City[];
-  systemSettings: SystemSettings;
-}
+  async addUser(user: Omit<User, "id">): Promise<User> {
+    const res = await axios.post(`${API_BASE}/users`, user, { withCredentials: true });
+    return res.data;
+  },
 
-// Начальные данные
-const initialData: StoreData = {
-  users: [
-    {
-      id: "1",
-      firstName: "Иван",
-      lastName: "Петров",
-      email: "admin@trivo.ru",
-      password: "admin123",
-      role: "Администратор",
-      registrationDate: "2024-01-15",
-      status: "active",
-    },
-    {
-      id: "2",
-      firstName: "Мария",
-      lastName: "Сидорова",
-      email: "maria@example.com",
-      password: "password123",
-      role: "Модератор",
-      registrationDate: "2024-02-20",
-      status: "active",
-    },
-    {
-      id: "3",
-      firstName: "Алексей",
-      lastName: "Иванов",
-      email: "alex@example.com",
-      password: "password123",
-      role: "Пользователь",
-      registrationDate: "2024-03-10",
-      status: "blocked",
-    },
-  ],
-  categories: [
-    {
-      id: "1",
-      name: "Авто",
-      icon: "Car",
-      subcategories: [
-        {
-          name: "Легковые автомобили",
-          items: [
-            "С пробегом",
-            "Новые",
-            "BMW",
-            "Mercedes",
-            "Toyota",
-            "Volkswagen",
-          ],
-        },
-        {
-          name: "Грузовики и спецтехника",
-          items: ["Грузовики", "Автобусы", "Прицепы", "Спецтехника"],
-        },
-      ],
-    },
-    {
-      id: "2",
-      name: "Недвижимость",
-      icon: "Home",
-      subcategories: [
-        {
-          name: "Квартиры",
-          items: ["Продажа", "Аренда", "1-комнатные", "2-комнатные"],
-        },
-      ],
-    },
-    {
-      id: "3",
-      name: "Работа",
-      icon: "Briefcase",
-      subcategories: [],
-    },
-    {
-      id: "4",
-      name: "Электроника",
-      icon: "Smartphone",
-      subcategories: [],
-    },
-  ],
-  cities: [
-    { id: "1", name: "Москва", region: "Московская область" },
-    { id: "2", name: "Санкт-Петербург", region: "Ленинградская область" },
-    { id: "3", name: "Екатеринбург", region: "Свердловская область" },
-  ],
-  systemSettings: {
-    siteName: "TRIVO",
-    siteDescription: "Крупнейшая площадка объявлений в России",
-    seoTitle: "TRIVO - Объявления России",
-    seoDescription: "Купить и продать товары на TRIVO - безопасно и выгодно",
-    commission: 5,
+  async updateUser(id: string, updates: Partial<User>): Promise<boolean> {
+    await axios.patch(`${API_BASE}/users/${id}`, updates, { withCredentials: true });
+    return true;
+  },
+
+  async deleteUser(id: string): Promise<boolean> {
+    await axios.delete(`${API_BASE}/users/${id}`, { withCredentials: true });
+    return true;
+  },
+
+  // CATEGORIES
+  async getCategories(): Promise<Category[]> {
+    const res = await axios.get(`${API_BASE}/categories`, { withCredentials: true });
+    return res.data;
+  },
+
+  async addCategory(category: Omit<Category, "id">): Promise<Category> {
+    const res = await axios.post(`${API_BASE}/categories`, category, { withCredentials: true });
+    return res.data;
+  },
+
+  async updateCategory(id: string, updates: Partial<Category>): Promise<boolean> {
+    await axios.patch(`${API_BASE}/categories/${id}`, updates, { withCredentials: true });
+    return true;
+  },
+
+  async deleteCategory(id: string): Promise<boolean> {
+    await axios.delete(`${API_BASE}/categories/${id}`, { withCredentials: true });
+    return true;
+  },
+
+  async addSubcategory(categoryId: string, subcategory: { name: string; items: string[] }) {
+    await axios.post(`${API_BASE}/categories/${categoryId}/subcategories`, subcategory, {
+      withCredentials: true,
+    });
+    return true;
+  },
+
+  // CITIES
+  async getCities(): Promise<City[]> {
+    const res = await axios.get(`${API_BASE}/cities`, { withCredentials: true });
+    return res.data;
+  },
+
+  async addCity(city: Omit<City, "id">): Promise<City> {
+    const res = await axios.post(`${API_BASE}/cities`, city, { withCredentials: true });
+    return res.data;
+  },
+
+  async deleteCity(id: string): Promise<boolean> {
+    await axios.delete(`${API_BASE}/cities/${id}`, { withCredentials: true });
+    return true;
+  },
+
+  // SETTINGS
+  async getSystemSettings(): Promise<SystemSettings> {
+    const res = await axios.get(`${API_BASE}/settings`, { withCredentials: true });
+    return res.data;
+  },
+
+  async updateSystemSettings(updates: Partial<SystemSettings>): Promise<void> {
+    await axios.patch(`${API_BASE}/settings`, updates, { withCredentials: true });
+  },
+
+  // STATS
+  async getStats(): Promise<{
+    totalUsers: number;
+    activeUsers: number;
+    totalCategories: number;
+    totalCities: number;
+    totalRevenue: number;
+    monthlyRevenue: number;
+  }> {
+    const res = await axios.get(`${API_BASE}/stats`, { withCredentials: true });
+    return res.data;
   },
 };
-
-class Store {
-  private data: StoreData;
-  private readonly STORAGE_KEY = "trivo_store";
-
-  constructor() {
-    this.data = this.loadFromStorage();
-  }
-
-  private loadFromStorage(): StoreData {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      return stored ? JSON.parse(stored) : initialData;
-    } catch {
-      return initialData;
-    }
-  }
-
-  private saveToStorage() {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
-    } catch (error) {
-      console.error("Ошибка сохранения данных:", error);
-    }
-  }
-
-  // Пользователи
-  getUsers(): User[] {
-    return this.data.users;
-  }
-
-  getUserByEmail(email: string): User | null {
-    return this.data.users.find((user) => user.email === email) || null;
-  }
-
-  addUser(user: Omit<User, "id">): User {
-    const newUser = {
-      ...user,
-      id: Date.now().toString(),
-    };
-    this.data.users.push(newUser);
-    this.saveToStorage();
-    return newUser;
-  }
-
-  updateUser(id: string, updates: Partial<User>): boolean {
-    const index = this.data.users.findIndex((user) => user.id === id);
-    if (index !== -1) {
-      this.data.users[index] = { ...this.data.users[index], ...updates };
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  deleteUser(id: string): boolean {
-    const index = this.data.users.findIndex((user) => user.id === id);
-    if (index !== -1) {
-      this.data.users.splice(index, 1);
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  // Категории
-  getCategories(): Category[] {
-    return this.data.categories;
-  }
-
-  addCategory(category: Omit<Category, "id">): Category {
-    const newCategory = {
-      ...category,
-      id: Date.now().toString(),
-    };
-    this.data.categories.push(newCategory);
-    this.saveToStorage();
-    return newCategory;
-  }
-
-  updateCategory(id: string, updates: Partial<Category>): boolean {
-    const index = this.data.categories.findIndex((cat) => cat.id === id);
-    if (index !== -1) {
-      this.data.categories[index] = {
-        ...this.data.categories[index],
-        ...updates,
-      };
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  deleteCategory(id: string): boolean {
-    const index = this.data.categories.findIndex((cat) => cat.id === id);
-    if (index !== -1) {
-      this.data.categories.splice(index, 1);
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  addSubcategory(
-    categoryId: string,
-    subcategory: { name: string; items: string[] },
-  ): boolean {
-    const category = this.data.categories.find((cat) => cat.id === categoryId);
-    if (category) {
-      category.subcategories.push(subcategory);
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  // Города
-  getCities(): City[] {
-    return this.data.cities;
-  }
-
-  addCity(city: Omit<City, "id">): City {
-    const newCity = {
-      ...city,
-      id: Date.now().toString(),
-    };
-    this.data.cities.push(newCity);
-    this.saveToStorage();
-    return newCity;
-  }
-
-  deleteCity(id: string): boolean {
-    const index = this.data.cities.findIndex((city) => city.id === id);
-    if (index !== -1) {
-      this.data.cities.splice(index, 1);
-      this.saveToStorage();
-      return true;
-    }
-    return false;
-  }
-
-  // Настройки системы
-  getSystemSettings(): SystemSettings {
-    return this.data.systemSettings;
-  }
-
-  updateSystemSettings(updates: Partial<SystemSettings>): void {
-    this.data.systemSettings = { ...this.data.systemSettings, ...updates };
-    this.saveToStorage();
-  }
-
-  // Статистика
-  getStats() {
-    const users = this.getUsers();
-    return {
-      totalUsers: users.length,
-      activeUsers: users.filter((u) => u.status === "active").length,
-      totalCategories: this.data.categories.length,
-      totalCities: this.data.cities.length,
-      totalRevenue: 125430,
-      monthlyRevenue: 15670,
-    };
-  }
-}
-
-export const store = new Store();
-export type { User, Category, City, SystemSettings };

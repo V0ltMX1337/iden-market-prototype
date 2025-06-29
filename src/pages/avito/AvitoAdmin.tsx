@@ -38,40 +38,12 @@ import {
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
-import { store } from "@/lib/store";
+import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "Пользователь" | "Модератор" | "Администратор";
-  registrationDate: string;
-  status: "active" | "blocked";
-}
-
-interface Category {
-  id: string;
-  name: string;
-  subcategories: string[];
-}
-
-interface City {
-  id: string;
-  name: string;
-  region: string;
-}
-
-interface SystemSettings {
-  siteName: string;
-  siteDescription: string;
-  seoTitle: string;
-  seoDescription: string;
-  commission: number;
-}
-
 const AvitoAdmin = () => {
+  const store = storeApi;
   const { isAdmin } = useAuth();
 
   // Проверяем права доступа

@@ -25,12 +25,14 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { store } from "@/lib/store";
+import { storeApi } from "@/lib/store";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const store = storeApi;
 
   const avitoCategories = store.getCategories();
 

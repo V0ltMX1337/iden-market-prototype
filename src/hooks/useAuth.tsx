@@ -1,97 +1,72 @@
-// hooks/useAuth.ts
-import {
-  useState,
-  useEffect,
-  createContext,
-  useContext,
-  ReactNode,
-} from "react";
-import { store, User } from "@/lib/store";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
+import type { User } from "../lib/types";
+
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => boolean;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
   isAdmin: () => boolean;
   isModerator: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // 🔧 добавлено
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("/api/auth/me", { withCredentials: true });
+      setUser(res.data);
+    } catch {
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const userCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("trivo_user="));
-
-    if (userCookie) {
-      try {
-        const userData = JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
-        const storeUser = store.getUserByEmail(userData.email);
-        if (storeUser && storeUser.status === "active") {
-          setUser(storeUser);
-        } else {
-          logout();
-        }
-      } catch {
-        logout();
-      }
-    }
-    setIsLoading(false); // 🔧 обязательно после всех проверок
+    fetchUser();
   }, []);
 
-  const login = (email: string, password: string): boolean => {
-    const foundUser = store.getUserByEmail(email);
-
-    if (
-      foundUser &&
-      foundUser.password === password &&
-      foundUser.status === "active"
-    ) {
-      setUser(foundUser);
-      const userData = {
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-        role: foundUser.role,
-      };
-      document.cookie = `trivo_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const res = await axios.post(
+        "/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      setUser(res.data);
       return true;
+    } catch {
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await axios.post("/api/auth/logout", {}, { withCredentials: true });
     setUser(null);
-    document.cookie =
-      "trivo_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
   };
 
-  const isAdmin = (): boolean => user?.role === "Администратор";
-  const isModerator = (): boolean => user?.role === "Модератор" || user?.role === "Администратор";
+  const isAdmin = () => user?.role === "Администратор";
+  const isModerator = () =>
+    user?.role === "Модератор" || user?.role === "Администратор";
 
-  const value: AuthContextType = {
-    user,
-    isLoading,
-    login,
-    logout,
-    isAdmin,
-    isModerator,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, isLoading, login, logout, isAdmin, isModerator }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
