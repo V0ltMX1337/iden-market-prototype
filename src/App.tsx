@@ -102,6 +102,46 @@ const App = () => {
                 <Route path="/partner/finance" element={<PartnerFinance />} />
               </Route>
 
+              <Route path="/avito" element={<AvitoMain />} />
+              <Route path="/avito/login" element={<AvitoLogin />} />
+              <Route path="/avito/register" element={<AvitoRegister />} />
+
+              {/* Защищенные маршруты профиля */}
+              <Route
+                path="/avito/profile"
+                element={
+                  <ProtectedRoute>
+                    <AvitoProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/avito/profile/*"
+                element={
+                  <ProtectedRoute>
+                    <AvitoProfile />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Защищенные админ маршруты */}
+              <Route
+                path="/avito/admin"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AvitoAdmin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/avito/admin/*"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AvitoAdmin />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path="/pvzturbo" element={<PvzDashboard />}>
                 <Route index element={<PvzOrders />} />
                 <Route path="/pvzturbo/overview" element={<PvzOrders />} />

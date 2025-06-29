@@ -1,101 +1,80 @@
-"use client";
-
-import React, { useState } from "react";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
+import type { Category } from "@/lib/types";
 
-interface CategoryItem {
-  name: string;
-  icon: string;
-  subcategories: {
-    name: string;
-    items: string[];
-  }[];
+interface AvitoCategoryMenuProps {
+  categories: Category[];
 }
 
-interface Props {
-  categories: CategoryItem[];
-}
+export const AvitoCategroyMenu = ({ categories }: AvitoCategoryMenuProps) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-export const AvitoCategroyMenu: React.FC<Props> = ({ categories }) => {
-  const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
+  const handleCategoryClick = (categoryId: string) => {
+    console.log("Выбрана категория:", categoryId);
+    // Здесь будет переход к объявлениям категории
+  };
+
+  const handleSubcategoryClick = (
+    categoryId: string,
+    subcategoryName: string,
+  ) => {
+    console.log(
+      "Выбрана подкатегория:",
+      subcategoryName,
+      "в категории:",
+      categoryId,
+    );
+    // Здесь будет переход к объявлениям подкатегории
+  };
 
   return (
-    <div className="relative w-full">
-      <div className="w-full">
-        {categories.map((category, index) => (
+    <div className="max-h-[400px] overflow-y-auto">
+      {categories.map((category) => (
+        <div
+          key={category.id}
+          className="border-b border-gray-100 last:border-0"
+        >
           <div
-            key={index}
-            className="group relative"
-            onMouseEnter={() => setHoveredCategory(index)}
-            onMouseLeave={() => setHoveredCategory(null)}
+            className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer"
+            onClick={() => handleCategoryClick(category.id)}
           >
-            {/* Категория */}
-            <div className="px-4 py-3 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 flex items-center">
-              <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
-                <Icon
-                  name={category.icon}
-                  size={14}
-                  className="text-blue-600"
-                />
-              </div>
-              <span className="font-medium text-gray-700 text-sm">
-                {category.name}
-              </span>
-              {category.subcategories.length > 0 && (
-                <Icon
-                  name="ChevronRight"
-                  size={14}
-                  className="ml-auto text-gray-400"
-                />
-              )}
-            </div>
-
-            {/* Подкатегории */}
-            {hoveredCategory === index && category.subcategories.length > 0 && (
-              <div
-                className={`
-                  absolute top-0 left-full ml-2 z-50 w-[500px] bg-white border border-gray-200 rounded-lg shadow-2xl
-                  p-6 transition-all duration-300 ease-out transform
-                  animate-fade-in
-                `}
-              >
-                <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-3">
-                    <Icon
-                      name={category.icon}
-                      size={16}
-                      className="text-blue-600"
-                    />
-                  </div>
-                  <span className="text-lg font-bold text-gray-800">
-                    {category.name}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-8">
-                  {category.subcategories.map((subcat, subIndex) => (
-                    <div key={subIndex}>
-                      <h4 className="font-semibold text-gray-800 text-base mb-3 border-b border-gray-100 pb-2">
-                        {subcat.name}
-                      </h4>
-                      <div className="space-y-2">
-                        {subcat.items.map((item, i) => (
-                          <div
-                            key={i}
-                            className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer py-1.5 px-2 rounded hover:bg-blue-50 transition-all duration-150"
-                          >
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <span className="font-medium text-gray-900">{category.name}</span>
+            {category.subcategories && category.subcategories.length > 0 && (
+              <Icon name="ChevronRight" size={16} className="text-gray-400" />
             )}
           </div>
-        ))}
-      </div>
+
+          {category.subcategories && category.subcategories.length > 0 && (
+            <div className="pl-4 pb-2">
+              {category.subcategories.map((subcategory) => (
+                <div key={subcategory.name} className="mb-2">
+                  <div
+                    className="text-sm font-medium text-gray-700 px-4 py-2 hover:bg-gray-50 cursor-pointer rounded"
+                    onClick={() =>
+                      handleSubcategoryClick(category.id, subcategory.name)
+                    }
+                  >
+                    {subcategory.name}
+                  </div>
+                  {subcategory.items && subcategory.items.length > 0 && (
+                    <div className="pl-4">
+                      {subcategory.items.map((item) => (
+                        <div
+                          key={item}
+                          className="text-sm text-gray-600 px-4 py-1 hover:bg-gray-50 cursor-pointer rounded"
+                          onClick={() => console.log("Выбран товар:", item)}
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

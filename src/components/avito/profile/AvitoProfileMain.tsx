@@ -45,38 +45,42 @@ const AvitoProfileMain = () => {
       color: "text-green-600",
     },
     {
-      label: "Продано товаров",
-      value: stats.totalUsers > 0 ? Math.floor(stats.totalUsers / 10) : 0,
-      icon: "TrendingUp",
+      label: "Всего пользователей",
+      value: stats.totalUsers,
+      icon: "Users",
       color: "text-blue-600",
     },
     {
-      label: "Отзывов",
-      value: Math.floor(stats.activeUsers / 5) || 8,
-      icon: "Star",
-      color: "text-yellow-600",
+      label: "Активных пользователей",
+      value: stats.activeUsers,
+      icon: "UserCheck",
+      color: "text-purple-600",
     },
     {
-      label: "На сайте с",
-      value: "2023",
-      icon: "Calendar",
-      color: "text-purple-600",
+      label: "Категорий",
+      value: stats.totalCategories,
+      icon: "Grid3X3",
+      color: "text-orange-600",
     },
   ];
 
   const recentActivity = [
     {
       type: "sale",
-      title: "Продали iPhone 13",
+      title: "Новое объявление размещено",
       time: "2 дня назад",
-      amount: "65 000 ₽",
+      amount: `${stats.totalUsers} пользователей`,
     },
     {
       type: "message",
-      title: "Новое сообщение по MacBook",
-      time: "5 дней назад",
+      title: `Активных категорий: ${stats.totalCategories}`,
+      time: "Всего",
     },
-    { type: "view", title: "Просмотрели ваш диван", time: "1 неделю назад" },
+    {
+      type: "view",
+      title: `Городов в системе: ${stats.totalCities}`,
+      time: "Всего",
+    },
   ];
 
   return (

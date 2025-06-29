@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await axios.post(
         `${API_BASE}/api/auth/login`,
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setUser(res.data);
       return true;
@@ -51,7 +51,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    await axios.post(`${API_BASE}/api/auth/logout`, {}, { withCredentials: true });
+    await axios.post(
+      `${API_BASE}/api/auth/logout`,
+      {},
+      { withCredentials: true },
+    );
     setUser(null);
   };
 
@@ -67,3 +71,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
+export { useAuth };

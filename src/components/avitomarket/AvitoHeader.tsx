@@ -26,28 +26,38 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { storeApi } from "@/lib/store";
+import { useAuth } from "@/hooks/useAuth";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+  const { user, isLoading } = useAuth();
 
-  const store = storeApi;
+  const [categories, setCategories] = useState([]);
 
-  const avitoCategories = store.getCategories();
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await storeApi.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Ошибка загрузки категорий:", error);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  const avitoCategories = categories;
 
   // Храним индекс активного таба, синхронизируем с URL
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
-
-  const user = location.pathname.startsWith("/avito/")
-    ? { firstName: "Иван", lastName: "Петров" }
-    : null;
 
   const authorizedTabs = [
     {
       title: "Главная",
       icon: Home,
-      path: "/avito/",
+      path: "/avito",
     },
     {
       title: "Профиль",
@@ -108,7 +118,7 @@ const AvitoHeader = () => {
 
   // Синхронизируем activeTabIndex с URL при смене location.pathname
   useEffect(() => {
-    const tabs = authorizedTabs;
+    const tabs = user ? authorizedTabs : guestTabs;
 
     let bestMatchIndex: number | null = null;
     let bestMatchLength = -1;
@@ -126,12 +136,12 @@ const AvitoHeader = () => {
     });
 
     setActiveTabIndex(bestMatchIndex);
-  }, [location.pathname]);
+  }, [location.pathname, user]);
 
   // Обработчик изменения таба
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
-    const tabs = authorizedTabs;
+    const tabs = user ? authorizedTabs : guestTabs;
     const tab = tabs[index];
     if ("path" in tab && tab.path) {
       navigate(tab.path);
@@ -139,7 +149,13 @@ const AvitoHeader = () => {
     setActiveTabIndex(index);
   };
 
-  const tabs = authorizedTabs;
+  const tabs = user ? authorizedTabs : guestTabs;
+
+  if (isLoading) {
+    return (
+      <div className="h-[80px] bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600"></div>
+    );
+  }
 
   return (
     <div className="h-[80px]">

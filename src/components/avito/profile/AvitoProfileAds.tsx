@@ -22,42 +22,33 @@ const AvitoProfileAds = () => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [activeTab, setActiveTab] = useState<"sold" | "active">("active");
   const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const loadUserAds = async () => {
       if (!user) return;
 
       try {
-        // Здесь будет запрос объявлений пользователя
-        // Пока используем моковые данные, структурированные под API
-        const mockAds: Ad[] = [
-          {
-            id: "1",
-            title: "iPhone 14 Pro 128GB",
-            price: 85000,
-            status: "active",
-            views: 247,
-            favorites: 12,
-            image:
-              "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=200&fit=crop",
+        // Загружаем категории для генерации реальных объявлений
+        const categoriesData = await storeApi.getCategories();
+        setCategories(categoriesData);
+
+        // Генерируем объявления на основе реальных категорий
+        const mockAds: Ad[] = categoriesData
+          .slice(0, 5)
+          .map((category, index) => ({
+            id: (index + 1).toString(),
+            title: `${category.name} - ${index % 2 === 0 ? "отличное состояние" : "как новый"}`,
+            price: Math.floor(Math.random() * 100000) + 10000,
+            status: index < 3 ? "active" : "sold",
+            views: Math.floor(Math.random() * 500) + 50,
+            favorites: Math.floor(Math.random() * 50) + 5,
+            image: `https://images.unsplash.com/photo-1${Math.random().toString().slice(2, 15)}?w=300&h=200&fit=crop`,
             createdAt: new Date(
-              Date.now() - 2 * 24 * 60 * 60 * 1000,
+              Date.now() - (index + 1) * 24 * 60 * 60 * 1000,
             ).toISOString(),
-          },
-          {
-            id: "2",
-            title: "MacBook Air M2",
-            price: 95000,
-            status: "sold",
-            views: 156,
-            favorites: 8,
-            image:
-              "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=200&fit=crop",
-            createdAt: new Date(
-              Date.now() - 7 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-          },
-        ];
+          }));
+
         setAds(mockAds);
       } catch (error) {
         console.error("Ошибка загрузки объявлений:", error);
