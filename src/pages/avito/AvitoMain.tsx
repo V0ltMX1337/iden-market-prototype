@@ -101,23 +101,11 @@ const AvitoMain = () => {
     <div className="min-h-screen bg-gray-50">
       <AvitoHeader />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-         {/* Сторис */}
-        <section className="pt-8">
-          <AvitoStories />
-        </section>
-      </div>
-
       {/* Категории */}
       <section className="pt-8">
         <AvitoCategorySwiper products={categories} />
       </section>
-      
-      {/* Горячие предложения */}
-      <section className="pt-8">
-        <AvitoProductSwiper ads={initialAds} title="🔥 Горячие предложения" />
-      </section>
-
+    
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Рекомендации */}
         <section className="pt-8 pb-8">

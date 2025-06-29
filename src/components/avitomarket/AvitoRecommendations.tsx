@@ -80,7 +80,7 @@ const AvitoRecommendations = () => {
               <Card
                 key={ad.id}
                 className="overflow-hidden cursor-pointer group relative"
-                onClick={() => navigate(`/avito/item/${ad.id}`)}
+                onClick={() => navigate(`/avito/product/${ad.id}`)}
               >
                 <Button
                   variant="ghost"
