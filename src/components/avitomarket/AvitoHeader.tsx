@@ -20,61 +20,26 @@ import {
   UserCircle,
 } from "lucide-react";
 import { AvitoCategroyMenu } from "../customcomponent/AvitoCategroyMenu";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import store from "@/store/jsonStore";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const avitoCategories = [
-    {
-      name: "Авто",
-      icon: "Car",
-      subcategories: [
-        {
-          name: "Легковые автомобили",
-          items: [
-            "С пробегом",
-            "Новые",
-            "BMW",
-            "Mercedes",
-            "Toyota",
-            "Volkswagen",
-          ],
-        },
-        {
-          name: "Грузовики и спецтехника",
-          items: ["Грузовики", "Автобусы", "Прицепы", "Спецтехника"],
-        },
-      ],
-    },
-    {
-      name: "Недвижимость",
-      icon: "Home",
-      subcategories: [
-        {
-          name: "Квартиры",
-          items: ["Продажа", "Аренда", "1-комнатные", "2-комнатные"],
-        },
-      ],
-    },
-    {
-      name: "Работа",
-      icon: "Briefcase",
-      subcategories: [],
-    },
-    {
-      name: "Электроника",
-      icon: "Smartphone",
-      subcategories: [],
-    },
-  ];
+  const avitoCategories = store.getCategories();
 
   // Храним индекс активного таба, синхронизируем с URL
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
 
-  const user = location.pathname.startsWith("/avito/") ? { firstName: "Иван", lastName: "Петров" } : null;
+  const user = location.pathname.startsWith("/avito/")
+    ? { firstName: "Иван", lastName: "Петров" }
+    : null;
 
   const authorizedTabs = [
     {
@@ -141,28 +106,30 @@ const AvitoHeader = () => {
 
   // Синхронизируем activeTabIndex с URL при смене location.pathname
   useEffect(() => {
-  const tabs = authorizedTabs;
+    const tabs = authorizedTabs;
 
-  let bestMatchIndex: number | null = null;
-  let bestMatchLength = -1;
+    let bestMatchIndex: number | null = null;
+    let bestMatchLength = -1;
 
-  tabs.forEach((tab, index) => {
-    if (!("path" in tab) || !tab.path) return;
+    tabs.forEach((tab, index) => {
+      if (!("path" in tab) || !tab.path) return;
 
-    if (location.pathname.startsWith(tab.path) && tab.path.length > bestMatchLength) {
-      bestMatchIndex = index;
-      bestMatchLength = tab.path.length;
-    }
-  });
+      if (
+        location.pathname.startsWith(tab.path) &&
+        tab.path.length > bestMatchLength
+      ) {
+        bestMatchIndex = index;
+        bestMatchLength = tab.path.length;
+      }
+    });
 
-  setActiveTabIndex(bestMatchIndex);
-}, [location.pathname]);
-
+    setActiveTabIndex(bestMatchIndex);
+  }, [location.pathname]);
 
   // Обработчик изменения таба
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
-    const tabs =authorizedTabs;
+    const tabs = authorizedTabs;
     const tab = tabs[index];
     if ("path" in tab && tab.path) {
       navigate(tab.path);
@@ -179,19 +146,22 @@ const AvitoHeader = () => {
           <div className="flex items-center justify-between h-20">
             {/* Левая часть: Лого */}
             <div className="flex items-center space-x-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="p-2 hover:bg-white/10 rounded-lg cursor-pointer">
-                  <Icon name="Grid3X3" size={20} className="text-white" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[20rem] p-0 overflow-visible z-[999]">
-                <div className="px-4 py-3 text-sm font-semibold border-b">
-                  Категории
-                </div>
-                <AvitoCategroyMenu categories={avitoCategories} />
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="p-2 hover:bg-white/10 rounded-lg cursor-pointer">
+                    <Icon name="Grid3X3" size={20} className="text-white" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  className="w-[20rem] p-0 overflow-visible z-[999]"
+                >
+                  <div className="px-4 py-3 text-sm font-semibold border-b">
+                    Категории
+                  </div>
+                  <AvitoCategroyMenu categories={avitoCategories} />
+                </DropdownMenuContent>
+              </DropdownMenu>
               <h1
                 className="text-3xl text-white cursor-pointer font-extrabold"
                 onClick={() => navigate("/avito")}

@@ -38,6 +38,9 @@ import {
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
+import { store } from "@/lib/store";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router-dom";
 
 interface User {
   id: string;
@@ -69,65 +72,20 @@ interface SystemSettings {
 }
 
 const AvitoAdmin = () => {
-  // Состояния для данных
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      name: "Иван Петров",
-      email: "ivan@example.com",
-      role: "Пользователь",
-      registrationDate: "2024-01-15",
-      status: "active",
-    },
-    {
-      id: "2",
-      name: "Мария Сидорова",
-      email: "maria@example.com",
-      role: "Модератор",
-      registrationDate: "2024-02-20",
-      status: "active",
-    },
-    {
-      id: "3",
-      name: "Алексей Иванов",
-      email: "alex@example.com",
-      role: "Администратор",
-      registrationDate: "2024-03-10",
-      status: "blocked",
-    },
-  ]);
+  const { isAdmin } = useAuth();
 
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: "1",
-      name: "Авто",
-      subcategories: ["Легковые автомобили", "Грузовики", "Мотоциклы"],
-    },
-    {
-      id: "2",
-      name: "Недвижимость",
-      subcategories: ["Квартиры", "Дома", "Коммерческая"],
-    },
-    {
-      id: "3",
-      name: "Электроника",
-      subcategories: ["Телефоны", "Компьютеры", "Бытовая техника"],
-    },
-  ]);
+  // Проверяем права доступа
+  if (!isAdmin()) {
+    return <Navigate to="/avito" replace />;
+  }
 
-  const [cities, setCities] = useState<City[]>([
-    { id: "1", name: "Москва", region: "Московская область" },
-    { id: "2", name: "Санкт-Петербург", region: "Ленинградская область" },
-    { id: "3", name: "Екатеринбург", region: "Свердловская область" },
-  ]);
-
-  const [systemSettings, setSystemSettings] = useState<SystemSettings>({
-    siteName: "TRIVO",
-    siteDescription: "Крупнейшая площадка объявлений в России",
-    seoTitle: "TRIVO - Объявления России",
-    seoDescription: "Купить и продать товары на TRIVO - безопасно и выгодно",
-    commission: 5,
-  });
+  // Состояния для данных из store
+  const [users, setUsers] = useState(store.getUsers());
+  const [categories, setCategories] = useState(store.getCategories());
+  const [cities, setCities] = useState(store.getCities());
+  const [systemSettings, setSystemSettings] = useState(
+    store.getSystemSettings(),
+  );
 
   // Форма состояния
   const [newCategory, setNewCategory] = useState({ name: "", subcategory: "" });
@@ -137,47 +95,33 @@ const AvitoAdmin = () => {
     "Пользователь" | "Модератор" | "Администратор"
   >("Пользователь");
 
-  // Статистика
-  const stats = {
-    totalUsers: users.length,
-    activeUsers: users.filter((u) => u.status === "active").length,
-    totalCategories: categories.length,
-    totalCities: cities.length,
-    totalRevenue: 125430,
-    monthlyRevenue: 15670,
-  };
-
   // Функции управления категориями
   const addCategory = () => {
     if (newCategory.name.trim()) {
-      const newCat: Category = {
-        id: Date.now().toString(),
+      const newCat = store.addCategory({
         name: newCategory.name,
+        icon: "Package",
         subcategories: [],
-      };
-      setCategories([...categories, newCat]);
+      });
+      setCategories(store.getCategories());
       setNewCategory({ name: "", subcategory: "" });
     }
   };
 
   const addSubcategory = (categoryId: string) => {
     if (newCategory.subcategory.trim()) {
-      setCategories(
-        categories.map((cat) =>
-          cat.id === categoryId
-            ? {
-                ...cat,
-                subcategories: [...cat.subcategories, newCategory.subcategory],
-              }
-            : cat,
-        ),
-      );
+      store.addSubcategory(categoryId, {
+        name: newCategory.subcategory,
+        items: [],
+      });
+      setCategories(store.getCategories());
       setNewCategory({ ...newCategory, subcategory: "" });
     }
   };
 
   const deleteCategory = (categoryId: string) => {
-    setCategories(categories.filter((cat) => cat.id !== categoryId));
+    store.deleteCategory(categoryId);
+    setCategories(store.getCategories());
   };
 
   // Функции управления городами

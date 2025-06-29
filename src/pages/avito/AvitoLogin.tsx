@@ -11,46 +11,32 @@ import {
 } from "@/components/ui/card";
 import { useNavigate, Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import { useAuth } from "@/hooks/useAuth";
 
 const AvitoLogin = () => {
   const navigate = useNavigate();
+  const { user, login, logout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // Проверяем авторизацию из куков
-  const getUserFromCookies = () => {
-    const userCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("trivo_user="));
-
-    if (userCookie) {
-      try {
-        return JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  };
-
-  const user = getUserFromCookies();
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
-    // Сохраняем пользователя в куки (имитация авторизации)
-    const userData = {
-      firstName: "Иван",
-      lastName: "Петров",
-      email: email,
-    };
-
-    document.cookie = `trivo_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
-    navigate("/avito");
+    if (login(email, password)) {
+      navigate("/avito");
+    } else {
+      setError("Неверный email или пароль");
+    }
   };
 
   const handleLoginAsUser = () => {
-    navigate("/avito/profile");
+    navigate("/avito");
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -80,7 +66,7 @@ const AvitoLogin = () => {
               </div>
               <CardTitle className="text-xl">Добро пожаловать!</CardTitle>
               <CardDescription className="text-base">
-                Вы уже авторизованы как {user.firstName} {user.lastName}
+                Вы уже авторизованы как {user.name}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -88,15 +74,11 @@ const AvitoLogin = () => {
                 onClick={handleLoginAsUser}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-12"
               >
-                Войти как {user.firstName} {user.lastName}
+                Войти как {user.name}
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {
-                  document.cookie =
-                    "trivo_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                  window.location.reload();
-                }}
+                onClick={handleLogout}
                 className="w-full"
               >
                 Войти как другой пользователь
@@ -144,6 +126,12 @@ const AvitoLogin = () => {
                     placeholder="••••••••"
                   />
                 </div>
+
+                {error && (
+                  <div className="text-red-600 text-sm text-center">
+                    {error}
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between">
                   <label className="flex items-center">
