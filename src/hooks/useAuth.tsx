@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import type { User } from "../lib/types";
 
-
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
@@ -14,13 +13,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const API_BASE = "http://94.156.112.180:7000"; // тот же, что и в storeApi
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("/api/auth/me", { withCredentials: true });
+      const res = await axios.get(`${API_BASE}/api/auth/me`, {
+        withCredentials: true,
+      });
       setUser(res.data);
     } catch {
       setUser(null);
@@ -36,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const res = await axios.post(
-        "/api/auth/login",
+        `${API_BASE}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    await axios.post("/api/auth/logout", {}, { withCredentials: true });
+    await axios.post(`${API_BASE}/api/auth/logout`, {}, { withCredentials: true });
     setUser(null);
   };
 
@@ -63,10 +66,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
 };

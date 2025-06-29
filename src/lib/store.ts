@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { User, Category, City, SystemSettings } from "../lib/types";
 
-const API_BASE = "/api"; // или полный путь, если нужен: http://localhost:3000/api
+const API_BASE = "http://94.156.112.180:7000"; // или полный путь, если нужен: http://localhost:3000/api
 
 export const storeApi = {
   // USERS
