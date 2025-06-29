@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 
 const AvitoProduct = () => {
   const navigate = useNavigate();
@@ -66,7 +67,19 @@ const AvitoProduct = () => {
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
-                <div className="flex gap-2 overflow-x-auto">
+                <div
+                  className="flex gap-2 pb-2"
+                  style={{
+                    overflowX: "auto",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                  }}
+                >
+                  <style jsx>{`
+                    div::-webkit-scrollbar {
+                      display: none;
+                    }
+                  `}</style>
                   {product.images.map((image, index) => (
                     <button
                       key={index}
@@ -163,25 +176,24 @@ const AvitoProduct = () => {
                 <div className="space-y-3">
                   <Button
                     className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-12 text-white font-semibold"
-                    onClick={() => {
-                      /* Запросить доставку */
-                    }}
+                    onClick={() => navigate("/avito/delivery")}
                   >
                     Запросить доставку
                   </Button>
                   <div className="text-sm text-gray-600 space-y-1 px-2">
                     <p>Авито Доставка.</p>
                     <p>Гарантия возврата денег, если товар не подойдёт</p>
-                    <button className="text-blue-600 hover:underline transition-colors">
+                    <button
+                      className="text-blue-600 hover:underline transition-colors"
+                      onClick={() => navigate("/avito/delivery-info")}
+                    >
                       Об Авито Доставке
                     </button>
                   </div>
 
                   <Button
                     className="w-full bg-green-600 hover:bg-green-700 h-12"
-                    onClick={() => {
-                      /* Написать продавцу */
-                    }}
+                    onClick={() => navigate("/avito/chat")}
                   >
                     <Icon name="MessageCircle" size={18} className="mr-2" />
                     Написать продавцу
@@ -189,9 +201,7 @@ const AvitoProduct = () => {
                   <Button
                     variant="outline"
                     className="w-full h-12 border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors"
-                    onClick={() => {
-                      /* Показать телефон */
-                    }}
+                    onClick={() => navigate("/avito/phone")}
                   >
                     <Icon name="Phone" size={18} className="mr-2" />
                     Показать телефон
@@ -280,22 +290,20 @@ const AvitoProduct = () => {
       {/* Ask Seller Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="bg-gradient-to-br from-white to-purple-50/30">
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Спросите у продавца</h2>
-            <div className="space-y-4">
-              <div className="flex gap-3 items-center">
+          <CardContent className="p-4">
+            <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
+            <div className="space-y-3">
+              <div className="flex gap-2 items-center">
                 <input
                   type="text"
                   placeholder="Здравствуйте!"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                 />
                 <Button
-                  className="bg-purple-600 hover:bg-purple-700 px-6 py-2"
-                  onClick={() => {
-                    /* Отправить сообщение */
-                  }}
+                  className="bg-purple-600 hover:bg-purple-700 px-4 py-2"
+                  onClick={() => navigate("/avito/chat")}
                 >
-                  <Icon name="Send" size={18} />
+                  <Icon name="Send" size={16} />
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -309,10 +317,8 @@ const AvitoProduct = () => {
                     key={index}
                     variant="outline"
                     size="sm"
-                    className="bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => {
-                      /* Вставить быстрый ответ */
-                    }}
+                    className="bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors text-xs px-2 py-1"
+                    onClick={() => navigate("/avito/chat")}
                   >
                     {question}
                   </Button>
@@ -395,6 +401,8 @@ const AvitoProduct = () => {
           </Card>
         </div>
       </div>
+
+      <AvitoFooter />
     </div>
   );
 };
