@@ -25,7 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import store from "@/store/jsonStore";
+import { store } from "@/lib/store";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();

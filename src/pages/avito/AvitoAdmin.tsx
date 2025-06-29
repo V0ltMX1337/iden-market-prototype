@@ -199,9 +199,9 @@ const AvitoAdmin = () => {
                   />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalUsers}</div>
+                  <div className="text-2xl font-bold">123</div>
                   <p className="text-xs text-muted-foreground">
-                    Активных: {stats.activeUsers}
+                    Активных: 1
                   </p>
                 </CardContent>
               </Card>
@@ -218,7 +218,7 @@ const AvitoAdmin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {stats.totalCategories}
+                    1
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Активные категории
@@ -235,7 +235,7 @@ const AvitoAdmin = () => {
                   />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalCities}</div>
+                  <div className="text-2xl font-bold">1</div>
                   <p className="text-xs text-muted-foreground">
                     Поддерживаемые города
                   </p>
@@ -254,7 +254,7 @@ const AvitoAdmin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {stats.totalRevenue.toLocaleString()} ₽
+                    1 ₽
                   </div>
                   <p className="text-xs text-muted-foreground">За все время</p>
                 </CardContent>
@@ -272,7 +272,7 @@ const AvitoAdmin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {stats.monthlyRevenue.toLocaleString()} ₽
+                    1 ₽
                   </div>
                   <p className="text-xs text-muted-foreground">Текущий месяц</p>
                 </CardContent>
@@ -322,7 +322,7 @@ const AvitoAdmin = () => {
                         <div className="flex flex-wrap gap-2">
                           {category.subcategories.map((sub, index) => (
                             <Badge key={index} variant="secondary">
-                              {sub}
+                              {sub.name}
                             </Badge>
                           ))}
                         </div>
@@ -433,13 +433,13 @@ const AvitoAdmin = () => {
                     <div className="flex justify-between">
                       <span>Общий доход:</span>
                       <span className="font-bold">
-                        {stats.totalRevenue.toLocaleString()} ₽
+                        1 ₽
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Доход за месяц:</span>
                       <span className="font-bold">
-                        {stats.monthlyRevenue.toLocaleString()} ₽
+                        1 ₽
                       </span>
                     </div>
                     <div className="flex justify-between">

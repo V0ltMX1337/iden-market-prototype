@@ -1,3 +1,4 @@
+// hooks/useAuth.ts
 import {
   useState,
   useEffect,
@@ -9,6 +10,7 @@ import { store, User } from "@/lib/store";
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
   login: (email: string, password: string) => boolean;
   logout: () => void;
   isAdmin: () => boolean;
@@ -23,8 +25,8 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 🔧 добавлено
 
-  // Проверяем авторизацию из cookies при загрузке
   useEffect(() => {
     const userCookie = document.cookie
       .split("; ")
@@ -32,21 +34,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     if (userCookie) {
       try {
-        const userData = JSON.parse(
-          decodeURIComponent(userCookie.split("=")[1]),
-        );
-        // Проверяем пользователя в store
+        const userData = JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
         const storeUser = store.getUserByEmail(userData.email);
         if (storeUser && storeUser.status === "active") {
           setUser(storeUser);
         } else {
-          // Если пользователь не найден или заблокирован, очищаем cookie
           logout();
         }
       } catch {
         logout();
       }
     }
+    setIsLoading(false); // 🔧 обязательно после всех проверок
   }, []);
 
   const login = (email: string, password: string): boolean => {
@@ -58,7 +57,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       foundUser.status === "active"
     ) {
       setUser(foundUser);
-      // Сохраняем в cookies
       const userData = {
         id: foundUser.id,
         email: foundUser.email,
@@ -77,16 +75,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       "trivo_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
   };
 
-  const isAdmin = (): boolean => {
-    return user?.role === "Администратор";
-  };
-
-  const isModerator = (): boolean => {
-    return user?.role === "Модератор" || user?.role === "Администратор";
-  };
+  const isAdmin = (): boolean => user?.role === "Администратор";
+  const isModerator = (): boolean => user?.role === "Модератор" || user?.role === "Администратор";
 
   const value: AuthContextType = {
     user,
+    isLoading,
     login,
     logout,
     isAdmin,
@@ -98,8 +92,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };
