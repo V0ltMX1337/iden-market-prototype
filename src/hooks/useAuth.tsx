@@ -41,7 +41,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await axios.post(
         `${API_BASE}/api/auth/login`,
         { email, password },
-        { withCredentials: true },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       );
       setUser(res.data);
       return true;
@@ -54,7 +59,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await axios.post(
       `${API_BASE}/api/auth/logout`,
       {},
-      { withCredentials: true },
+      {
+        withCredentials: true,
+      },
     );
     setUser(null);
   };
