@@ -1,33 +1,16 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const AvitoProfileMain = () => {
   const navigate = useNavigate();
+  const { user } = useAuth(); // ✅ получаем пользователя из контекста
 
-  // Получаем данные пользователя из куков
-  const getUserFromCookies = () => {
-    const userCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("trivo_user="));
-
-    if (userCookie) {
-      try {
-        return JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  };
-
-  const user = getUserFromCookies() || {
-    firstName: "Иван",
-    lastName: "Петров",
-    email: "ivan@example.com",
-  };
+  if (!user) return null; // ⚠️ fallback, на всякий случай
 
   const stats = [
     {
@@ -68,7 +51,7 @@ const AvitoProfileMain = () => {
 
   return (
     <div className="space-y-6">
-      {/* Profile Header */}
+      {/* Профиль */}
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start space-x-6">
@@ -98,12 +81,7 @@ const AvitoProfileMain = () => {
               >
                 <div className="flex text-yellow-400">
                   {[...Array(5)].map((_, i) => (
-                    <Icon
-                      key={i}
-                      name="Star"
-                      size={16}
-                      className={i < 4 ? "fill-current" : ""}
-                    />
+                    <Icon key={i} name="Star" size={16} className={i < 4 ? "fill-current" : ""} />
                   ))}
                 </div>
                 <span className="text-sm text-gray-600">4.2 (8 отзывов)</span>
@@ -119,18 +97,14 @@ const AvitoProfileMain = () => {
         </CardContent>
       </Card>
 
-      {/* Stats */}
+      {/* Статистика */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-lg bg-gray-50`}>
-                  <Icon
-                    name={stat.icon as any}
-                    size={24}
-                    className={stat.color}
-                  />
+                <div className="p-2 rounded-lg bg-gray-50">
+                  <Icon name={stat.icon as any} size={24} className={stat.color} />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stat.value}</p>
@@ -142,7 +116,7 @@ const AvitoProfileMain = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
+      {/* Быстрые действия */}
       <Card>
         <CardHeader>
           <CardTitle>Быстрые действия</CardTitle>
@@ -177,7 +151,7 @@ const AvitoProfileMain = () => {
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
+      {/* Последняя активность */}
       <Card>
         <CardHeader>
           <CardTitle>Последняя активность</CardTitle>
@@ -194,25 +168,25 @@ const AvitoProfileMain = () => {
                     activity.type === "sale"
                       ? "bg-green-100"
                       : activity.type === "message"
-                        ? "bg-blue-100"
-                        : "bg-gray-100"
+                      ? "bg-blue-100"
+                      : "bg-gray-100"
                   }`}
                 >
                   <Icon
                     name={
                       activity.type === "sale"
-                        ? ("DollarSign" as any)
+                        ? "DollarSign"
                         : activity.type === "message"
-                          ? ("MessageCircle" as any)
-                          : ("Eye" as any)
+                        ? "MessageCircle"
+                        : "Eye"
                     }
                     size={20}
                     className={
                       activity.type === "sale"
                         ? "text-green-600"
                         : activity.type === "message"
-                          ? "text-blue-600"
-                          : "text-gray-600"
+                        ? "text-blue-600"
+                        : "text-gray-600"
                     }
                   />
                 </div>
@@ -222,9 +196,7 @@ const AvitoProfileMain = () => {
                 </div>
                 {activity.amount && (
                   <div className="text-right">
-                    <p className="font-semibold text-green-600">
-                      {activity.amount}
-                    </p>
+                    <p className="font-semibold text-green-600">{activity.amount}</p>
                   </div>
                 )}
               </div>

@@ -1,6 +1,7 @@
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   role: "Пользователь" | "Модератор" | "Администратор";
@@ -44,7 +45,8 @@ const initialData: StoreData = {
   users: [
     {
       id: "1",
-      name: "Иван Петров",
+      firstName: "Иван",
+      lastName: "Петров",
       email: "admin@trivo.ru",
       password: "admin123",
       role: "Администратор",
@@ -53,7 +55,8 @@ const initialData: StoreData = {
     },
     {
       id: "2",
-      name: "Мария Сидорова",
+      firstName: "Мария",
+      lastName: "Сидорова",
       email: "maria@example.com",
       password: "password123",
       role: "Модератор",
@@ -62,7 +65,8 @@ const initialData: StoreData = {
     },
     {
       id: "3",
-      name: "Алексей Иванов",
+      firstName: "Алексей",
+      lastName: "Иванов",
       email: "alex@example.com",
       password: "password123",
       role: "Пользователь",

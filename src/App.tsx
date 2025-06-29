@@ -197,7 +197,14 @@ const App = () => {
               <Route path="/avito/login" element={<AvitoLogin />} />
               <Route path="/avito/register" element={<AvitoRegister />} />
               <Route path="/avito/product/:id" element={<AvitoProduct />} />
-              <Route path="/avito/profile/*" element={<AvitoProfile />} />
+              <Route
+                path="/avito/profile/*"
+                element={
+                  <ProtectedRoute>
+                    <AvitoProfile />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/avito/admin"
                 element={
