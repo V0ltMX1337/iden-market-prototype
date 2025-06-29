@@ -257,35 +257,16 @@ const AvitoProduct = () => {
       {/* Ask Seller Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Card className="bg-gradient-to-br from-white to-purple-50/30">
-          <CardContent className="p-4">
-            <h2 className="text-lg font-bold mb-3">Спросите у продавца</h2>
-            <div className="relative mb-3">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
+            <div className="flex gap-3 items-center">
               <input
                 type="text"
                 placeholder="Здравствуйте!"
-                className="w-full p-2 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              <Button
-                size="sm"
-                className="absolute right-1 top-1 bg-purple-600 hover:bg-purple-700 h-8"
-              >
-                <Icon name="Send" size={14} />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full h-7 text-xs"
-              >
-                Ещё продаёте?
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full h-7 text-xs"
-              >
-                Торг уместен?
+              <Button className="bg-purple-600 hover:bg-purple-700 px-6">
+                <Icon name="Send" size={18} />
               </Button>
             </div>
           </CardContent>
