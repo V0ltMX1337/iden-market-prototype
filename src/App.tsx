@@ -30,6 +30,7 @@ import AvitoRegister from "./pages/avito/AvitoRegister";
 import AvitoProfile from "./pages/avito/AvitoProfile";
 import AvitoProduct from "./pages/avito/AvitoProduct";
 import AvitoSell from "./components/avito/profile/AvitoSell";
+import AvitoAdmin from "./pages/avito/AvitoAdmin";
 import PvzDashboard from "./pages/pvzturbo/PvzDashboard";
 import PvzOrders from "./components/pvzturbo/pvz/PvzOrders";
 import PvzOrderIssuance from "./components/pvzturbo/pvz/PvzOrderIssuance";
@@ -68,9 +69,18 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile/*" element={<Profile />} />
-            <Route path="/marketplace/category/:category" element={<MarketplaceCategory />} />
-            <Route path="/marketplace/product/:productId" element={<ProductPage />} />
-            <Route path="/marketplace/product/ar/:productId" element={<ProductPageAR />} />
+            <Route
+              path="/marketplace/category/:category"
+              element={<MarketplaceCategory />}
+            />
+            <Route
+              path="/marketplace/product/:productId"
+              element={<ProductPage />}
+            />
+            <Route
+              path="/marketplace/product/ar/:productId"
+              element={<ProductPageAR />}
+            />
             <Route path="/seller/:sellerId" element={<SellerPage />} />
             <Route path="/partner/login" element={<PartnerLogin />} />
             <Route path="/partner/register" element={<PartnerRegister />} />
@@ -89,31 +99,88 @@ const App = () => {
             <Route path="/pvzturbo" element={<PvzDashboard />}>
               <Route index element={<PvzOrders />} />
               <Route path="/pvzturbo/overview" element={<PvzOrders />} />
-              <Route path="/pvzturbo/order-issuance" element={<PvzOrderIssuance />} />
-              <Route path="/pvzturbo/order-issuance/:barcode" element={<PvzOrderIssuanceDetails  />} />
-              <Route path="/pvzturbo/order-issuance/returns-packaging/:barcode" element={<PvzReturnsPackagingPage  />} />
-              <Route path="/pvzturbo/shipment-receipt" element={<PvzShipmentReceipt />} />
-              <Route path="/pvzturbo/returns-from-client" element={<PvzOrders />} />
-              <Route path="/pvzturbo/returns-from-seller" element={<PvzOrders />} />
-              <Route path="/pvzturbo/sklad" element={<PvzWarehouseManagement />} />
-              <Route path="/pvzturbo/order-place" element={<PvzPlaceOrders />} />
+              <Route
+                path="/pvzturbo/order-issuance"
+                element={<PvzOrderIssuance />}
+              />
+              <Route
+                path="/pvzturbo/order-issuance/:barcode"
+                element={<PvzOrderIssuanceDetails />}
+              />
+              <Route
+                path="/pvzturbo/order-issuance/returns-packaging/:barcode"
+                element={<PvzReturnsPackagingPage />}
+              />
+              <Route
+                path="/pvzturbo/shipment-receipt"
+                element={<PvzShipmentReceipt />}
+              />
+              <Route
+                path="/pvzturbo/returns-from-client"
+                element={<PvzOrders />}
+              />
+              <Route
+                path="/pvzturbo/returns-from-seller"
+                element={<PvzOrders />}
+              />
+              <Route
+                path="/pvzturbo/sklad"
+                element={<PvzWarehouseManagement />}
+              />
+              <Route
+                path="/pvzturbo/order-place"
+                element={<PvzPlaceOrders />}
+              />
               <Route path="/pvzturbo/training" element={<PvzTrainingPage />} />
-              <Route path="/pvzturbo/training/:courseId" element={<PvzTrainingCoursePage />} />
+              <Route
+                path="/pvzturbo/training/:courseId"
+                element={<PvzTrainingCoursePage />}
+              />
               <Route path="/pvzturbo/support" element={<PvzSupportChat />} />
             </Route>
 
             <Route path="/pvzturboowner" element={<PvzOwnerDashboard />}>
               <Route index element={<PvzOwnerAnalytics />} />
-              <Route path="/pvzturboowner/overview" element={<PvzOwnerAnalytics />} />
-              <Route path="/pvzturboowner/overview/:pvz" element={<PvzOwnerManagementPage />} />
-              <Route path="/pvzturboowner/staff/overview/:id" element={<PvzOwnerEditStaff />} />
-              <Route path="/pvzturboowner/staff/create/" element={<PvzOwnerCreateStaff />} />
-              <Route path="/pvzturboowner/points" element={<PvzOwnerListPvz />} />
-              <Route path="/pvzturboowner/point/create" element={<PvzAdminCreateWizard />} />
-              <Route path="/pvzturboowner/sklad" element={<PvzWarehouseManagement />} />
-              <Route path="/pvzturboowner/training" element={<PvzOwnerTrainingCoursePage />} />
-              <Route path="/pvzturboowner/training/:courseId" element={<PvzOwnerTrainingPage />} />
-              <Route path="/pvzturboowner/support" element={<PvzOwnerSupportChat />} />
+              <Route
+                path="/pvzturboowner/overview"
+                element={<PvzOwnerAnalytics />}
+              />
+              <Route
+                path="/pvzturboowner/overview/:pvz"
+                element={<PvzOwnerManagementPage />}
+              />
+              <Route
+                path="/pvzturboowner/staff/overview/:id"
+                element={<PvzOwnerEditStaff />}
+              />
+              <Route
+                path="/pvzturboowner/staff/create/"
+                element={<PvzOwnerCreateStaff />}
+              />
+              <Route
+                path="/pvzturboowner/points"
+                element={<PvzOwnerListPvz />}
+              />
+              <Route
+                path="/pvzturboowner/point/create"
+                element={<PvzAdminCreateWizard />}
+              />
+              <Route
+                path="/pvzturboowner/sklad"
+                element={<PvzWarehouseManagement />}
+              />
+              <Route
+                path="/pvzturboowner/training"
+                element={<PvzOwnerTrainingCoursePage />}
+              />
+              <Route
+                path="/pvzturboowner/training/:courseId"
+                element={<PvzOwnerTrainingPage />}
+              />
+              <Route
+                path="/pvzturboowner/support"
+                element={<PvzOwnerSupportChat />}
+              />
             </Route>
 
             {/* Avito Routes */}
@@ -122,6 +189,7 @@ const App = () => {
             <Route path="/avito/register" element={<AvitoRegister />} />
             <Route path="/avito/product/:id" element={<AvitoProduct />} />
             <Route path="/avito/profile/*" element={<AvitoProfile />} />
+            <Route path="/avito/admin" element={<AvitoAdmin />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
