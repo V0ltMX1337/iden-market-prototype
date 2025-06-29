@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 
 const AvitoProduct = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const AvitoProduct = () => {
     title: "iPhone 14 Pro 128GB Space Black",
     price: 85000,
     location: "Москва, м. Тверская",
+    category: "Электроника > Телефоны > Apple iPhone",
     description:
       "Продаю iPhone 14 Pro 128GB в отличном состоянии. Покупал в официальном магазине, есть чек. Комплект полный: коробка, кабель, документы. Без царапин и сколов, всегда использовал с чехлом и защитным стеклом.",
     images: [
@@ -32,50 +34,26 @@ const AvitoProduct = () => {
     views: 247,
     favorites: 18,
     publishedAt: "2 дня назад",
-    specifications: [
-      { label: "Состояние", value: "Отличное" },
-      { label: "Память", value: "128 ГБ" },
-      { label: "Цвет", value: "Space Black" },
-      { label: "Гарантия", value: "Есть" },
-    ],
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/avito")}
-              className="flex items-center space-x-2 text-white hover:bg-white/20"
-            >
-              <Icon name="ArrowLeft" size={20} />
-              <span className="text-2xl font-bold">AVITO</span>
-            </Button>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="text-white hover:bg-white/20">
-                <Icon name="Heart" size={18} className="mr-2" />
-                Избранное
-              </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/20">
-                <Icon name="User" size={18} className="mr-2" />
-                Профиль
-              </Button>
-              <Button
-                onClick={() => navigate("/avito/sell")}
-                className="bg-white text-purple-600 hover:bg-gray-100 font-semibold"
-              >
-                <Icon name="Plus" size={16} className="mr-2" />
-                Подать объявление
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AvitoHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <nav className="flex items-center space-x-2 text-sm text-gray-600">
+            <button
+              onClick={() => navigate("/avito")}
+              className="hover:text-blue-600"
+            >
+              Главная
+            </button>
+            <Icon name="ChevronRight" size={16} />
+            <span className="text-gray-900">{product.category}</span>
+          </nav>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Product Images */}
           <div className="lg:col-span-2">
@@ -117,24 +95,6 @@ const AvitoProduct = () => {
                 <p className="text-gray-700 leading-relaxed">
                   {product.description}
                 </p>
-              </CardContent>
-            </Card>
-
-            {/* Specifications */}
-            <Card className="mt-6">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold mb-4">Характеристики</h2>
-                <div className="space-y-3">
-                  {product.specifications.map((spec, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between py-2 border-b border-gray-100 last:border-b-0"
-                    >
-                      <span className="text-gray-600">{spec.label}</span>
-                      <span className="font-medium">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -208,9 +168,6 @@ const AvitoProduct = () => {
                   >
                     <Icon name="Phone" size={18} className="mr-2" />
                     Показать телефон
-                  </Button>
-                  <Button variant="outline" className="w-full h-12">
-                    <Icon name="Heart" size={18} className="mr-2" />В избранное
                   </Button>
                 </div>
 
@@ -307,30 +264,12 @@ const AvitoProduct = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" className="rounded-full">
-                Где и когда можно посмотреть?
-              </Button>
-              <Button variant="outline" size="sm" className="rounded-full">
                 Ещё продаёте?
               </Button>
               <Button variant="outline" size="sm" className="rounded-full">
                 Торг уместен?
               </Button>
-              <Button variant="outline" size="sm" className="rounded-full">
-                Отправите Авито Доставкой?
-              </Button>
             </div>
-            <div className="mt-4 text-sm text-gray-600">
-              <p>
-                № {product.id}736350794 • 14 июня в 17:15 • 74 просмотра (+19
-                сегодня)
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="mt-4 text-blue-600 border-blue-600 hover:bg-blue-50"
-            >
-              Пожаловаться на объявление
-            </Button>
           </CardContent>
         </Card>
       </div>
