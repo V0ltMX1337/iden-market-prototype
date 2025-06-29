@@ -40,9 +40,9 @@ const AvitoProduct = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50">
       <AvitoHeader />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Breadcrumbs */}
-        <div className="mb-6">
+        <div className="mb-4">
           <nav className="flex items-center space-x-2 text-sm text-gray-600">
             <button
               onClick={() => navigate("/avito")}
@@ -54,12 +54,12 @@ const AvitoProduct = () => {
             <span className="text-gray-900">{product.category}</span>
           </nav>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Product Images */}
           <div className="lg:col-span-2">
             <Card>
-              <CardContent className="p-6">
-                <div className="aspect-[4/3] mb-4">
+              <CardContent className="p-3">
+                <div className="aspect-[4/3] mb-2">
                   <img
                     src={product.images[currentImage]}
                     alt={product.title}
@@ -71,7 +71,7 @@ const AvitoProduct = () => {
                     <button
                       key={index}
                       onClick={() => setCurrentImage(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
+                      className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
                         currentImage === index
                           ? "border-blue-500"
                           : "border-gray-200"
@@ -89,10 +89,10 @@ const AvitoProduct = () => {
             </Card>
 
             {/* Description */}
-            <Card className="mt-6">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold mb-4">Описание</h2>
-                <p className="text-gray-700 leading-relaxed">
+            <Card className="mt-3">
+              <CardContent className="p-3">
+                <h2 className="text-lg font-bold mb-2">Описание</h2>
+                <p className="text-gray-700 text-sm leading-relaxed">
                   {product.description}
                 </p>
               </CardContent>
@@ -100,57 +100,65 @@ const AvitoProduct = () => {
           </div>
 
           {/* Product Info & Actions */}
-          <div className="space-y-6">
+          <div className="space-y-3">
             <Card className="bg-gradient-to-br from-white to-blue-50/50 border-purple-200">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
+              <CardContent className="p-3">
+                <div className="flex items-start justify-between mb-2">
                   <div>
-                    <Badge className="bg-green-100 text-green-800 mb-2">
+                    <Badge className="bg-green-100 text-green-800 mb-1 text-xs">
                       Б/у
                     </Badge>
-                    <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+                    <h1 className="text-lg font-bold mb-1">{product.title}</h1>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm" className="text-gray-500">
-                      <Icon name="MoreHorizontal" size={20} />
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-500 p-1"
+                    >
+                      <Icon name="MoreHorizontal" size={16} />
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-red-500">
-                      <Icon name="Heart" size={20} />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 p-1"
+                    >
+                      <Icon name="Heart" size={16} />
                     </Button>
                   </div>
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-3">
                   <div className="flex items-baseline space-x-2">
-                    <p className="text-3xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-gray-900">
                       {product.price.toLocaleString()} ₽
                     </p>
-                    <p className="text-lg text-gray-500 line-through">
+                    <p className="text-sm text-gray-500 line-through">
                       {(product.price + 15000).toLocaleString()} ₽
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
+                <div className="flex items-center gap-3 text-xs text-gray-600 mb-3">
                   <span className="flex items-center">
-                    <Icon name="MapPin" size={16} className="mr-1" />
+                    <Icon name="MapPin" size={14} className="mr-1" />
                     {product.location}
                   </span>
                   <span className="flex items-center">
-                    <Icon name="Eye" size={16} className="mr-1" />
+                    <Icon name="Eye" size={14} className="mr-1" />
                     {product.views}
                   </span>
                   <span className="flex items-center">
-                    <Icon name="Heart" size={16} className="mr-1" />
+                    <Icon name="Heart" size={14} className="mr-1" />
                     {product.favorites}
                   </span>
                 </div>
 
-                <div className="space-y-3">
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-12 text-white font-semibold">
+                <div className="space-y-2">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-10 text-white font-semibold text-sm">
                     Запросить доставку
                   </Button>
-                  <div className="text-sm text-gray-600 space-y-1">
+                  <div className="text-xs text-gray-600 space-y-1">
                     <p>Авито Доставка.</p>
                     <p>Гарантия возврата денег, если товар не подойдёт</p>
                     <a href="#" className="text-blue-600 hover:underline">
@@ -158,20 +166,20 @@ const AvitoProduct = () => {
                     </a>
                   </div>
 
-                  <Button className="w-full bg-green-600 hover:bg-green-700 h-12">
-                    <Icon name="MessageCircle" size={18} className="mr-2" />
+                  <Button className="w-full bg-green-600 hover:bg-green-700 h-10 text-sm">
+                    <Icon name="MessageCircle" size={16} className="mr-2" />
                     Написать продавцу
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full h-12 border-blue-600 text-blue-600 hover:bg-blue-50"
+                    className="w-full h-10 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm"
                   >
-                    <Icon name="Phone" size={18} className="mr-2" />
+                    <Icon name="Phone" size={16} className="mr-2" />
                     Показать телефон
                   </Button>
                 </div>
 
-                <p className="text-sm text-gray-500 mt-4">
+                <p className="text-xs text-gray-500 mt-2">
                   Размещено {product.publishedAt}
                 </p>
               </CardContent>
@@ -179,23 +187,25 @@ const AvitoProduct = () => {
 
             {/* Seller Info */}
             <Card>
-              <CardContent className="p-6">
-                <h3 className="font-bold mb-4">Продавец</h3>
-                <div className="flex items-start gap-4">
+              <CardContent className="p-3">
+                <h3 className="font-bold mb-2 text-sm">Продавец</h3>
+                <div className="flex items-start gap-3">
                   <img
                     src={product.seller.avatar}
                     alt={product.seller.name}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <div className="flex-1">
-                    <h4 className="font-semibold">{product.seller.name}</h4>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                    <h4 className="font-semibold text-sm">
+                      {product.seller.name}
+                    </h4>
+                    <div className="flex items-center gap-2 text-xs text-gray-600 mt-1">
                       <div className="flex text-yellow-400">
                         {[...Array(5)].map((_, i) => (
                           <Icon
                             key={i}
                             name="Star"
-                            size={12}
+                            size={10}
                             className={
                               i < Math.floor(product.seller.rating)
                                 ? "fill-current"
@@ -207,12 +217,12 @@ const AvitoProduct = () => {
                       <span>{product.seller.rating}</span>
                       <span>({product.seller.reviewsCount} отзывов)</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       На сайте {product.seller.onSiteFor}
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full mt-4">
+                <Button variant="outline" className="w-full mt-2 h-8 text-sm">
                   Все объявления продавца
                 </Button>
               </CardContent>
@@ -220,18 +230,18 @@ const AvitoProduct = () => {
 
             {/* Safety Tips */}
             <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-3">
+              <CardContent className="p-3">
+                <div className="flex items-start gap-2">
                   <Icon
                     name="Shield"
-                    size={20}
+                    size={16}
                     className="text-orange-600 mt-1"
                   />
                   <div>
-                    <h3 className="font-semibold text-orange-800 mb-2">
+                    <h3 className="font-semibold text-orange-800 mb-1 text-sm">
                       Безопасная сделка
                     </h3>
-                    <ul className="text-sm text-orange-700 space-y-1">
+                    <ul className="text-xs text-orange-700 space-y-1">
                       <li>• Встречайтесь в людных местах</li>
                       <li>• Проверяйте товар перед покупкой</li>
                       <li>• Не переводите деньги заранее</li>
@@ -245,28 +255,36 @@ const AvitoProduct = () => {
       </div>
 
       {/* Ask Seller Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Card className="bg-gradient-to-br from-white to-purple-50/30">
-          <CardContent className="p-6">
-            <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
-            <div className="relative mb-4">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-bold mb-3">Спросите у продавца</h2>
+            <div className="relative mb-3">
               <input
                 type="text"
                 placeholder="Здравствуйте!"
-                className="w-full p-3 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
               />
               <Button
                 size="sm"
-                className="absolute right-2 top-2 bg-purple-600 hover:bg-purple-700"
+                className="absolute right-1 top-1 bg-purple-600 hover:bg-purple-700 h-8"
               >
-                <Icon name="Send" size={16} />
+                <Icon name="Send" size={14} />
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="rounded-full">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full h-7 text-xs"
+              >
                 Ещё продаёте?
               </Button>
-              <Button variant="outline" size="sm" className="rounded-full">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full h-7 text-xs"
+              >
                 Торг уместен?
               </Button>
             </div>
@@ -275,23 +293,25 @@ const AvitoProduct = () => {
       </div>
 
       {/* Similar Products Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="space-y-4">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">Похожие объявления</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-4">
+              <h2 className="text-lg font-bold mb-3">Похожие объявления</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[1, 2, 3].map((item) => (
                   <div
                     key={item}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">iPhone 14 Pro Max</h3>
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-2"></div>
+                    <h3 className="font-semibold mb-1 text-sm">
+                      iPhone 14 Pro Max
+                    </h3>
                     <p className="text-lg font-bold text-green-600 mb-1">
                       95 000 ₽
                     </p>
-                    <p className="text-sm text-gray-600">Москва</p>
+                    <p className="text-xs text-gray-600">Москва</p>
                   </div>
                 ))}
               </div>
@@ -299,22 +319,22 @@ const AvitoProduct = () => {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">Как новое, но дешевле</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-4">
+              <h2 className="text-lg font-bold mb-3">Как новое, но дешевле</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[1, 2, 3].map((item) => (
                   <div
                     key={item}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-2"></div>
+                    <h3 className="font-semibold mb-1 text-sm">
                       iPhone 14 {item === 1 ? "Pro" : ""}
                     </h3>
                     <p className="text-lg font-bold text-green-600 mb-1">
                       {75000 + item * 5000} ₽
                     </p>
-                    <p className="text-sm text-gray-600">Москва</p>
+                    <p className="text-xs text-gray-600">Москва</p>
                   </div>
                 ))}
               </div>
@@ -322,20 +342,22 @@ const AvitoProduct = () => {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">Может быть интересно</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-4">
+              <h2 className="text-lg font-bold mb-3">Может быть интересно</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[1, 2, 3].map((item) => (
                   <div
                     key={item}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">Samsung Galaxy S23</h3>
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-2"></div>
+                    <h3 className="font-semibold mb-1 text-sm">
+                      Samsung Galaxy S23
+                    </h3>
                     <p className="text-lg font-bold text-green-600 mb-1">
                       {60000 + item * 3000} ₽
                     </p>
-                    <p className="text-sm text-gray-600">Москва</p>
+                    <p className="text-xs text-gray-600">Москва</p>
                   </div>
                 ))}
               </div>
