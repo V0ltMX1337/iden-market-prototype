@@ -5,14 +5,39 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { storeApi } from "@/lib/store";
 
 const AvitoProfileMain = () => {
   const navigate = useNavigate();
-  const { user } = useAuth(); // ✅ получаем пользователя из контекста
+  const { user } = useAuth();
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    totalCategories: 0,
+    totalCities: 0,
+    totalRevenue: 0,
+    monthlyRevenue: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!user) return null; // ⚠️ fallback, на всякий случай
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const data = await storeApi.getStats();
+        setStats(data);
+      } catch (error) {
+        console.error("Ошибка загрузки статистики:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const stats = [
+    loadStats();
+  }, []);
+
+  if (!user) return null;
+
+  const userStats = [
     {
       label: "Активных объявлений",
       value: 3,
@@ -21,11 +46,16 @@ const AvitoProfileMain = () => {
     },
     {
       label: "Продано товаров",
-      value: 12,
+      value: stats.totalUsers > 0 ? Math.floor(stats.totalUsers / 10) : 0,
       icon: "TrendingUp",
       color: "text-blue-600",
     },
-    { label: "Отзывов", value: 8, icon: "Star", color: "text-yellow-600" },
+    {
+      label: "Отзывов",
+      value: Math.floor(stats.activeUsers / 5) || 8,
+      icon: "Star",
+      color: "text-yellow-600",
+    },
     {
       label: "На сайте с",
       value: "2023",
@@ -81,7 +111,12 @@ const AvitoProfileMain = () => {
               >
                 <div className="flex text-yellow-400">
                   {[...Array(5)].map((_, i) => (
-                    <Icon key={i} name="Star" size={16} className={i < 4 ? "fill-current" : ""} />
+                    <Icon
+                      key={i}
+                      name="Star"
+                      size={16}
+                      className={i < 4 ? "fill-current" : ""}
+                    />
                   ))}
                 </div>
                 <span className="text-sm text-gray-600">4.2 (8 отзывов)</span>
@@ -99,12 +134,16 @@ const AvitoProfileMain = () => {
 
       {/* Статистика */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
+        {userStats.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
                 <div className="p-2 rounded-lg bg-gray-50">
-                  <Icon name={stat.icon as any} size={24} className={stat.color} />
+                  <Icon
+                    name={stat.icon as any}
+                    size={24}
+                    className={stat.color}
+                  />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stat.value}</p>
@@ -168,8 +207,8 @@ const AvitoProfileMain = () => {
                     activity.type === "sale"
                       ? "bg-green-100"
                       : activity.type === "message"
-                      ? "bg-blue-100"
-                      : "bg-gray-100"
+                        ? "bg-blue-100"
+                        : "bg-gray-100"
                   }`}
                 >
                   <Icon
@@ -177,16 +216,16 @@ const AvitoProfileMain = () => {
                       activity.type === "sale"
                         ? "DollarSign"
                         : activity.type === "message"
-                        ? "MessageCircle"
-                        : "Eye"
+                          ? "MessageCircle"
+                          : "Eye"
                     }
                     size={20}
                     className={
                       activity.type === "sale"
                         ? "text-green-600"
                         : activity.type === "message"
-                        ? "text-blue-600"
-                        : "text-gray-600"
+                          ? "text-blue-600"
+                          : "text-gray-600"
                     }
                   />
                 </div>
@@ -196,7 +235,9 @@ const AvitoProfileMain = () => {
                 </div>
                 {activity.amount && (
                   <div className="text-right">
-                    <p className="font-semibold text-green-600">{activity.amount}</p>
+                    <p className="font-semibold text-green-600">
+                      {activity.amount}
+                    </p>
                   </div>
                 )}
               </div>

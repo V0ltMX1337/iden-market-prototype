@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { useNavigate, Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import { storeApi } from "@/lib/store";
 
 const AvitoRegister = () => {
   const navigate = useNavigate();
@@ -22,25 +23,38 @@ const AvitoRegister = () => {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Пароли не совпадают!");
+      setError("Пароли не совпадают!");
       return;
     }
 
-    // Сохраняем пользователя в куки
-    const userData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-    };
+    setIsLoading(true);
+    try {
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        role: "Пользователь" as const,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-    document.cookie = `trivo_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
-    navigate("/avito/login");
+      await storeApi.addUser(userData);
+      navigate("/avito/login");
+    } catch (error) {
+      setError("Ошибка при регистрации. Попробуйте еще раз.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -77,6 +91,11 @@ const AvitoRegister = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -194,9 +213,10 @@ const AvitoRegister = () => {
 
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 h-12"
               >
-                Создать TRIVO ID
+                {isLoading ? "Создание аккаунта..." : "Создать TRIVO ID"}
               </Button>
             </form>
 

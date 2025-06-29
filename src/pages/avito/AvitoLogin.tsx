@@ -20,14 +20,19 @@ const AvitoLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (login(email, password)) {
-      navigate("/avito");
-    } else {
-      setError("Неверный email или пароль");
+    try {
+      const success = await login(email, password);
+      if (success) {
+        navigate("/avito");
+      } else {
+        setError("Неверный email или пароль");
+      }
+    } catch (error) {
+      setError("Ошибка при входе в систему");
     }
   };
 
@@ -35,8 +40,8 @@ const AvitoLogin = () => {
     navigate("/avito");
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
