@@ -41,26 +41,36 @@ const AvitoProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Button
               variant="ghost"
               onClick={() => navigate("/avito")}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 text-white hover:bg-white/20"
             >
               <Icon name="ArrowLeft" size={20} />
-              <span className="text-2xl font-bold text-blue-600">AVITO</span>
+              <span className="text-2xl font-bold">AVITO</span>
             </Button>
-            <Button
-              onClick={() => navigate("/avito/sell")}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <Icon name="Plus" size={16} className="mr-2" />
-              Подать объявление
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" className="text-white hover:bg-white/20">
+                <Icon name="Heart" size={18} className="mr-2" />
+                Избранное
+              </Button>
+              <Button variant="ghost" className="text-white hover:bg-white/20">
+                <Icon name="User" size={18} className="mr-2" />
+                Профиль
+              </Button>
+              <Button
+                onClick={() => navigate("/avito/sell")}
+                className="bg-white text-purple-600 hover:bg-gray-100 font-semibold"
+              >
+                <Icon name="Plus" size={16} className="mr-2" />
+                Подать объявление
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -131,12 +141,35 @@ const AvitoProduct = () => {
 
           {/* Product Info & Actions */}
           <div className="space-y-6">
-            <Card>
+            <Card className="bg-gradient-to-br from-white to-blue-50/50 border-purple-200">
               <CardContent className="p-6">
-                <h1 className="text-2xl font-bold mb-4">{product.title}</h1>
-                <p className="text-3xl font-bold text-green-600 mb-4">
-                  {product.price.toLocaleString()} ₽
-                </p>
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <Badge className="bg-green-100 text-green-800 mb-2">
+                      Б/у
+                    </Badge>
+                    <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" size="sm" className="text-gray-500">
+                      <Icon name="MoreHorizontal" size={20} />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-red-500">
+                      <Icon name="Heart" size={20} />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex items-baseline space-x-2">
+                    <p className="text-3xl font-bold text-gray-900">
+                      {product.price.toLocaleString()} ₽
+                    </p>
+                    <p className="text-lg text-gray-500 line-through">
+                      {(product.price + 15000).toLocaleString()} ₽
+                    </p>
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
                   <span className="flex items-center">
@@ -154,11 +187,25 @@ const AvitoProduct = () => {
                 </div>
 
                 <div className="space-y-3">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-12 text-white font-semibold">
+                    Запросить доставку
+                  </Button>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p>Авито Доставка.</p>
+                    <p>Гарантия возврата денег, если товар не подойдёт</p>
+                    <a href="#" className="text-blue-600 hover:underline">
+                      Об Авито Доставке
+                    </a>
+                  </div>
+
                   <Button className="w-full bg-green-600 hover:bg-green-700 h-12">
                     <Icon name="MessageCircle" size={18} className="mr-2" />
                     Написать продавцу
                   </Button>
-                  <Button variant="outline" className="w-full h-12">
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 border-blue-600 text-blue-600 hover:bg-blue-50"
+                  >
                     <Icon name="Phone" size={18} className="mr-2" />
                     Показать телефон
                   </Button>
@@ -215,7 +262,7 @@ const AvitoProduct = () => {
             </Card>
 
             {/* Safety Tips */}
-            <Card className="border-orange-200 bg-orange-50">
+            <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3">
                   <Icon
@@ -237,6 +284,124 @@ const AvitoProduct = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Ask Seller Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="bg-gradient-to-br from-white to-purple-50/30">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
+            <div className="relative mb-4">
+              <input
+                type="text"
+                placeholder="Здравствуйте!"
+                className="w-full p-3 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <Button
+                size="sm"
+                className="absolute right-2 top-2 bg-purple-600 hover:bg-purple-700"
+              >
+                <Icon name="Send" size={16} />
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" className="rounded-full">
+                Где и когда можно посмотреть?
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-full">
+                Ещё продаёте?
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-full">
+                Торг уместен?
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-full">
+                Отправите Авито Доставкой?
+              </Button>
+            </div>
+            <div className="mt-4 text-sm text-gray-600">
+              <p>
+                № {product.id}736350794 • 14 июня в 17:15 • 74 просмотра (+19
+                сегодня)
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="mt-4 text-blue-600 border-blue-600 hover:bg-blue-50"
+            >
+              Пожаловаться на объявление
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Similar Products Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold mb-4">Похожие объявления</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
+                    <h3 className="font-semibold mb-2">iPhone 14 Pro Max</h3>
+                    <p className="text-lg font-bold text-green-600 mb-1">
+                      95 000 ₽
+                    </p>
+                    <p className="text-sm text-gray-600">Москва</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold mb-4">Как новое, но дешевле</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
+                    <h3 className="font-semibold mb-2">
+                      iPhone 14 {item === 1 ? "Pro" : ""}
+                    </h3>
+                    <p className="text-lg font-bold text-green-600 mb-1">
+                      {75000 + item * 5000} ₽
+                    </p>
+                    <p className="text-sm text-gray-600">Москва</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold mb-4">Может быть интересно</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
+                    <h3 className="font-semibold mb-2">Samsung Galaxy S23</h3>
+                    <p className="text-lg font-bold text-green-600 mb-1">
+                      {60000 + item * 3000} ₽
+                    </p>
+                    <p className="text-sm text-gray-600">Москва</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
