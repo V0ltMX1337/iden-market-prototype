@@ -1,7 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { YMaps, Map, Placemark, GeolocationControl, SearchControl } from "@pbe/react-yandex-maps";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,36 +15,47 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
+import type { Ad, Category, City } from "@/lib/types";
+import { useAuth } from "@/hooks/useAuth";
+import { storeApi } from "@/lib/store";
+
 const AvitoSell = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
-    category: "",
+    category: "",     // slug категории
+    subcategory: "",  // slug подкатегории
     condition: "",
-    location: "",
+    cityId: "",
+    address: "",
   });
 
-  const categories = [
-    "Транспорт","Недвижимость","Работа",
-    "Услуги","Личные вещи","Для дома и дачи",
-    "Электроника","Хобби и отдых",
-  ];
-
-  const conditions = [
-    "Новое","Отличное","Очень хорошее",
-    "Хорошее","Удовлетворительное",
-  ];
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [photos, setPhotos] = useState<
     Array<{ file: File; preview: string; isMain: boolean }>
   >([]);
+
+  const conditions = [
+    "Новое",
+    "Отличное",
+    "Очень хорошее",
+    "Хорошее",
+    "Удовлетворительное",
+  ];
+
+  useEffect(() => {
+    storeApi.getCategories().then(setCategories);
+    storeApi.getCities().then(setCities);
+  }, []);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -54,7 +64,7 @@ const AvitoSell = () => {
         preview: URL.createObjectURL(file),
         isMain: photos.length + idx === 0,
       }));
-      setPhotos(prev => [...prev, ...mapped]);
+      setPhotos((prev) => [...prev, ...mapped]);
     },
     [photos]
   );
@@ -65,29 +75,81 @@ const AvitoSell = () => {
   });
 
   const setAsMain = (index: number) => {
-    setPhotos(prev =>
-      prev.map((p, i) => ({ ...p, isMain: i === index }))
-    );
+    setPhotos((prev) => prev.map((p, i) => ({ ...p, isMain: i === index })));
   };
 
-  const [coords, setCoords] = useState<[number, number]>([55.75, 37.57]);
+  // Рандомный список картинок для примера
+  const randomImageLinks = [
+    "https://placekitten.com/400/300",
+    "https://placekitten.com/401/300",
+    "https://placekitten.com/402/300",
+    "https://placekitten.com/403/300",
+    "https://placekitten.com/404/300",
+  ];
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const c: [number, number] = [
-          pos.coords.latitude,
-          pos.coords.longitude,
-        ];
-        setCoords(c);
-      });
-    }
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Здесь отправка formData, photos, coords на сервер...
-    navigate("/avito/profile/ads");
+
+    if (!user) {
+      alert("Пожалуйста, войдите в систему для публикации объявления.");
+      return;
+    }
+
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.price ||
+      !formData.category ||
+      !formData.subcategory ||
+      !formData.condition ||
+      !formData.cityId
+    ) {
+      alert("Пожалуйста, заполните все обязательные поля.");
+      return;
+    }
+
+    const city = cities.find((c) => c.id === formData.cityId);
+    if (!city) {
+      alert("Пожалуйста, выберите корректный город.");
+      return;
+    }
+
+    try {
+      const photoLinks = randomImageLinks.slice(0, photos.length || 1);
+
+      // Здесь можно объединять category + subcategory, если нужно, например:
+      const category = categories.find((c) => c.slug === formData.category);
+      const subcategorySlug = formData.subcategory;
+
+      if (!category) {
+        alert("Невалидная категория.");
+        return;
+      }
+
+
+      const newAd: Omit<Ad, "id"> = {
+        title: formData.title,
+        description: formData.description,
+        price: Number(formData.price),
+        city,
+        links: photoLinks,
+        views: 0,
+        favoritesCount: 0,
+        publishedAt: new Date().toISOString(),
+        userId: user.id,
+        active: true,
+        categoryId: category.id,           // ✅ добавлено
+        subcategorySlug: subcategorySlug,  // ✅ добавлено
+      };
+
+
+      await storeApi.addAd(newAd);
+
+      navigate("/avito/profile/ads");
+    } catch (error) {
+      console.error(error);
+      alert("Ошибка при публикации объявления. Попробуйте позже.");
+    }
   };
 
   return (
@@ -128,6 +190,7 @@ const AvitoSell = () => {
                       className={`w-full h-32 object-cover rounded ${
                         p.isMain ? "ring-4 ring-green-500" : ""
                       }`}
+                      alt="Фото объявления"
                     />
                     <Button
                       size="sm"
@@ -154,20 +217,46 @@ const AvitoSell = () => {
               <Label htmlFor="category">Категория</Label>
               <Select
                 value={formData.category}
-                onValueChange={v => handleInputChange("category", v)}
+                onValueChange={(v) => {
+                  handleInputChange("category", v);
+                  handleInputChange("subcategory", "");
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Выберите категорию" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map(c => (
-                    <SelectItem key={c} value={c}>
-                      {c}
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.slug}>
+                      {cat.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {formData.category && (
+              <div>
+                <Label htmlFor="subcategory">Подкатегория</Label>
+                <Select
+                  value={formData.subcategory}
+                  onValueChange={(v) => handleInputChange("subcategory", v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите подкатегорию" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories
+                      .find((cat) => cat.slug === formData.category)
+                      ?.subcategories.map((sub) => (
+                        <SelectItem key={sub.slug} value={sub.slug}>
+                          {sub.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div>
               <Label htmlFor="title">Название</Label>
@@ -175,7 +264,7 @@ const AvitoSell = () => {
                 id="title"
                 placeholder="Например: iPhone 14 Pro 128GB"
                 value={formData.title}
-                onChange={e => handleInputChange("title", e.target.value)}
+                onChange={(e) => handleInputChange("title", e.target.value)}
                 required
               />
             </div>
@@ -187,9 +276,7 @@ const AvitoSell = () => {
                 rows={4}
                 placeholder="Расскажите подробнее..."
                 value={formData.description}
-                onChange={e =>
-                  handleInputChange("description", e.target.value)
-                }
+                onChange={(e) => handleInputChange("description", e.target.value)}
                 required
               />
             </div>
@@ -199,13 +286,13 @@ const AvitoSell = () => {
                 <Label htmlFor="condition">Состояние</Label>
                 <Select
                   value={formData.condition}
-                  onValueChange={v => handleInputChange("condition", v)}
+                  onValueChange={(v) => handleInputChange("condition", v)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Выберите состояние" />
                   </SelectTrigger>
                   <SelectContent>
-                    {conditions.map(c => (
+                    {conditions.map((c) => (
                       <SelectItem key={c} value={c}>
                         {c}
                       </SelectItem>
@@ -221,7 +308,7 @@ const AvitoSell = () => {
                   type="number"
                   placeholder="0"
                   value={formData.price}
-                  onChange={e => handleInputChange("price", e.target.value)}
+                  onChange={(e) => handleInputChange("price", e.target.value)}
                   required
                 />
               </div>
@@ -234,24 +321,34 @@ const AvitoSell = () => {
           <CardHeader>
             <CardTitle>Местоположение</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Label>Укажите город/точку на карте</Label>
-              <YMaps>
-                <Map
-                  defaultState={{ center: coords, zoom: 10 }}
-                  width="100%"
-                  height="300px"
-                  onClick={e => {
-                    const c = e.get("coords") as [number, number];
-                    setCoords(c);
-                  }}
-                >
-                  <GeolocationControl options={{ float: "left" }} />
-                  <SearchControl options={{ float: "left" }} />
-                  <Placemark geometry={coords} />
-                </Map>
-              </YMaps>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="cityId">Город</Label>
+              <Select
+                value={formData.cityId}
+                onValueChange={(v) => handleInputChange("cityId", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities.map((city) => (
+                    <SelectItem key={city.id} value={city.id}>
+                      {city.name}, {city.region}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="address">Адрес (опционально)</Label>
+              <Input
+                id="address"
+                placeholder="Улица, дом, квартира и т.п."
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+              />
             </div>
           </CardContent>
         </Card>

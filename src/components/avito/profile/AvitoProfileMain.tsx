@@ -6,80 +6,68 @@ import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
+import type { Review, Ad } from "@/lib/types";
 
 const AvitoProfileMain = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    activeUsers: 0,
-    totalCategories: 0,
-    totalCities: 0,
-    totalRevenue: 0,
-    monthlyRevenue: 0,
-  });
+
+  const [adsCount, setAdsCount] = useState({ active: 0, inactive: 0 });
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [recentAds, setRecentAds] = useState<Ad[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadStats = async () => {
+    const loadData = async () => {
+      if (!user) return;
+
       try {
-        const data = await storeApi.getStats();
-        setStats(data);
-      } catch (error) {
-        console.error("Ошибка загрузки статистики:", error);
+        const [userReviews, userAds, adsCountRes] = await Promise.all([
+          storeApi.getReviewsByUserId(user.id),
+          storeApi.getUserAds(user.id),
+          storeApi.countUserAds(user.id),
+        ]);
+
+        setAdsCount(adsCountRes);
+        setReviews(userReviews);
+        setRecentAds(userAds.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 3));
+      } catch (e) {
+        console.error("Ошибка загрузки данных профиля", e);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadStats();
-  }, []);
+    loadData();
+  }, [user]);
 
-  if (!user) return null;
+  if (!user || isLoading) return null;
+
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        ).toFixed(1)
+      : "—";
 
   const userStats = [
     {
-      label: "Активных объявлений",
-      value: 3,
-      icon: "Package",
+      label: "Баланс",
+      value: `${user.balance} ₽`,
+      icon: "Money",
       color: "text-green-600",
     },
     {
-      label: "Всего пользователей",
-      value: stats.totalUsers,
-      icon: "Users",
+      label: "Активных объявлений",
+      value: adsCount.active,
+      icon: "Package",
       color: "text-blue-600",
     },
     {
-      label: "Активных пользователей",
-      value: stats.activeUsers,
-      icon: "UserCheck",
-      color: "text-purple-600",
-    },
-    {
-      label: "Категорий",
-      value: stats.totalCategories,
-      icon: "Grid3X3",
-      color: "text-orange-600",
-    },
-  ];
-
-  const recentActivity = [
-    {
-      type: "sale",
-      title: "Новое объявление размещено",
-      time: "2 дня назад",
-      amount: `${stats.totalUsers} пользователей`,
-    },
-    {
-      type: "message",
-      title: `Активных категорий: ${stats.totalCategories}`,
-      time: "Всего",
-    },
-    {
-      type: "view",
-      title: `Городов в системе: ${stats.totalCities}`,
-      time: "Всего",
+      label: "Неактивных",
+      value: adsCount.inactive,
+      icon: "Package",
+      color: "text-gray-600",
     },
   ];
 
@@ -101,13 +89,12 @@ const AvitoProfileMain = () => {
                   <Icon name="Mail" size={16} className="mr-1" />
                   {user.email}
                 </span>
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-700"
-                >
-                  <Icon name="Shield" size={12} className="mr-1" />
-                  Проверен
-                </Badge>
+                {user.status === "ACTIVE" && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-700">
+                    <Icon name="Shield" size={12} className="mr-1" />
+                    Проверен
+                  </Badge>
+                )}
               </div>
               <div
                 className="flex items-center space-x-2 cursor-pointer hover:opacity-80"
@@ -119,11 +106,13 @@ const AvitoProfileMain = () => {
                       key={i}
                       name="Star"
                       size={16}
-                      className={i < 4 ? "fill-current" : ""}
+                      className={i < Math.round(Number(averageRating)) ? "fill-current" : ""}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-gray-600">4.2 (8 отзывов)</span>
+                <span className="text-sm text-gray-600">
+                  {averageRating} ({reviews.length} отзывов)
+                </span>
               </div>
             </div>
             <Button
@@ -143,11 +132,7 @@ const AvitoProfileMain = () => {
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
                 <div className="p-2 rounded-lg bg-gray-50">
-                  <Icon
-                    name={stat.icon as any}
-                    size={24}
-                    className={stat.color}
-                  />
+                  <Icon name={stat.icon as any} size={24} className={stat.color} />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stat.value}</p>
@@ -194,56 +179,30 @@ const AvitoProfileMain = () => {
         </CardContent>
       </Card>
 
-      {/* Последняя активность */}
+      {/* Последние объявления */}
       <Card>
         <CardHeader>
           <CardTitle>Последняя активность</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
+            {recentAds.map((ad) => (
               <div
-                key={index}
+                key={ad.id}
                 className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
               >
-                <div
-                  className={`p-2 rounded-full ${
-                    activity.type === "sale"
-                      ? "bg-green-100"
-                      : activity.type === "message"
-                        ? "bg-blue-100"
-                        : "bg-gray-100"
-                  }`}
-                >
-                  <Icon
-                    name={
-                      activity.type === "sale"
-                        ? "DollarSign"
-                        : activity.type === "message"
-                          ? "MessageCircle"
-                          : "Eye"
-                    }
-                    size={20}
-                    className={
-                      activity.type === "sale"
-                        ? "text-green-600"
-                        : activity.type === "message"
-                          ? "text-blue-600"
-                          : "text-gray-600"
-                    }
-                  />
+                <div className="p-2 rounded-full bg-green-100">
+                  <Icon name="Package" size={20} className="text-green-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">{activity.title}</p>
-                  <p className="text-sm text-gray-600">{activity.time}</p>
+                  <p className="font-medium">{ad.title}</p>
+                  <p className="text-sm text-gray-600">
+                    {new Date(ad.publishedAt).toLocaleDateString()}
+                  </p>
                 </div>
-                {activity.amount && (
-                  <div className="text-right">
-                    <p className="font-semibold text-green-600">
-                      {activity.amount}
-                    </p>
-                  </div>
-                )}
+                <div className="text-right">
+                  <p className="font-semibold text-green-600">{ad.price} ₽</p>
+                </div>
               </div>
             ))}
           </div>

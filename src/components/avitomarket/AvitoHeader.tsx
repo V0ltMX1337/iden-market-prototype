@@ -19,7 +19,7 @@ import {
   Home,
   UserCircle,
 } from "lucide-react";
-import { AvitoCategroyMenu } from "../customcomponent/AvitoCategroyMenu";
+import { AvitoCategoryMenu } from "../customcomponent/AvitoCategoryMenu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +27,7 @@ import {
 } from "../ui/dropdown-menu";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
+import type { Category } from "@/lib/types";
 
 const AvitoHeader = () => {
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ const AvitoHeader = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { user, isLoading } = useAuth();
 
-  const [categories, setCategories] = useState([]);
+  // Категории типизированы
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -54,69 +56,25 @@ const AvitoHeader = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
 
   const authorizedTabs = [
-    {
-      title: "Главная",
-      icon: Home,
-      path: "/avito",
-    },
-    {
-      title: "Профиль",
-      icon: UserCircle,
-      path: "/avito/profile",
-    },
-    {
-      title: "Мои объявления",
-      icon: Package,
-      path: "/avito/profile/ads",
-    },
-    {
-      title: "Сообщения",
-      icon: MessageCircle,
-      path: "/avito/profile/messages",
-    },
-    {
-      title: "Избранное",
-      icon: Heart,
-      path: "/avito/profile/favorites",
-    },
+    { title: "Главная", icon: Home, path: "/avito" },
+    { title: "Профиль", icon: UserCircle, path: "/avito/profile" },
+    { title: "Мои объявления", icon: Package, path: "/avito/profile/ads" },
+    { title: "Сообщения", icon: MessageCircle, path: "/avito/profile/messages" },
+    { title: "Избранное", icon: Heart, path: "/avito/profile/favorites" },
     { type: "separator" },
-    {
-      title: "Заказы",
-      icon: ShoppingBag,
-      path: "/avito/profile/orders",
-    },
-    {
-      title: "Корзина",
-      icon: ShoppingCart,
-      path: "/avito/profile/cart",
-    },
+    { title: "Заказы", icon: ShoppingBag, path: "/avito/profile/orders" },
+    { title: "Корзина", icon: ShoppingCart, path: "/avito/profile/cart" },
     { type: "separator" },
-    {
-      title: "Поддержка",
-      icon: HelpCircle,
-      path: "/avito/support",
-    },
-    {
-      title: "О нас",
-      icon: Info,
-      path: "/avito/about",
-    },
+    { title: "Поддержка", icon: HelpCircle, path: "/avito/support" },
+    { title: "О нас", icon: Info, path: "/avito/about" },
   ];
 
   const guestTabs = [
-    {
-      title: "Войти",
-      icon: LogIn,
-      path: "/avito/login",
-    },
-    {
-      title: "Регистрация",
-      icon: UserPlus,
-      path: "/avito/register",
-    },
+    { title: "Войти", icon: LogIn, path: "/avito/login" },
+    { title: "Регистрация", icon: UserPlus, path: "/avito/register" },
   ];
 
-  // Синхронизируем activeTabIndex с URL при смене location.pathname
+  // Синхронизация activeTabIndex с URL
   useEffect(() => {
     const tabs = user ? authorizedTabs : guestTabs;
 
@@ -138,7 +96,6 @@ const AvitoHeader = () => {
     setActiveTabIndex(bestMatchIndex);
   }, [location.pathname, user]);
 
-  // Обработчик изменения таба
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
     const tabs = user ? authorizedTabs : guestTabs;
@@ -153,7 +110,7 @@ const AvitoHeader = () => {
 
   if (isLoading) {
     return (
-      <div className="h-[80px] bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600"></div>
+      <div className="h-[80px] bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600" />
     );
   }
 
@@ -162,24 +119,26 @@ const AvitoHeader = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between h-20">
-            {/* Левая часть: Лого */}
+            {/* Левая часть: Лого + категории */}
             <div className="flex items-center space-x-6">
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="p-2 hover:bg-white/10 rounded-lg cursor-pointer">
-                    <Icon name="Grid3X3" size={20} className="text-white" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-[20rem] p-0 overflow-visible z-[999]"
-                >
-                  <div className="px-4 py-3 text-sm font-semibold border-b">
-                    Категории
-                  </div>
-                  <AvitoCategroyMenu categories={avitoCategories} />
-                </DropdownMenuContent>
-              </DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <div className="p-2 hover:bg-white/10 rounded-lg cursor-pointer relative z-[1000]">
+      <Icon name="Grid3X3" size={20} className="text-white" />
+    </div>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent
+    align="start"
+    className="w-[20rem] bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0 overflow-visible"
+    sideOffset={12}
+  >
+    <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100">
+      ✨ Категории
+    </div>
+    <AvitoCategoryMenu categories={avitoCategories} />
+  </DropdownMenuContent>
+</DropdownMenu>
+
               <h1
                 className="text-3xl text-white cursor-pointer font-extrabold"
                 onClick={() => navigate("/avito")}
@@ -192,6 +151,7 @@ const AvitoHeader = () => {
                   TRIVO
                 </FancyText>
               </h1>
+
               <Badge
                 variant="secondary"
                 className="ml-3 text-sm px-3 py-1 bg-white/20 text-white border-0"
@@ -221,7 +181,7 @@ const AvitoHeader = () => {
               </div>
             </div>
 
-            {/* Правая часть */}
+            {/* Правая часть: вкладки */}
             <div className="flex flex-col gap-4">
               <ExpandableTabsAvito
                 tabs={tabs}

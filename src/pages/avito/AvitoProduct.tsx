@@ -1,40 +1,103 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
+import { storeApi } from "@/lib/store";
+import { Star } from "lucide-react";
 
 const AvitoProduct = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [ad, setAd] = useState<any>(null);
+  const [author, setAuthor] = useState<any>(null);
+  const [category, setCategory] = useState<any>(null);
+  const [subcategoryName, setSubcategoryName] = useState<string | null>(null);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
 
+  useEffect(() => {
+    if (!id) return;
+
+    setLoading(true);
+    storeApi
+      .getAdById(id)
+      .then(async (adData) => {
+        setAd(adData);
+        const [userData, categories] = await Promise.all([
+          storeApi.getUserById(adData.userId),
+          storeApi.getCategories(),
+        ]);
+        setAuthor(userData);
+        const reviews = await storeApi.getReviewsByUserId(userData.id);
+        setUserReviews(reviews);
+
+        const foundCategory = categories.find((cat) => cat.id === adData.categoryId) || null;
+        setCategory(foundCategory);
+
+        if (foundCategory && adData.subcategorySlug) {
+          const foundSubcategory = foundCategory.subcategories?.find(
+            (sub: any) => sub.slug === adData.subcategorySlug
+          );
+          setSubcategoryName(foundSubcategory ? foundSubcategory.name : null);
+        } else {
+          setSubcategoryName(null);
+        }
+      })
+      .catch(() => navigate("/avito"))
+      .finally(() => setLoading(false));
+  }, [id, navigate]);
+
+  if (loading)
+    return (
+      <div className="p-10 text-center text-gray-600 text-lg font-medium">
+        Загрузка...
+      </div>
+    );
+
+  if (!ad)
+    return (
+      <div className="p-10 text-center text-red-600 font-semibold">
+        Объявление не найдено
+      </div>
+    );
+
   const product = {
-    id: 1,
-    title: "iPhone 14 Pro 128GB Space Black",
-    price: 85000,
-    location: "Москва, м. Тверская",
-    category: "Электроника > Телефоны > Apple iPhone",
-    description:
-      "Продаю iPhone 14 Pro 128GB в отличном состоянии. Покупал в официальном магазине, есть чек. Комплект полный: коробка, кабель, документы. Без царапин и сколов, всегда использовал с чехлом и защитным стеклом.",
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&h=400&fit=crop",
-    ],
-    seller: {
-      name: "Иван Петров",
-      rating: 4.8,
-      reviewsCount: 12,
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
-      onSiteFor: "2 года",
-    },
-    views: 247,
-    favorites: 18,
-    publishedAt: "2 дня назад",
+    ...ad,
+    seller: author,
+    category: category && subcategoryName ? `${category.name} > ${subcategoryName}` : "",
+  };
+
+  // Вычисляем средний рейтинг пользователя
+  const averageRating =
+    userReviews.length > 0
+      ? userReviews.reduce((acc, r) => acc + r.rating, 0) / userReviews.length
+      : 0;
+
+  // Отрисовка звезд (целых и половинных)
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) {
+        stars.push(<Star key={i} fill="gold" stroke="gold" />);
+      } else if (rating >= i - 0.5) {
+        stars.push(
+          <Star
+            key={i}
+            fill="url(#half)"
+            stroke="gold"
+            style={{ clipPath: "inset(0 50% 0 0)" }}
+          />
+        );
+      } else {
+        stars.push(<Star key={i} stroke="gold" />);
+      }
+    }
+    return stars;
   };
 
   return (
@@ -43,44 +106,39 @@ const AvitoProduct = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Breadcrumbs */}
-        <div className="mb-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-600">
-            <button
-              onClick={() => navigate("/avito")}
-              className="hover:text-blue-600 transition-colors"
-            >
-              Главная
-            </button>
-            <Icon name="ChevronRight" size={16} />
-            <span className="text-gray-900">{product.category}</span>
-          </nav>
-        </div>
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+          <button
+            onClick={() => navigate("/avito")}
+            className="hover:text-blue-600 transition-colors"
+          >
+            Главная
+          </button>
+          <Icon name="ChevronRight" size={16} />
+          <span className="text-gray-900">{product.category}</span>
+        </nav>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Product Images */}
+          {/* Left: Images and description */}
           <div className="lg:col-span-2">
             <Card className="h-fit">
               <CardContent className="p-4">
                 <div className="aspect-[4/3] mb-4">
                   <img
-                    src={product.images[currentImage]}
+                    src={product.links?.[currentImage] || ""}
                     alt={product.title}
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
                 <div
-                  className="flex gap-2 pb-2"
-                  style={{
-                    overflowX: "auto",
-                    scrollbarWidth: "none",
-                    msOverflowStyle: "none",
-                  }}
+                  className="flex gap-2 pb-2 overflow-x-auto scrollbar-none"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
-                  <style jsx>{`
+                  <style>{`
                     div::-webkit-scrollbar {
                       display: none;
                     }
                   `}</style>
-                  {product.images.map((image, index) => (
+                  {product.images?.map((image: string, index: number) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImage(index)}
@@ -101,47 +159,31 @@ const AvitoProduct = () => {
               </CardContent>
             </Card>
 
-            {/* Description */}
             <Card className="mt-6 h-fit">
               <CardContent className="p-4">
                 <h2 className="text-xl font-bold mb-4">Описание</h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description}
-                </p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{product.description}</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Product Info & Actions */}
+          {/* Right: Product Info + Seller Info + Safety Tips */}
           <div className="space-y-6">
+            {/* Product Info Card */}
             <Card className="bg-gradient-to-br from-white to-blue-50/50 border-purple-200 h-fit">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <Badge className="bg-green-100 text-green-800 mb-2">
-                      Б/у
+                      {product.isUsed ? "Б/у" : "Новый"}
                     </Badge>
                     <h1 className="text-xl font-bold mb-2">{product.title}</h1>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-500 hover:text-gray-700 transition-colors"
-                      onClick={() => {
-                        /* Меню действий */
-                      }}
-                    >
+                    <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700 transition-colors">
                       <Icon name="MoreHorizontal" size={20} />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-500 hover:text-red-700 transition-colors"
-                      onClick={() => {
-                        /* Добавить в избранное */
-                      }}
-                    >
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 transition-colors">
                       <Icon name="Heart" size={20} />
                     </Button>
                   </div>
@@ -150,10 +192,10 @@ const AvitoProduct = () => {
                 <div className="mb-4">
                   <div className="flex items-baseline space-x-3">
                     <p className="text-3xl font-bold text-gray-900">
-                      {product.price.toLocaleString()} ₽
+                      {product.price?.toLocaleString()} ₽
                     </p>
                     <p className="text-lg text-gray-500 line-through">
-                      {(product.price + 15000).toLocaleString()} ₽
+                      {(product.price + 15000)?.toLocaleString()} ₽
                     </p>
                   </div>
                 </div>
@@ -216,64 +258,48 @@ const AvitoProduct = () => {
 
             {/* Seller Info */}
             <Card className="mt-6 h-fit">
-              <CardContent className="p-4">
-                <h3 className="font-bold mb-3">Продавец</h3>
-                <div className="flex items-start gap-3">
-                  <img
-                    src={product.seller.avatar}
-                    alt={product.seller.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-semibold">{product.seller.name}</h4>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Icon
-                            key={i}
-                            name="Star"
-                            size={12}
-                            className={
-                              i < Math.floor(product.seller.rating)
-                                ? "fill-current"
-                                : ""
-                            }
-                          />
-                        ))}
-                      </div>
-                      <span>{product.seller.rating}</span>
-                      <span>({product.seller.reviewsCount} отзывов)</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">
-                      На сайте {product.seller.onSiteFor}
-                    </p>
+            <CardContent className="p-4">
+              <h3 className="font-bold mb-3">Продавец</h3>
+              <div className="flex items-start gap-4">
+                <img
+                  src={product.seller.avatar}
+                  alt={`${product.seller.firstName} ${product.seller.lastName}`}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div className="flex-1">
+                  <h4 className="font-semibold">
+                    {product.seller.firstName} {product.seller.lastName}
+                  </h4>
+                  <div className="text-sm text-gray-500">
+                    • Пользователь с{" "}
+                    {new Date(author.registrationDate).toLocaleDateString("ru-RU")}
+                  </div>
+                  {author.city.name}
+                  <div className="flex items-center gap-1 mt-1 text-yellow-500">
+                    {renderStars(averageRating)}
+                    <span className="ml-2 text-gray-700 text-sm">
+                      {averageRating.toFixed(1)} / 5 ({userReviews.length}) отзывов
+                    </span>
                   </div>
                 </div>
-                <Button
-                  variant="outline"
-                  className="w-full mt-3 h-10 hover:bg-gray-50 transition-colors"
-                  onClick={() =>
-                    navigate(`/avito/seller/${product.seller.name}`)
-                  }
-                >
-                  Все объявления продавца
-                </Button>
-              </CardContent>
-            </Card>
+              </div>
+              <Button
+                variant="outline"
+                className="w-full mt-3 h-10 hover:bg-gray-50 transition-colors"
+                onClick={() => navigate(`/avito/seller/${product.seller.id}`)}
+              >
+                Все объявления продавца
+              </Button>
+            </CardContent>
+          </Card>
 
             {/* Safety Tips */}
             <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50 mt-6 h-fit">
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
-                  <Icon
-                    name="Shield"
-                    size={20}
-                    className="text-orange-600 mt-1"
-                  />
+                  <Icon name="Shield" size={20} className="text-orange-600 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-orange-800 mb-2">
-                      Безопасная сделка
-                    </h3>
+                    <h3 className="font-semibold text-orange-800 mb-2">Безопасная сделка</h3>
                     <ul className="text-sm text-orange-700 space-y-1">
                       <li>• Встречайтесь в людных местах</li>
                       <li>• Проверяйте товар перед покупкой</li>
@@ -332,73 +358,57 @@ const AvitoProduct = () => {
       {/* Similar Products Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-6">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Похожие объявления</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((item) => (
-                  <button
-                    key={item}
-                    className="border rounded-lg p-4 hover:shadow-lg transition-all duration-200 text-left"
-                    onClick={() => navigate(`/avito/product/${item}`)}
-                  >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">iPhone 14 Pro Max</h3>
-                    <p className="text-xl font-bold text-green-600 mb-1">
-                      95 000 ₽
-                    </p>
-                    <p className="text-sm text-gray-600">Москва</p>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Как новое, но дешевле</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((item) => (
-                  <button
-                    key={item}
-                    className="border rounded-lg p-4 hover:shadow-lg transition-all duration-200 text-left"
-                    onClick={() => navigate(`/avito/product/new-${item}`)}
-                  >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">
-                      iPhone 14 {item === 1 ? "Pro" : ""}
-                    </h3>
-                    <p className="text-xl font-bold text-green-600 mb-1">
-                      {75000 + item * 5000} ₽
-                    </p>
-                    <p className="text-sm text-gray-600">Москва</p>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Может быть интересно</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((item) => (
-                  <button
-                    key={item}
-                    className="border rounded-lg p-4 hover:shadow-lg transition-all duration-200 text-left"
-                    onClick={() => navigate(`/avito/product/samsung-${item}`)}
-                  >
-                    <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold mb-2">Samsung Galaxy S23</h3>
-                    <p className="text-xl font-bold text-green-600 mb-1">
-                      {60000 + item * 3000} ₽
-                    </p>
-                    <p className="text-sm text-gray-600">Москва</p>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Similar products cards */}
+          {[{
+            title: "Похожие объявления",
+            items: [1, 2, 3],
+            baseUrl: "/avito/product/",
+            name: "iPhone 14 Pro Max",
+            basePrice: 95000,
+          }, {
+            title: "Как новое, но дешевле",
+            items: [1, 2, 3],
+            baseUrl: "/avito/product/new-",
+            name: "iPhone 14",
+            priceOffset: [0, 5000, 10000],
+            extraNameForFirst: "Pro",
+            basePrice: 75000,
+          }, {
+            title: "Может быть интересно",
+            items: [1, 2, 3],
+            baseUrl: "/avito/product/samsung-",
+            name: "Samsung Galaxy S23",
+            basePrice: 60000,
+            priceStep: 3000,
+          }].map(({ title, items, baseUrl, name, basePrice, priceOffset = [], extraNameForFirst = "", priceStep }, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold mb-4">{title}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {items.map((item, idx) => (
+                    <button
+                      key={item}
+                      className="border rounded-lg p-4 hover:shadow-lg transition-all duration-200 text-left"
+                      onClick={() => navigate(`${baseUrl}${item}`)}
+                    >
+                      <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
+                      <h3 className="font-semibold mb-2">
+                        {name} {extraNameForFirst && idx === 0 ? extraNameForFirst : ""}
+                      </h3>
+                      <p className="text-xl font-bold text-green-600 mb-1">
+                        {priceOffset.length
+                          ? (basePrice + priceOffset[idx])?.toLocaleString()
+                          : priceStep
+                          ? (basePrice + item * priceStep)?.toLocaleString()
+                          : basePrice.toLocaleString()} ₽
+                      </p>
+                      <p className="text-sm text-gray-600">Москва</p>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
 

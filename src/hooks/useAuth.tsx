@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import type { User } from "../lib/types";
+import { UserRole, type User } from "../lib/types";
 
 interface AuthContextType {
   user: User | null;
@@ -91,8 +91,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
   };
 
-  const isAdmin = () => user?.role === "Администратор";
-  const isModerator = () => user?.role === "Модератор" || user?.role === "Администратор";
+const isAdmin = () => user?.role === UserRole.ADMINISTRATOR;
+const isModerator = () =>
+  user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMINISTRATOR;
 
   return (
     <AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isModerator }}>

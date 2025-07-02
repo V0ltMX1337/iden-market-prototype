@@ -1,52 +1,46 @@
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import { storeApi } from "@/lib/store";
+import { Review } from "@/lib/types";
+import { useAuth } from "@/hooks/useAuth";
 
 const AvitoProfileReviews = () => {
-  const reviews = [
-    {
-      id: 1,
-      userName: "Анна Смирнова",
-      rating: 5,
-      comment:
-        "Отличный продавец! Товар в точности как описано, быстрая доставка.",
-      productTitle: "iPhone 14 Pro 128GB",
-      date: "2 дня назад",
-      avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b9fcf7cf?w=50&h=50&fit=crop&crop=face",
-    },
-    {
-      id: 2,
-      userName: "Дмитрий Козлов",
-      rating: 5,
-      comment: "Всё супер! Рекомендую этого продавца.",
-      productTitle: "MacBook Air M2",
-      date: "1 неделю назад",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
-    },
-    {
-      id: 3,
-      userName: "Елена Петрова",
-      rating: 4,
-      comment:
-        "Хороший товар, небольшие потертости были не указаны, но в целом доволен покупкой.",
-      productTitle: "Диван угловой",
-      date: "2 недели назад",
-      avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face",
-    },
-    {
-      id: 4,
-      userName: "Михаил Васильев",
-      rating: 5,
-      comment: "Быстро ответил, встретились в удобном месте. Товар отличный!",
-      productTitle: "Samsung Galaxy S22",
-      date: "3 недели назад",
-      avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face",
-    },
-  ];
+  const { user, isLoading: authLoading } = useAuth();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      const fetchReviews = async () => {
+        try {
+          setLoading(true);
+          // Получаем объявления пользователя
+          const ads = await storeApi.getUserAds(user.id);
+          // Получаем отзывы по каждому объявлению
+          const reviewsArrays = await Promise.all(
+            ads.map((ad) => storeApi.getReviewsByAdId(ad.id))
+          );
+          // Объединяем все отзывы в один массив
+          const allReviews = reviewsArrays.flat();
+          setReviews(allReviews);
+        } catch (err: any) {
+          setError(err.message || "Ошибка загрузки отзывов");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchReviews();
+    } else if (!authLoading && !user) {
+      setReviews([]);
+      setLoading(false);
+    }
+  }, [user, authLoading]);
+
+  if (authLoading || loading) return <div>Загрузка отзывов...</div>;
+  if (error) return <div className="text-red-600">Ошибка: {error}</div>;
+  if (reviews.length === 0) return <div>Нет отзывов для отображения.</div>;
 
   const averageRating =
     reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
@@ -94,7 +88,7 @@ const AvitoProfileReviews = () => {
                     <div
                       className="bg-yellow-400 h-2 rounded-full"
                       style={{ width: `${percentage}%` }}
-                    ></div>
+                    />
                   </div>
                   <span className="text-sm text-gray-600 w-8">{count}</span>
                 </div>
@@ -110,17 +104,17 @@ const AvitoProfileReviews = () => {
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <img
-                  src={review.avatar}
-                  alt={review.userName}
+                  src={review.fromUser.photoUrl}
+                  alt={`${review.fromUser.firstName} ${review.fromUser.lastName}`}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="font-semibold">{review.userName}</h3>
-                      <p className="text-sm text-gray-600">
-                        {review.productTitle}
-                      </p>
+                      <h3 className="font-semibold">
+                        {review.fromUser.firstName} {review.fromUser.lastName}
+                      </h3>
+                      <p className="text-sm text-gray-600">{review.ad.title}</p>
                     </div>
                     <div className="text-right">
                       <div className="flex text-yellow-400 mb-1">
@@ -134,7 +128,7 @@ const AvitoProfileReviews = () => {
                         ))}
                       </div>
                       <span className="text-sm text-gray-500">
-                        {review.date}
+                        {new Date(review.createdAt).toLocaleDateString("ru-RU")}
                       </span>
                     </div>
                   </div>

@@ -5,64 +5,53 @@ import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
+import { Ad as AdType, User } from "@/lib/types";
 
-interface Ad {
-  id: string;
-  title: string;
-  price: number;
+// Расширяем тип Ad, чтобы добавить status, если в API его нет
+interface Ad extends AdType {
   status: "active" | "sold" | "inactive";
-  views: number;
-  favorites: number;
-  image: string;
-  createdAt: string;
 }
 
 const AvitoProfileAds = () => {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [ads, setAds] = useState<Ad[]>([]);
   const [activeTab, setActiveTab] = useState<"sold" | "active">("active");
   const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadUserAds = async () => {
-      if (!user) return;
+      if (!user) return setIsLoading(false);
 
       try {
-        // Загружаем категории для генерации реальных объявлений
-        const categoriesData = await storeApi.getCategories();
-        setCategories(categoriesData);
+        setIsLoading(true);
+        // Загружаем объявления текущего пользователя через API
+        const userAds = await storeApi.getUserAds(user.id);
 
-        // Генерируем объявления на основе реальных категорий
-        const mockAds: Ad[] = categoriesData
-          .slice(0, 5)
-          .map((category, index) => ({
-            id: (index + 1).toString(),
-            title: `${category.name} - ${index % 2 === 0 ? "отличное состояние" : "как новый"}`,
-            price: Math.floor(Math.random() * 100000) + 10000,
-            status: index < 3 ? "active" : "sold",
-            views: Math.floor(Math.random() * 500) + 50,
-            favorites: Math.floor(Math.random() * 50) + 5,
-            image: `https://images.unsplash.com/photo-1${Math.random().toString().slice(2, 15)}?w=300&h=200&fit=crop`,
-            createdAt: new Date(
-              Date.now() - (index + 1) * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-          }));
+        // Если API не возвращает status — добавляем вручную (например, все active)
+        // Или фильтруем по какому-то признаку статуса из API, если есть
+        const adsWithStatus: Ad[] = userAds.map((ad: AdType) => ({
+          ...ad,
+          status: "active", // заменить по реальному признаку, если есть
+        }));
 
-        setAds(mockAds);
-      } catch (error) {
-        console.error("Ошибка загрузки объявлений:", error);
+        setAds(adsWithStatus);
+      } catch (err: any) {
+        setError(err.message || "Ошибка загрузки объявлений");
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadUserAds();
-  }, [user]);
+    if (!authLoading) {
+      loadUserAds();
+    }
+  }, [user, authLoading]);
 
   const handleRemoveFromSale = async (adId: string) => {
     try {
-      // Здесь будет API запрос на обновление статуса
+      await storeApi.updateAdStatus(adId, "inactive");
+
       setAds((prev) =>
         prev.map((ad) =>
           ad.id === adId ? { ...ad, status: "inactive" as const } : ad,
@@ -76,16 +65,16 @@ const AvitoProfileAds = () => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 1) return "сегодня";
-    if (diffDays === 2) return "вчера";
+    if (diffDays === 0) return "сегодня";
+    if (diffDays === 1) return "вчера";
     if (diffDays <= 7) return `${diffDays} дня назад`;
     return `${Math.floor(diffDays / 7)} недель назад`;
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -93,7 +82,10 @@ const AvitoProfileAds = () => {
     );
   }
 
-  // Фильтруем объявления по выбранной вкладке
+  if (error) {
+    return <div className="text-red-600 text-center py-8">Ошибка: {error}</div>;
+  }
+
   const filteredAds = ads.filter((ad) =>
     activeTab === "active" ? ad.status === "active" : ad.status === "sold",
   );
@@ -111,7 +103,6 @@ const AvitoProfileAds = () => {
         </Button>
       </div>
 
-      {/* Табы */}
       <div className="flex space-x-4 border-b border-gray-200 mb-4">
         <button
           className={`py-2 px-4 font-semibold ${
@@ -135,7 +126,6 @@ const AvitoProfileAds = () => {
         </button>
       </div>
 
-      {/* Объявления */}
       <div className="grid gap-6">
         {filteredAds.length === 0 && (
           <p className="text-center text-gray-500">
@@ -148,7 +138,7 @@ const AvitoProfileAds = () => {
               <div className="flex gap-6">
                 <div className="w-32 h-24 flex-shrink-0">
                   <img
-                    src={ad.image}
+                    src={ad.links[0] || "/placeholder.png"}
                     alt={ad.title}
                     className="w-full h-full object-cover rounded-lg"
                   />
@@ -170,9 +160,9 @@ const AvitoProfileAds = () => {
                     </span>
                     <span className="flex items-center">
                       <Icon name="Heart" size={14} className="mr-1" />
-                      {ad.favorites} в избранном
+                      {ad.favoritesCount} в избранном
                     </span>
-                    <span>{formatDate(ad.createdAt)}</span>
+                    <span>{formatDate(ad.publishedAt)}</span>
                   </div>
                   <div className="flex gap-2">
                     <Button
