@@ -16,55 +16,43 @@ import {
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
+import { storeApi } from "@/lib/store";
+import { useAuth } from "@/hooks/useAuth";
+import type { User, Ad, Review } from "@/lib/types";
 
-interface UserProfile {
-  id: string;
-  name: string;
-  rating: number;
+interface UserDisplayData {
+  user: User;
+  averageRating: number;
   reviewCount: number;
-  subscribersCount: number;
-  subscriptionsCount: number;
   joinDate: string;
-  isVerified: boolean;
-  avatar: string;
   responseTime: string;
   deliveryCount: number;
   salesCount: number;
 }
 
-interface Ad {
-  id: string;
-  title: string;
-  price: string;
+interface AdWithStatus extends Ad {
+  status: "active" | "sold" | "archived";
+  isDeliveryAvailable: boolean;
+  isFavorite: boolean;
+  formattedPrice: string;
   location: string;
   date: string;
   image: string;
-  isDeliveryAvailable: boolean;
-  isFavorite: boolean;
-  status: "active" | "sold" | "archived";
-}
-
-interface Review {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  rating: number;
-  date: string;
-  dealInfo: string;
-  comment: string;
-  isVerifiedPurchase: boolean;
 }
 
 const AvitoUser = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [ads, setAds] = useState<Ad[]>([]);
+  const { user: currentUser } = useAuth();
+  const [userDisplayData, setUserDisplayData] =
+    useState<UserDisplayData | null>(null);
+  const [ads, setAds] = useState<AdWithStatus[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [activeTab, setActiveTab] = useState("active");
   const [searchQuery, setSearchQuery] = useState("");
   const [reviewSortOrder, setReviewSortOrder] = useState("new");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const scrollToReviews = () => {
     const reviewsSection = document.getElementById("reviews-section");
@@ -78,124 +66,72 @@ const AvitoUser = () => {
   };
 
   useEffect(() => {
-    // Симуляция загрузки данных
-    setTimeout(() => {
-      setUserProfile({
-        id: userId || "1",
-        name: "UPGRADE(Dzerzhinsk)",
-        rating: 4.9,
-        reviewCount: 298,
-        subscribersCount: 512,
-        subscriptionsCount: 6,
-        joinDate: "март 2012",
-        isVerified: true,
-        avatar:
-          "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-        responseTime: "30 минут",
-        deliveryCount: 8,
-        salesCount: 321,
-      });
+    const loadUserData = async () => {
+      if (!userId) return;
 
-      setAds([
-        {
-          id: "1",
-          title: "Игровой пк Ryzen 5 5600/B450/32 gb/RTX 3060/12gb/1tb ssd",
-          price: "35 000 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "21 час назад",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: true,
-          isFavorite: false,
-          status: "active",
-        },
-        {
-          id: "2",
-          title: "Блок питания hspd 500w",
-          price: "2 750 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "13 февраля 13:11",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: true,
-          isFavorite: true,
-          status: "active",
-        },
-        {
-          id: "3",
-          title: "Компьютер Скупка/Сборка/Обмен",
-          price: "100 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "9 сентября 2022",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: false,
-          isFavorite: false,
-          status: "active",
-        },
-        {
-          id: "4",
-          title: "Оперативная память DDR4 adata 8Gb",
-          price: "1 250 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "13 февраля 13:17",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: true,
-          isFavorite: false,
-          status: "active",
-        },
-        {
-          id: "5",
-          title: "Thermaltake Litepower 550w/Новый",
-          price: "1 000 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "вчера",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: true,
-          isFavorite: true,
-          status: "sold",
-        },
-        {
-          id: "6",
-          title: "Ноутбук Digma Eve C4801/Гарантия 1 год",
-          price: "15 000 ₽",
-          location: "Нижегородская обл., Дзержинск",
-          date: "2 дня назад",
-          image:
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-          isDeliveryAvailable: true,
-          isFavorite: false,
-          status: "sold",
-        },
-      ]);
+      try {
+        setLoading(true);
+        setError(null);
 
-      setReviews([
-        {
-          id: "1",
-          userName: "Алексей",
-          userAvatar: "A",
-          rating: 5,
-          date: "20 июня · Покупатель",
-          dealInfo: "Сделка состоялась · DDR3 Corsair 8 gb 1600 Mhz",
-          comment: "Всё прошло гладко.",
-          isVerifiedPurchase: true,
-        },
-        {
-          id: "2",
-          userName: "Посев",
-          userAvatar:
-            "https://cdn.poehali.dev/files/9715c0de-f1a2-4e90-beca-86851d19bfa7.png",
-          rating: 5,
-          date: "19 июня · Покупатель",
-          dealInfo: "Сделка состоялась · Msi Rtx 4060 Ventus 2X White 8 gb",
-          comment: "Всё отлично, рекомендую",
-          isVerifiedPurchase: true,
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+        // Параллельная загрузка данных
+        const [user, userAds, userReviews] = await Promise.all([
+          storeApi.getUserById(userId),
+          storeApi.getUserAds(userId),
+          storeApi.getReviewsByUserId(userId),
+        ]);
+
+        // Обрабатываем данные пользователя
+        const averageRating =
+          userReviews.length > 0
+            ? userReviews.reduce((sum, review) => sum + review.rating, 0) /
+              userReviews.length
+            : 0;
+
+        const joinDate = new Date(user.registrationDate).toLocaleDateString(
+          "ru-RU",
+          {
+            year: "numeric",
+            month: "long",
+          },
+        );
+
+        const displayData: UserDisplayData = {
+          user,
+          averageRating: Math.round(averageRating * 10) / 10,
+          reviewCount: userReviews.length,
+          joinDate,
+          responseTime: "30 минут", // Можно добавить в User модель
+          deliveryCount: Math.floor(Math.random() * 10) + 1,
+          salesCount: userAds.length,
+        };
+
+        setUserDisplayData(displayData);
+
+        // Обрабатываем объявления
+        const adsWithStatus: AdWithStatus[] = userAds.map((ad) => ({
+          ...ad,
+          status: ad.active ? "active" : "sold",
+          isDeliveryAvailable: Math.random() > 0.5,
+          isFavorite: false,
+          formattedPrice: `${ad.price.toLocaleString()} ₽`,
+          location: `${ad.city.region}, ${ad.city.name}`,
+          date: new Date(ad.publishedAt).toLocaleDateString("ru-RU"),
+          image:
+            ad.links[0] ||
+            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
+        }));
+
+        setAds(adsWithStatus);
+        setReviews(userReviews);
+      } catch (err) {
+        console.error("Ошибка загрузки данных пользователя:", err);
+        setError("Ошибка загрузки данных пользователя");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
   }, [userId]);
 
   const filteredAds = ads.filter((ad) => {
@@ -210,19 +146,20 @@ const AvitoUser = () => {
   const activeCount = ads.filter((ad) => ad.status === "active").length;
   const soldCount = ads.filter((ad) => ad.status === "sold").length;
 
-  const ratingDistribution = {
-    5: 287,
-    4: 7,
-    3: 1,
-    2: 0,
-    1: 3,
-  };
+  // Вычисляем распределение оценок
+  const ratingDistribution = reviews.reduce(
+    (acc, review) => {
+      acc[review.rating] = (acc[review.rating] || 0) + 1;
+      return acc;
+    },
+    { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } as Record<number, number>,
+  );
 
   const sortedReviews = [...reviews].sort((a, b) => {
     if (reviewSortOrder === "new") {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
 
   if (loading) {
@@ -233,7 +170,15 @@ const AvitoUser = () => {
     );
   }
 
-  if (!userProfile) {
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-red-600">{error}</div>
+      </div>
+    );
+  }
+
+  if (!userDisplayData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl">Пользователь не найден</div>
@@ -252,14 +197,27 @@ const AvitoUser = () => {
             <Card className="p-6">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">U</span>
+                  {userDisplayData.user.photoUrl ? (
+                    <img
+                      src={userDisplayData.user.photoUrl}
+                      alt={`${userDisplayData.user.firstName} ${userDisplayData.user.lastName}`}
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-white font-bold text-xl">
+                      {userDisplayData.user.firstName.charAt(0)}
+                    </span>
+                  )}
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold">{userProfile.name}</h1>
+                  <h1 className="text-xl font-bold">
+                    {userDisplayData.user.firstName}{" "}
+                    {userDisplayData.user.lastName}
+                  </h1>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="flex items-center gap-1">
                       <span className="text-lg font-semibold">
-                        {userProfile.rating}
+                        {userDisplayData.averageRating || 0}
                       </span>
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
@@ -267,7 +225,7 @@ const AvitoUser = () => {
                             key={i}
                             name="Star"
                             className={`w-4 h-4 ${
-                              i < Math.floor(userProfile.rating)
+                              i < Math.floor(userDisplayData.averageRating)
                                 ? "text-yellow-400 fill-current"
                                 : "text-gray-300"
                             }`}
@@ -279,7 +237,7 @@ const AvitoUser = () => {
                       className="text-blue-600 underline cursor-pointer hover:text-blue-800"
                       onClick={scrollToReviews}
                     >
-                      {userProfile.reviewCount} отзывов
+                      {userDisplayData.reviewCount} отзывов
                     </span>
                   </div>
                 </div>
@@ -287,11 +245,10 @@ const AvitoUser = () => {
 
               <div className="space-y-3 mb-6">
                 <div className="text-sm text-gray-600">
-                  {userProfile.subscribersCount} подписчиков,{" "}
-                  {userProfile.subscriptionsCount} подписок
+                  {userDisplayData.user.email}
                 </div>
                 <div className="text-sm text-gray-600">
-                  На Авито с {userProfile.joinDate}
+                  На Авито с {userDisplayData.joinDate}
                 </div>
               </div>
 
