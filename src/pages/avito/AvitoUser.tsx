@@ -65,6 +65,13 @@ const AvitoUser = () => {
   const [reviewSortOrder, setReviewSortOrder] = useState("new");
   const [loading, setLoading] = useState(true);
 
+  const scrollToReviews = () => {
+    const reviewsSection = document.getElementById("reviews-section");
+    if (reviewsSection) {
+      reviewsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     // Симуляция загрузки данных
     setTimeout(() => {
@@ -263,7 +270,10 @@ const AvitoUser = () => {
                         ))}
                       </div>
                     </div>
-                    <span className="text-blue-600 underline cursor-pointer">
+                    <span
+                      className="text-blue-600 underline cursor-pointer hover:text-blue-800"
+                      onClick={scrollToReviews}
+                    >
                       {userProfile.reviewCount} отзывов
                     </span>
                   </div>
@@ -468,7 +478,7 @@ const AvitoUser = () => {
         </div>
 
         {/* Блок отзывов */}
-        <div className="mt-12">
+        <div className="mt-12" id="reviews-section">
           <Card className="p-6">
             <h2 className="text-2xl font-bold mb-6">
               Отзывы о {userProfile.name}
