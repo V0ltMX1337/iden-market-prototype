@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
@@ -36,12 +44,25 @@ interface Ad {
   status: "active" | "sold" | "archived";
 }
 
+interface Review {
+  id: string;
+  userName: string;
+  userAvatar: string;
+  rating: number;
+  date: string;
+  dealInfo: string;
+  comment: string;
+  isVerifiedPurchase: boolean;
+}
+
 const AvitoUser = () => {
   const { userId } = useParams<{ userId: string }>();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [ads, setAds] = useState<Ad[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [activeTab, setActiveTab] = useState("active");
   const [searchQuery, setSearchQuery] = useState("");
+  const [reviewSortOrder, setReviewSortOrder] = useState("new");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -137,6 +158,30 @@ const AvitoUser = () => {
           status: "sold",
         },
       ]);
+
+      setReviews([
+        {
+          id: "1",
+          userName: "Алексей",
+          userAvatar: "A",
+          rating: 5,
+          date: "20 июня · Покупатель",
+          dealInfo: "Сделка состоялась · DDR3 Corsair 8 gb 1600 Mhz",
+          comment: "Всё прошло гладко.",
+          isVerifiedPurchase: true,
+        },
+        {
+          id: "2",
+          userName: "Посев",
+          userAvatar:
+            "https://cdn.poehali.dev/files/9715c0de-f1a2-4e90-beca-86851d19bfa7.png",
+          rating: 5,
+          date: "19 июня · Покупатель",
+          dealInfo: "Сделка состоялась · Msi Rtx 4060 Ventus 2X White 8 gb",
+          comment: "Всё отлично, рекомендую",
+          isVerifiedPurchase: true,
+        },
+      ]);
       setLoading(false);
     }, 1000);
   }, [userId]);
@@ -152,6 +197,21 @@ const AvitoUser = () => {
 
   const activeCount = ads.filter((ad) => ad.status === "active").length;
   const soldCount = ads.filter((ad) => ad.status === "sold").length;
+
+  const ratingDistribution = {
+    5: 287,
+    4: 7,
+    3: 1,
+    2: 0,
+    1: 3,
+  };
+
+  const sortedReviews = [...reviews].sort((a, b) => {
+    if (reviewSortOrder === "new") {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
 
   if (loading) {
     return (
@@ -405,6 +465,163 @@ const AvitoUser = () => {
               </TabsContent>
             </Tabs>
           </div>
+        </div>
+
+        {/* Блок отзывов */}
+        <div className="mt-12">
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-6">
+              Отзывы о {userProfile.name}
+            </h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              {/* Рейтинг и статистика */}
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="text-5xl font-bold">{userProfile.rating}</div>
+                  <div>
+                    <div className="flex items-center gap-1 mb-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="Star"
+                          className={`w-5 h-5 ${
+                            i < Math.floor(userProfile.rating)
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      на основании {userProfile.reviewCount} оценок
+                    </div>
+                  </div>
+                </div>
+
+                {/* Детализация по звёздам */}
+                <div className="space-y-2">
+                  {[5, 4, 3, 2, 1].map((stars) => (
+                    <div key={stars} className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        {[...Array(stars)].map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="Star"
+                            className="w-3 h-3 text-yellow-400 fill-current"
+                          />
+                        ))}
+                        {[...Array(5 - stars)].map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="Star"
+                            className="w-3 h-3 text-gray-300"
+                          />
+                        ))}
+                      </div>
+                      <div className="flex-1 mx-2">
+                        <Progress
+                          value={
+                            (ratingDistribution[
+                              stars as keyof typeof ratingDistribution
+                            ] /
+                              userProfile.reviewCount) *
+                            100
+                          }
+                          className="h-2"
+                        />
+                      </div>
+                      <div className="text-sm text-gray-600 w-8 text-right">
+                        {
+                          ratingDistribution[
+                            stars as keyof typeof ratingDistribution
+                          ]
+                        }
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Описание рейтинга */}
+              <div className="flex flex-col justify-center">
+                <div className="text-sm text-gray-600 mb-4">
+                  Рейтинг — это среднее арифметическое оценок пользователей.
+                  Подробнее
+                </div>
+                <Button className="w-fit">Написать отзыв</Button>
+              </div>
+            </div>
+
+            {/* Сортировка отзывов */}
+            <div className="flex items-center gap-2 mb-6">
+              <Icon name="ArrowUpDown" className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-700">Сначала новые</span>
+              <Select
+                value={reviewSortOrder}
+                onValueChange={setReviewSortOrder}
+              >
+                <SelectTrigger className="w-32 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">Новые</SelectItem>
+                  <SelectItem value="old">Старые</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Список отзывов */}
+            <div className="space-y-6">
+              {sortedReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="border-b border-gray-200 pb-6 last:border-b-0"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      {review.userAvatar.startsWith("http") ? (
+                        <img
+                          src={review.userAvatar}
+                          alt={review.userName}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-white font-medium">
+                          {review.userAvatar}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium">{review.userName}</span>
+                        <span className="text-sm text-gray-500">
+                          {review.date}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="Star"
+                            className={`w-4 h-4 ${
+                              i < review.rating
+                                ? "text-yellow-400 fill-current"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <div className="text-sm text-gray-600 mb-3">
+                        {review.dealInfo}
+                      </div>
+                      <div className="text-gray-900">{review.comment}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
       </div>
 
