@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,6 +57,7 @@ interface Review {
 
 const AvitoUser = () => {
   const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [ads, setAds] = useState<Ad[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -70,6 +71,10 @@ const AvitoUser = () => {
     if (reviewsSection) {
       reviewsSection.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const navigateToAddReview = () => {
+    navigate(`/avito/user/${userId}/addReview`);
   };
 
   useEffect(() => {
@@ -559,7 +564,9 @@ const AvitoUser = () => {
                   Рейтинг — это среднее арифметическое оценок пользователей.
                   Подробнее
                 </div>
-                <Button className="w-fit">Написать отзыв</Button>
+                <Button className="w-fit" onClick={navigateToAddReview}>
+                  Написать отзыв
+                </Button>
               </div>
             </div>
 
