@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { User, Category, City, SystemSettings, Subcategory, Ad, Review } from "../lib/types";
+import type { User, Category, City, SystemSettings, Subcategory, Ad, Review, Message, ChatSummary } from "../lib/types";
 
 const API_BASE = "http://94.156.112.180:7000";
 
@@ -48,7 +48,7 @@ export const storeApi = {
   },
 
   async countUserAds(userId: string): Promise<{ active: number; inactive: number }> {
-    const res = await axios.get(`${API_BASE}/users/${userId}/ads/count`);
+    const res = await axios.get(`${API_BASE}/users/${userId}/adscount`);
     return res.data;
   },
 
@@ -68,7 +68,25 @@ export const storeApi = {
     return res.data;
   },
 
-  // TODO: Можно добавить updateAd, deleteAd если понадобятся
+  async sendMessage(message: Omit<Message, "id" | "timestamp">): Promise<Message> {
+    const res = await axios.post(`${API_BASE}/api/messages`, message);
+    return res.data;
+  },
+
+  async getMessages(adId: string, user1: string, user2: string): Promise<Message[]> {
+    const res = await axios.get(`${API_BASE}/api/messages`, {
+      params: { adId, user1, user2 }
+    });
+    return res.data;
+  },
+
+  async getUserChats(userId: string): Promise<ChatSummary[]> {
+    const res = await axios.get(`${API_BASE}/api/user-chats`, {
+      params: { userId },
+      withCredentials: true,
+    });
+    return res.data;
+  },
 
   // --- REVIEWS ---
   async getReviews(): Promise<Review[]> {
@@ -165,6 +183,34 @@ export const storeApi = {
   async updateSystemSettings(updates: Partial<SystemSettings>): Promise<void> {
     await axios.put(`${API_BASE}/systemSettings`, updates, { withCredentials: true });
   },
+
+    // FILE UPLOADS
+  async uploadPhoto(folder: string, file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("folder", folder);
+    formData.append("file", file);
+  
+    const res = await axios.post(`${API_BASE}/api/uploadphoto`, formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  
+    return res.data;
+  },
+  
+  async uploadPhotos(folder: string, files: File[]): Promise<{ urls: string[] }> {
+    const formData = new FormData();
+    formData.append("folder", folder);
+    files.forEach(file => formData.append("files", file));
+  
+    const res = await axios.post(`${API_BASE}/api/uploadphotos`, formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  
+    return res.data;
+  },
+
 
   // STATS
   async getStats(): Promise<{

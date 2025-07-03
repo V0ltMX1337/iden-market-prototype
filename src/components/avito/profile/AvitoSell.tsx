@@ -51,6 +51,11 @@ const AvitoSell = () => {
   useEffect(() => {
     storeApi.getCategories().then(setCategories);
     storeApi.getCities().then(setCities);
+
+    // Очистка preview URL при размонтировании
+    return () => {
+      photos.forEach((p) => URL.revokeObjectURL(p.preview));
+    };
   }, []);
 
   const handleInputChange = (field: string, value: string) => {
@@ -77,15 +82,6 @@ const AvitoSell = () => {
   const setAsMain = (index: number) => {
     setPhotos((prev) => prev.map((p, i) => ({ ...p, isMain: i === index })));
   };
-
-  // Рандомный список картинок для примера
-  const randomImageLinks = [
-    "https://placekitten.com/400/300",
-    "https://placekitten.com/401/300",
-    "https://placekitten.com/402/300",
-    "https://placekitten.com/403/300",
-    "https://placekitten.com/404/300",
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,9 +111,17 @@ const AvitoSell = () => {
     }
 
     try {
-      const photoLinks = randomImageLinks.slice(0, photos.length || 1);
+      let photoLinks: string[] = [];
 
-      // Здесь можно объединять category + subcategory, если нужно, например:
+      if (photos.length > 0) {
+        // Загружаем файлы в папку 'ads'
+        const uploadResult = await storeApi.uploadPhotos(
+          "ads",
+          photos.map((p) => p.file)
+        );
+        photoLinks = uploadResult.urls;
+      }
+
       const category = categories.find((c) => c.slug === formData.category);
       const subcategorySlug = formData.subcategory;
 
@@ -125,7 +129,6 @@ const AvitoSell = () => {
         alert("Невалидная категория.");
         return;
       }
-
 
       const newAd: Omit<Ad, "id"> = {
         title: formData.title,
@@ -138,10 +141,9 @@ const AvitoSell = () => {
         publishedAt: new Date().toISOString(),
         userId: user.id,
         active: true,
-        categoryId: category.id,           // ✅ добавлено
-        subcategorySlug: subcategorySlug,  // ✅ добавлено
+        categoryId: category.id,
+        subcategorySlug: subcategorySlug,
       };
-
 
       await storeApi.addAd(newAd);
 
@@ -197,6 +199,7 @@ const AvitoSell = () => {
                       variant="outline"
                       className="absolute bottom-2 left-2"
                       onClick={() => setAsMain(i)}
+                      type="button"
                     >
                       {p.isMain ? "Главное" : "Сделать главным"}
                     </Button>

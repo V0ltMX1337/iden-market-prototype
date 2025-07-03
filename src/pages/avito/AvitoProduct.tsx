@@ -8,9 +8,12 @@ import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { storeApi } from "@/lib/store";
 import { Star } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const AvitoProduct = () => {
+  
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [ad, setAd] = useState<any>(null);
   const [author, setAuthor] = useState<any>(null);
@@ -19,6 +22,39 @@ const AvitoProduct = () => {
   const [userReviews, setUserReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
+  const [messageText, setMessageText] = useState("");
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+
+  const questions = [
+    "Где и когда можно посмотреть?",
+    "Ещё продаёте?",
+    "Торг уместен?",
+    "Отправите Авито Доставкой?",
+  ];
+
+  const sendMessage = async (text?: string) => {
+    const content = text ?? messageText;
+    if (!content.trim()) return; // пустое сообщение не отправляем
+    if (!user) {
+      alert("Для отправки сообщения нужно войти в аккаунт");
+      return;
+    }
+    try {
+      if (!ad) return;
+      await storeApi.sendMessage({
+        adId: ad.id,
+        senderId: user.id,
+        receiverId: ad.userId,
+        content: content.trim(),
+      });
+      alert("Сообщение отправлено");
+      setMessageText(""); // очищаем поле
+      setSelectedQuestion(null);
+      navigate("/avito/chat");
+    } catch (e) {
+      alert("Ошибка при отправке сообщения");
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -223,13 +259,13 @@ const AvitoProduct = () => {
                     Запросить доставку
                   </Button>
                   <div className="text-sm text-gray-600 space-y-1 px-2">
-                    <p>Авито Доставка.</p>
+                    <p>Trivo Доставка.</p>
                     <p>Гарантия возврата денег, если товар не подойдёт</p>
                     <button
                       className="text-blue-600 hover:underline transition-colors"
                       onClick={() => navigate("/avito/delivery-info")}
                     >
-                      Об Авито Доставке
+                      Об Trivo Доставке
                     </button>
                   </div>
 
@@ -316,44 +352,55 @@ const AvitoProduct = () => {
       {/* Ask Seller Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="bg-gradient-to-br from-white to-purple-50/30">
-          <CardContent className="p-4">
-            <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
-            <div className="space-y-3">
-              <div className="flex gap-2 items-center">
-                <input
-                  type="text"
-                  placeholder="Здравствуйте!"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                />
-                <Button
-                  className="bg-purple-600 hover:bg-purple-700 px-4 py-2"
-                  onClick={() => navigate("/avito/chat")}
-                >
-                  <Icon name="Send" size={16} />
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Где и когда можно посмотреть?",
-                  "Ещё продаёте?",
-                  "Торг уместен?",
-                  "Отправите Авито Доставкой?",
-                ].map((question, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors text-xs px-2 py-1"
-                    onClick={() => navigate("/avito/chat")}
-                  >
-                    {question}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              <CardContent className="p-4">
+                <h2 className="text-xl font-bold mb-4">Спросите у продавца</h2>
+                <div className="space-y-3">
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      placeholder="Здравствуйте!"
+                      value={messageText}
+                      onChange={(e) => setMessageText(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
+                    />
+                    <Button
+                      className="bg-purple-600 hover:bg-purple-700 px-4 py-2"
+                      onClick={() => sendMessage()}
+                      disabled={!messageText.trim()}
+                    >
+                      <Icon name="Send" size={16} />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {questions.map((question) => (
+                      <Button
+                        key={question}
+                        variant={selectedQuestion === question ? "default" : "outline"}
+                        size="sm"
+                        className={`text-xs px-2 py-1 ${
+                          selectedQuestion === question
+                            ? "bg-purple-600 text-white"
+                            : "bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100"
+                        } transition-colors`}
+                        onClick={() => {
+                          setSelectedQuestion(question);
+                          sendMessage(question);
+                        }}
+                      >
+                        {question}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
       {/* Similar Products Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

@@ -77,9 +77,17 @@ const AvitoProfileMain = () => {
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start space-x-6">
+            {user.photoUrl ? (
+            <img
+              src={user.photoUrl}
+              alt="Аватар пользователя"
+              className="w-24 h-24 rounded-full object-cover mb-4 border border-gray-300"
+            />
+          ) : (
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <Icon name="User" size={32} className="text-white" />
             </div>
+          )}
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 {user.firstName} {user.lastName}

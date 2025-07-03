@@ -70,6 +70,21 @@ export interface Review {
   createdAt: string;    // 🕒 Когда оставлен
 }
 
+export interface Message {
+  id: string;
+  adId: string;
+  senderId: string;
+  receiverId: string;
+  content: string;
+  timestamp: string;
+}
+
+export interface ChatSummary {
+  adId: string;
+  otherUserId: string;        // собеседник в чате
+  lastMessage: string;
+  lastTimestamp: string;
+}
 
 export interface SystemSettings {
   siteName: string;

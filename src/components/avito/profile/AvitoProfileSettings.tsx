@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +19,14 @@ const AvitoProfileSettings = () => {
     email: string;
     phone: string;
     cityId: string;
+    photoUrl?: string;
   }>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     cityId: "",
+    photoUrl: "",
   });
 
   const [notifications, setNotifications] = useState({
@@ -37,6 +39,7 @@ const AvitoProfileSettings = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     const loadCities = async () => {
@@ -63,6 +66,7 @@ const AvitoProfileSettings = () => {
           email: freshUser.email || "",
           phone: freshUser.phone || "",
           cityId: freshUser.city?.id || "",
+          photoUrl: freshUser.photoUrl || "",
         });
       } catch (error) {
         console.error("Ошибка загрузки данных пользователя", error);
@@ -75,40 +79,51 @@ const AvitoProfileSettings = () => {
   }, [user?.id]);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleNotificationChange = (field: keyof typeof notifications, value: boolean) => {
-    setNotifications(prev => ({ ...prev, [field]: value }));
+  const handleNotificationChange = (
+    field: keyof typeof notifications,
+    value: boolean
+  ) => {
+    setNotifications((prev) => ({ ...prev, [field]: value }));
   };
-
+  
   const handleSave = async () => {
     if (!user?.id) return;
-
+  
     if (!formData.cityId) {
       alert("Пожалуйста, выберите город");
       return;
     }
-
+  
     setSaving(true);
     try {
-      const cityObj = cities.find(c => c.id === formData.cityId);
+      const cityObj = cities.find((c) => c.id === formData.cityId);
       if (!cityObj) {
         alert("Выбран неверный город");
         setSaving(false);
         return;
       }
-
-      await storeApi.updateUser(user.id, {
+    
+      // Объединяем полный объект пользователя с новыми данными из формы
+      const updatedUser: User = {
         ...user,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
         city: cityObj,
-      });
-
+        photoUrl: formData.photoUrl || "", // Гарантируем, что всегда строка
+      };
+    
+      await storeApi.updateUser(user.id, updatedUser);
+    
       alert("Данные успешно сохранены");
+    
+      // тут нужно обновить локальный контекст/стейт пользователя, если используешь
+      // например: updateUserInContext(updatedUser);
+    
     } catch (error) {
       console.error("Ошибка сохранения данных", error);
       alert("Ошибка при сохранении данных");
@@ -117,12 +132,70 @@ const AvitoProfileSettings = () => {
     }
   };
 
+
+
+  // Загрузка аватарки
+  const onAvatarChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files?.[0]) return;
+
+      const file = e.target.files[0];
+      setUploadingAvatar(true);
+
+      try {
+        const res = await storeApi.uploadPhoto("avatars", file);
+        setFormData((prev) => ({ ...prev, photoUrl: res.url }));
+      } catch (error) {
+        console.error("Ошибка загрузки аватарки", error);
+        alert("Ошибка загрузки аватарки");
+      } finally {
+        setUploadingAvatar(false);
+      }
+    },
+    []
+  );
+
   if (loading) return <div>Загрузка...</div>;
   if (!user) return <div>Пользователь не авторизован</div>;
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Настройки профиля</h1>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Аватарка</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 flex flex-col items-center">
+          {formData.photoUrl ? (
+            <img
+              src={formData.photoUrl}
+              alt="Аватар пользователя"
+              className="w-24 h-24 rounded-full object-cover mb-4 border border-gray-300"
+            />
+          ) : (
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <Icon name="User" size={32} className="text-white" />
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onAvatarChange}
+            disabled={uploadingAvatar}
+            id="avatar-upload"
+            className="hidden"
+          />
+          <label
+            htmlFor="avatar-upload"
+            className={`cursor-pointer px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 ${
+              uploadingAvatar ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {uploadingAvatar ? "Загрузка..." : "Загрузить аватарку"}
+          </label>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -135,7 +208,7 @@ const AvitoProfileSettings = () => {
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={e => handleInputChange("firstName", e.target.value)}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
               />
             </div>
             <div>
@@ -143,7 +216,7 @@ const AvitoProfileSettings = () => {
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={e => handleInputChange("lastName", e.target.value)}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
               />
             </div>
           </div>
@@ -153,7 +226,7 @@ const AvitoProfileSettings = () => {
               id="email"
               type="email"
               value={formData.email}
-              onChange={e => handleInputChange("email", e.target.value)}
+              onChange={(e) => handleInputChange("email", e.target.value)}
             />
           </div>
           <div>
@@ -161,7 +234,7 @@ const AvitoProfileSettings = () => {
             <Input
               id="phone"
               value={formData.phone}
-              onChange={e => handleInputChange("phone", e.target.value)}
+              onChange={(e) => handleInputChange("phone", e.target.value)}
             />
           </div>
           <div>
@@ -169,12 +242,12 @@ const AvitoProfileSettings = () => {
             <select
               id="city"
               value={formData.cityId}
-              onChange={e => handleInputChange("cityId", e.target.value)}
+              onChange={(e) => handleInputChange("cityId", e.target.value)}
               className="w-full border rounded px-3 py-2"
               required
             >
               <option value="">Выберите город</option>
-              {cities.map(city => (
+              {cities.map((city) => (
                 <option key={city.id} value={city.id}>
                   {city.name} ({city.region})
                 </option>
@@ -197,10 +270,26 @@ const AvitoProfileSettings = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           {[
-            { label: "Email уведомления", description: "Получать уведомления на email", field: "email" },
-            { label: "SMS уведомления", description: "Получать SMS о новых сообщениях", field: "sms" },
-            { label: "Push уведомления", description: "Показывать уведомления в браузере", field: "push" },
-            { label: "Маркетинговые рассылки", description: "Получать информацию о акциях и новостях", field: "marketing" },
+            {
+              label: "Email уведомления",
+              description: "Получать уведомления на email",
+              field: "email",
+            },
+            {
+              label: "SMS уведомления",
+              description: "Получать SMS о новых сообщениях",
+              field: "sms",
+            },
+            {
+              label: "Push уведомления",
+              description: "Показывать уведомления в браузере",
+              field: "push",
+            },
+            {
+              label: "Маркетинговые рассылки",
+              description: "Получать информацию о акциях и новостях",
+              field: "marketing",
+            },
           ].map(({ label, description, field }) => (
             <div className="flex items-center justify-between" key={field}>
               <div>
@@ -209,7 +298,9 @@ const AvitoProfileSettings = () => {
               </div>
               <Switch
                 checked={notifications[field]}
-                onCheckedChange={checked => handleNotificationChange(field, checked)}
+                onCheckedChange={(checked) =>
+                  handleNotificationChange(field, checked)
+                }
               />
             </div>
           ))}
