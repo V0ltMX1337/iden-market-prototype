@@ -6,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
-import Header from "@/components/avito/Header";
-import Footer from "@/components/avito/Footer";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 
 interface UserProfile {
   id: string;
@@ -171,7 +171,7 @@ const AvitoUser = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <AvitoHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -408,7 +408,7 @@ const AvitoUser = () => {
         </div>
       </div>
 
-      <Footer />
+      <AvitoFooter />
     </div>
   );
 };
