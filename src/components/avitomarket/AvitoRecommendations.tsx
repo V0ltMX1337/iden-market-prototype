@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { storeApi } from "@/lib/store";
-import type { Ad } from "@/lib/types";
+import { AdStatus, type Ad } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
@@ -15,7 +15,9 @@ const AvitoRecommendations = () => {
     const fetchAds = async () => {
       try {
         const adsData = await storeApi.getAds();
-        setAds(adsData);
+        // Фильтруем только активные объявления
+        const activeAds = adsData.filter((ad) => ad.adStatus === AdStatus.ACTIVE);
+        setAds(activeAds);
       } catch (error) {
         console.error("Ошибка при загрузке объявлений:", error);
       } finally {
@@ -36,17 +38,15 @@ const AvitoRecommendations = () => {
 
   return (
     <section className="py-10 px-4">
-      <h2 className="text-2xl font-bold mb-6">Рекомендации для вас</h2>
-
       {ads.length === 0 ? (
         <p className="text-center text-gray-500">Объявления не найдены</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {ads.map((ad) => (
             <Card
               key={ad.id}
               className="overflow-hidden cursor-pointer group relative"
-              onClick={() => navigate(`/avito/product/${ad.id}`)}
+              onClick={() => navigate(`/product/${ad.id}`)}
             >
               <Button
                 variant="ghost"

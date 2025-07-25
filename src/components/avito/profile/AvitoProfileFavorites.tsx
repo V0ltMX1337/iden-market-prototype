@@ -1,55 +1,103 @@
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { storeApi } from "@/lib/store";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 
+interface FavoriteAd {
+  id: string;
+  title: string;
+  price: number;
+  location: string;
+  image: string;
+  publishedAt: string;
+}
+
 const AvitoProfileFavorites = () => {
-  const favorites = [
-    {
-      id: 1,
-      title: "Volkswagen Golf 2019",
-      price: 1850000,
-      location: "Санкт-Петербург",
-      image:
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=300&h=200&fit=crop",
-      time: "5 часов назад",
-    },
-    {
-      id: 2,
-      title: "Квартира 2-к",
-      price: 8500000,
-      location: "Москва",
-      image:
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=300&h=200&fit=crop",
-      time: "1 день назад",
-    },
-    {
-      id: 3,
-      title: "Samsung Galaxy S23",
-      price: 55000,
-      location: "Екатеринбург",
-      image:
-        "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=300&h=200&fit=crop",
-      time: "2 дня назад",
-    },
-    {
-      id: 4,
-      title: "Кресло офисное",
-      price: 12000,
-      location: "Новосибирск",
-      image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop",
-      time: "3 дня назад",
-    },
-    {
-      id: 5,
-      title: "Электросамокат",
-      price: 35000,
-      location: "Казань",
-      image:
-        "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop",
-      time: "1 неделю назад",
-    },
-  ];
+  const { user } = useAuth();
+  const [favorites, setFavorites] = useState<FavoriteAd[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setFavorites([]);
+      setLoading(false);
+      return;
+    }
+
+    const fetchFavorites = async () => {
+      try {
+        setLoading(true);
+
+        const favoriteIds: string[] = await storeApi.getFavorites(user.id);
+        const favoriteAdsPromises = favoriteIds.map((adId) =>
+          storeApi.getAdById(adId)
+        );
+        const favoriteAds = await Promise.all(favoriteAdsPromises);
+
+        const formattedFavorites: FavoriteAd[] = favoriteAds.map((ad) => ({
+          id: ad.id,
+          title: ad.title,
+          price: ad.price,
+          location: ad.city?.name || "Не указано",
+          image: ad.links?.[0] || "/images/placeholder.png",
+          publishedAt: new Date(ad.publishedAt).toLocaleDateString("ru-RU", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
+        }));
+
+        setFavorites(formattedFavorites);
+      } catch (error) {
+        console.error("Ошибка при загрузке избранного:", error);
+        setFavorites([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavorites();
+  }, [user]);
+
+  const handleRemoveFromFavorites = async (
+    adId: string,
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation(); // предотвращает переход по карточке
+  
+    try {
+      await storeApi.removeFavorite(user!.id, adId);
+      setFavorites((prev) => prev.filter((item) => item.id !== adId));
+    } catch (err) {
+      console.error("Не удалось удалить из избранного:", err);
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="text-center p-6 text-gray-600">
+        Пожалуйста, войдите в аккаунт, чтобы просмотреть избранное.
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="text-center p-6 text-gray-600">
+        Загрузка избранного...
+      </div>
+    );
+  }
+
+  if (favorites.length === 0) {
+    return (
+      <div className="text-center p-6 text-gray-600">
+        У вас пока нет избранных товаров.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -63,6 +111,7 @@ const AvitoProfileFavorites = () => {
           <Card
             key={item.id}
             className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden"
+            onClick={() => (window.location.href = `/product/${item.id}`)}
           >
             <div className="aspect-[4/3] overflow-hidden relative">
               <img
@@ -73,12 +122,13 @@ const AvitoProfileFavorites = () => {
               <Button
                 size="sm"
                 variant="secondary"
-                className="absolute top-2 right-2 p-2 h-auto bg-white/90 hover:bg-white"
+                className="absolute top-2 right-2 p-2 h-auto bg-white/90 hover:bg-white z-10"
+                onClick={(e) => handleRemoveFromFavorites(item.id, e)}
               >
                 <Icon
                   name="Heart"
                   size={16}
-                  className="text-red-500 fill-current"
+                  className="text-red-500 hover:text-red-500"
                 />
               </Button>
             </div>
@@ -92,13 +142,24 @@ const AvitoProfileFavorites = () => {
                   <Icon name="MapPin" size={14} className="mr-1" />
                   {item.location}
                 </span>
-                <span>{item.time}</span>
+                <span>{item.publishedAt}</span>
               </div>
               <div className="flex gap-2 mt-4">
-                <Button size="sm" className="flex-1">
+                <Button
+                  size="sm"
+                  className="flex-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `/product/${item.id}`;
+                  }}
+                >
                   Посмотреть
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Icon name="MessageCircle" size={14} />
                 </Button>
               </div>

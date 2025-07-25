@@ -5,19 +5,16 @@ import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
-import { Ad as AdType, User } from "@/lib/types";
-
-// Расширяем тип Ad, чтобы добавить status, если в API его нет
-interface Ad extends AdType {
-  status: "active" | "sold" | "inactive";
-}
+import { Ad as AdType, AdStatus } from "@/lib/types";
+import { useNavigate } from "react-router-dom";
 
 const AvitoProfileAds = () => {
   const { user, isLoading: authLoading } = useAuth();
-  const [ads, setAds] = useState<Ad[]>([]);
-  const [activeTab, setActiveTab] = useState<"sold" | "active">("active");
+  const [ads, setAds] = useState<AdType[]>([]);
+  const [activeTab, setActiveTab] = useState<"active" | "sold" | "needs_action">("active");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUserAds = async () => {
@@ -25,17 +22,8 @@ const AvitoProfileAds = () => {
 
       try {
         setIsLoading(true);
-        // Загружаем объявления текущего пользователя через API
         const userAds = await storeApi.getUserAds(user.id);
-
-        // Если API не возвращает status — добавляем вручную (например, все active)
-        // Или фильтруем по какому-то признаку статуса из API, если есть
-        const adsWithStatus: Ad[] = userAds.map((ad: AdType) => ({
-          ...ad,
-          status: "active", // заменить по реальному признаку, если есть
-        }));
-
-        setAds(adsWithStatus);
+        setAds(userAds);
       } catch (err: any) {
         setError(err.message || "Ошибка загрузки объявлений");
       } finally {
@@ -50,15 +38,40 @@ const AvitoProfileAds = () => {
 
   const handleRemoveFromSale = async (adId: string) => {
     try {
-      await storeApi.updateAdStatus(adId, "inactive");
+      const currentAd = ads.find((ad) => ad.id === adId);
+      if (!currentAd) return;
+
+      const updatedAd = { ...currentAd, adStatus: AdStatus.SOLD };
+      await storeApi.updateAd(adId, updatedAd);
 
       setAds((prev) =>
         prev.map((ad) =>
-          ad.id === adId ? { ...ad, status: "inactive" as const } : ad,
-        ),
+          ad.id === adId ? { ...ad, adStatus: AdStatus.SOLD } : ad
+        )
       );
     } catch (error) {
       console.error("Ошибка при снятии с продажи:", error);
+    }
+  };
+
+  const handleExtendAd = async (adId: string) => {
+    try {
+      const ad = ads.find((ad) => ad.id === adId);
+      if (!ad) return;
+
+      const updatedAd = {
+        ...ad,
+        publishedAt: new Date().toISOString(),
+        adStatus: AdStatus.ACTIVE,
+      };
+
+      await storeApi.updateAd(adId, updatedAd);
+
+      setAds((prev) =>
+        prev.map((item) => (item.id === adId ? updatedAd : item))
+      );
+    } catch (error) {
+      console.error("Ошибка при продлении:", error);
     }
   };
 
@@ -74,6 +87,23 @@ const AvitoProfileAds = () => {
     return `${Math.floor(diffDays / 7)} недель назад`;
   };
 
+  const filteredAds = ads.filter((ad) => {
+    switch (activeTab) {
+      case "active":
+        return ad.adStatus === AdStatus.ACTIVE;
+      case "sold":
+        return ad.adStatus === AdStatus.SOLD;
+      case "needs_action":
+        return (
+          ad.adStatus === AdStatus.BLOCKED ||
+          ad.adStatus === AdStatus.TIME_OUT ||
+          (ad.adStatus !== AdStatus.ACTIVE && ad.adStatus !== AdStatus.SOLD)
+        );
+      default:
+        return false;
+    }
+  });
+
   if (authLoading || isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -86,17 +116,13 @@ const AvitoProfileAds = () => {
     return <div className="text-red-600 text-center py-8">Ошибка: {error}</div>;
   }
 
-  const filteredAds = ads.filter((ad) =>
-    activeTab === "active" ? ad.status === "active" : ad.status === "sold",
-  );
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Мои объявления</h1>
         <Button
           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-          onClick={() => (window.location.href = "/avito/profile/sell")}
+          onClick={() => (window.location.href = "/profile/sell")}
         >
           <Icon name="Plus" size={16} className="mr-2" />
           Подать объявление
@@ -107,7 +133,7 @@ const AvitoProfileAds = () => {
         <button
           className={`py-2 px-4 font-semibold ${
             activeTab === "active"
-              ? "border-b-2 border-blue-600"
+              ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-blue-600"
           }`}
           onClick={() => setActiveTab("active")}
@@ -124,6 +150,16 @@ const AvitoProfileAds = () => {
         >
           Проданные
         </button>
+        <button
+          className={`py-2 px-4 font-semibold ${
+            activeTab === "needs_action"
+              ? "border-b-2 border-red-600 text-red-600"
+              : "text-gray-600 hover:text-red-600"
+          }`}
+          onClick={() => setActiveTab("needs_action")}
+        >
+          Требует действий
+        </button>
       </div>
 
       <div className="grid gap-6">
@@ -136,7 +172,10 @@ const AvitoProfileAds = () => {
           <Card key={ad.id}>
             <CardContent className="p-6">
               <div className="flex gap-6">
-                <div className="w-32 h-24 flex-shrink-0">
+                <div
+                  className="w-32 h-24 flex-shrink-0 cursor-pointer"
+                  onClick={() => navigate(`/ad/${ad.id}`)}
+                >
                   <img
                     src={ad.links[0] || "/placeholder.png"}
                     alt={ad.title}
@@ -145,9 +184,14 @@ const AvitoProfileAds = () => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-semibold">{ad.title}</h3>
-                    <Badge className={getStatusColor(ad.status)}>
-                      {getStatusText(ad.status)}
+                    <h3
+                      className="text-lg font-semibold cursor-pointer hover:underline"
+                      onClick={() => navigate(`/product/${ad.id}`)}
+                    >
+                      {ad.title}
+                    </h3>
+                    <Badge className={getStatusColor(ad.adStatus)}>
+                      {getStatusText(ad.adStatus)}
                     </Badge>
                   </div>
                   <p className="text-2xl font-bold text-green-600 mb-3">
@@ -164,22 +208,24 @@ const AvitoProfileAds = () => {
                     </span>
                     <span>{formatDate(ad.publishedAt)}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <Button
                       variant="outline"
                       size="sm"
                       className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                      onClick={() => navigate(`/profile/edit/${ad.id}`)}
                     >
                       Редактировать
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => navigate(`/profile/${ad.id}/statistic`)}
                       className="border-purple-200 text-purple-600 hover:bg-purple-50"
                     >
                       Статистика
                     </Button>
-                    {ad.status === "active" && (
+                    {ad.adStatus === AdStatus.ACTIVE && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -187,6 +233,16 @@ const AvitoProfileAds = () => {
                         className="border-red-200 text-red-600 hover:bg-red-50"
                       >
                         Снять с продажи
+                      </Button>
+                    )}
+                    {ad.adStatus === AdStatus.TIME_OUT && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleExtendAd(ad.id)}
+                        className="border-green-200 text-green-600 hover:bg-green-50"
+                      >
+                        Продлить
                       </Button>
                     )}
                   </div>
@@ -199,27 +255,30 @@ const AvitoProfileAds = () => {
     </div>
   );
 
-  function getStatusColor(status: string) {
+  function getStatusColor(status: AdStatus) {
     switch (status) {
-      case "active":
+      case AdStatus.ACTIVE:
         return "bg-green-100 text-green-700";
-      case "sold":
+      case AdStatus.SOLD:
         return "bg-blue-100 text-blue-700";
-      case "inactive":
-        return "bg-gray-100 text-gray-700";
+      case AdStatus.TIME_OUT:
+      case AdStatus.BLOCKED:
+        return "bg-red-100 text-red-700";
       default:
         return "bg-gray-100 text-gray-700";
     }
   }
 
-  function getStatusText(status: string) {
+  function getStatusText(status: AdStatus) {
     switch (status) {
-      case "active":
+      case AdStatus.ACTIVE:
         return "Активно";
-      case "sold":
+      case AdStatus.SOLD:
         return "Продано";
-      case "inactive":
-        return "Неактивно";
+      case AdStatus.TIME_OUT:
+        return "Истёк срок размещения";
+      case AdStatus.BLOCKED:
+        return "Заблокировано";
       default:
         return "Неизвестно";
     }

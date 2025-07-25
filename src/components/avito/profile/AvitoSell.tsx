@@ -2,7 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +20,8 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-import type { Ad, Category, City } from "@/lib/types";
+import type { Ad, AdFilter, Category, City, FilterDefinition } from "@/lib/types";
+import { AdStatus, AdSold, FilterType } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
 
@@ -27,18 +33,28 @@ const AvitoSell = () => {
     title: "",
     description: "",
     price: "",
-    category: "",     // slug категории
-    subcategory: "",  // slug подкатегории
+    category: "",
     condition: "",
     cityId: "",
     address: "",
   });
+
+  const [subcategoryPath, setSubcategoryPath] = useState<string[]>([]);
+  const [subcategoryLevels, setSubcategoryLevels] = useState<
+    Array<{ name: string; slug: string }[]>
+  >([]);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [photos, setPhotos] = useState<
     Array<{ file: File; preview: string; isMain: boolean }>
   >([]);
+
+  const [allFilters, setAllFilters] = useState<FilterDefinition[]>([]);
+  const [filters, setFilters] = useState<FilterDefinition[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<
+    Record<string, string | number | boolean>
+  >({});
 
   const conditions = [
     "Новое",
@@ -48,15 +64,105 @@ const AvitoSell = () => {
     "Удовлетворительное",
   ];
 
+  const mapConditionToAdSold = (condition: string): AdSold => {
+    switch (condition) {
+      case "Новое":
+        return AdSold.NEW;
+      case "Отличное":
+        return AdSold.OTLICHNOE;
+      case "Очень хорошее":
+        return AdSold.XOROSHEE;
+      case "Хорошее":
+        return AdSold.XOROSHEE;
+      case "Удовлетворительное":
+        return AdSold.YDVORITEL;
+      default:
+        return AdSold.NEW;
+    }
+  };
+
   useEffect(() => {
     storeApi.getCategories().then(setCategories);
     storeApi.getCities().then(setCities);
+    storeApi.getFilters().then(setAllFilters);
 
-    // Очистка preview URL при размонтировании
     return () => {
       photos.forEach((p) => URL.revokeObjectURL(p.preview));
     };
   }, []);
+
+  useEffect(() => {
+    if (formData.category) {
+      const cat = categories.find((c) => c.slug === formData.category);
+      if (cat) {
+        setSubcategoryPath([]);
+        setSubcategoryLevels([cat.subcategories]);
+      } else {
+        setSubcategoryLevels([]);
+        setSubcategoryPath([]);
+      }
+      setFilters([]);
+      setSelectedFilters({});
+    } else {
+      setSubcategoryLevels([]);
+      setSubcategoryPath([]);
+      setFilters([]);
+      setSelectedFilters({});
+    }
+  }, [formData.category, categories]);
+
+  const findSubcategoryByPath = (
+    subcategories: Category["subcategories"],
+    path: string[]
+  ): Category["subcategories"][0] | undefined => {
+    if (path.length === 0) return undefined;
+    let currentLevel = subcategories;
+    let foundSubcat;
+
+    for (const slug of path) {
+      foundSubcat = currentLevel.find((sub) => sub.slug === slug);
+      if (!foundSubcat) return undefined;
+      currentLevel = foundSubcat.children || [];
+    }
+    return foundSubcat;
+  };
+
+  const handleSubcategorySelect = (levelIndex: number, slug: string) => {
+    const newPath = [...subcategoryPath.slice(0, levelIndex), slug];
+    setSubcategoryPath(newPath);
+
+    const cat = categories.find((c) => c.slug === formData.category);
+    if (!cat) return;
+
+    const currentSubcat = findSubcategoryByPath(cat.subcategories, newPath);
+
+    const children = currentSubcat?.children || [];
+
+    if (children.length > 0) {
+      setSubcategoryLevels((prev) => [
+        ...prev.slice(0, levelIndex + 1),
+        children,
+      ]);
+    } else {
+      setSubcategoryLevels((prev) => prev.slice(0, levelIndex + 1));
+    }
+
+    if (currentSubcat) {
+      const filterDefs = currentSubcat.filters
+        .map((fa) => allFilters.find((f) => f.id === fa.filterId))
+        .filter((f): f is FilterDefinition => f !== undefined);
+
+      setFilters(filterDefs);
+      setSelectedFilters({});
+    } else {
+      setFilters([]);
+      setSelectedFilters({});
+    }
+  };
+
+  const handleFilterChange = (filterId: string, value: any) => {
+    setSelectedFilters((prev) => ({ ...prev, [filterId]: value }));
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -80,7 +186,9 @@ const AvitoSell = () => {
   });
 
   const setAsMain = (index: number) => {
-    setPhotos((prev) => prev.map((p, i) => ({ ...p, isMain: i === index })));
+    setPhotos((prev) =>
+      prev.map((p, i) => ({ ...p, isMain: i === index }))
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,15 +199,17 @@ const AvitoSell = () => {
       return;
     }
 
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.price ||
-      !formData.category ||
-      !formData.subcategory ||
-      !formData.condition ||
-      !formData.cityId
-    ) {
+    const requiredFields = [
+      formData.title,
+      formData.description,
+      formData.price,
+      formData.category,
+      subcategoryPath.length > 0,
+      formData.condition,
+      formData.cityId,
+    ];
+
+    if (requiredFields.includes("") || requiredFields.includes(false)) {
       alert("Пожалуйста, заполните все обязательные поля.");
       return;
     }
@@ -114,7 +224,6 @@ const AvitoSell = () => {
       let photoLinks: string[] = [];
 
       if (photos.length > 0) {
-        // Загружаем файлы в папку 'ads'
         const uploadResult = await storeApi.uploadPhotos(
           "ads",
           photos.map((p) => p.file)
@@ -123,13 +232,27 @@ const AvitoSell = () => {
       }
 
       const category = categories.find((c) => c.slug === formData.category);
-      const subcategorySlug = formData.subcategory;
-
       if (!category) {
         alert("Невалидная категория.");
         return;
       }
 
+      const lastSubcategory = findSubcategoryByPath(
+        category.subcategories,
+        subcategoryPath
+      );
+      if (!lastSubcategory) {
+        alert("Невалидная подкатегория.");
+        return;
+      }
+
+      const filtersArray: AdFilter[] = Object.entries(selectedFilters).map(
+        ([filterId, value]) => ({
+          filterId,
+          value: String(value),
+        })
+      );
+      
       const newAd: Omit<Ad, "id"> = {
         title: formData.title,
         description: formData.description,
@@ -140,19 +263,21 @@ const AvitoSell = () => {
         favoritesCount: 0,
         publishedAt: new Date().toISOString(),
         userId: user.id,
-        active: true,
+        adStatus: AdStatus.ACTIVE,
+        adSold: mapConditionToAdSold(formData.condition),
         categoryId: category.id,
-        subcategorySlug: subcategorySlug,
+        subcategoryId: lastSubcategory.id,
+        filters: filtersArray, // 👈 сюда добавили
       };
 
       await storeApi.addAd(newAd);
-
-      navigate("/avito/profile/ads");
+      navigate("/profile/ads");
     } catch (error) {
       console.error(error);
       alert("Ошибка при публикации объявления. Попробуйте позже.");
     }
   };
+
 
   return (
     <div className="space-y-6">
@@ -217,13 +342,46 @@ const AvitoSell = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
+              <Label htmlFor="title">Название</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleInputChange("title", e.target.value)}
+                placeholder="Введите название"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="description">Описание</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange("description", e.target.value)}
+                placeholder="Введите описание"
+                required
+                rows={4}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="price">Цена</Label>
+              <Input
+                id="price"
+                type="number"
+                value={formData.price}
+                onChange={(e) => handleInputChange("price", e.target.value)}
+                placeholder="Введите цену"
+                required
+              />
+            </div>
+
+            <div>
               <Label htmlFor="category">Категория</Label>
               <Select
                 value={formData.category}
-                onValueChange={(v) => {
-                  handleInputChange("category", v);
-                  handleInputChange("subcategory", "");
-                }}
+                onValueChange={(value) => handleInputChange("category", value)}
+                required
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Выберите категорию" />
@@ -238,106 +396,42 @@ const AvitoSell = () => {
               </Select>
             </div>
 
-            {formData.category && (
-              <div>
-                <Label htmlFor="subcategory">Подкатегория</Label>
+            {/* Подкатегории по уровням */}
+            {subcategoryLevels.map((levelSubcats, idx) => (
+              <div key={idx}>
+                <Label>Подкатегория (уровень {idx + 1})</Label>
                 <Select
-                  value={formData.subcategory}
-                  onValueChange={(v) => handleInputChange("subcategory", v)}
+                  value={subcategoryPath[idx] || ""}
+                  onValueChange={(value) => handleSubcategorySelect(idx, value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Выберите подкатегорию" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories
-                      .find((cat) => cat.slug === formData.category)
-                      ?.subcategories.map((sub) => (
-                        <SelectItem key={sub.slug} value={sub.slug}>
-                          {sub.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            <div>
-              <Label htmlFor="title">Название</Label>
-              <Input
-                id="title"
-                placeholder="Например: iPhone 14 Pro 128GB"
-                value={formData.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="description">Описание</Label>
-              <Textarea
-                id="description"
-                rows={4}
-                placeholder="Расскажите подробнее..."
-                value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="condition">Состояние</Label>
-                <Select
-                  value={formData.condition}
-                  onValueChange={(v) => handleInputChange("condition", v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите состояние" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {conditions.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
+                    {levelSubcats.map((subcat) => (
+                      <SelectItem key={subcat.slug} value={subcat.slug}>
+                        {subcat.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+            ))}
 
-              <div>
-                <Label htmlFor="price">Цена, ₽</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  placeholder="0"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange("price", e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Location picker */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Местоположение</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="cityId">Город</Label>
+              <Label htmlFor="condition">Состояние</Label>
               <Select
-                value={formData.cityId}
-                onValueChange={(v) => handleInputChange("cityId", v)}
+                value={formData.condition}
+                onValueChange={(value) => handleInputChange("condition", value)}
+                required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Выберите город" />
+                  <SelectValue placeholder="Выберите состояние" />
                 </SelectTrigger>
                 <SelectContent>
-                  {cities.map((city) => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name}, {city.region}
+                  {conditions.map((cond) => (
+                    <SelectItem key={cond} value={cond}>
+                      {cond}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -345,26 +439,106 @@ const AvitoSell = () => {
             </div>
 
             <div>
-              <Label htmlFor="address">Адрес (опционально)</Label>
+              <Label htmlFor="cityId">Город</Label>
+              <Select
+                value={formData.cityId}
+                onValueChange={(value) => handleInputChange("cityId", value)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities.map((city) => (
+                    <SelectItem key={city.id} value={city.id}>
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="address">Адрес</Label>
               <Input
                 id="address"
-                placeholder="Улица, дом, квартира и т.п."
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
+                placeholder="Введите адрес"
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Actions */}
-        <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => navigate("/avito")}>
-            Отменить
-          </Button>
-          <Button type="submit" className="bg-green-600 hover:bg-green-700">
-            Опубликовать объявление
-          </Button>
-        </div>
+        {/* Фильтры */}
+        {filters.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Фильтры</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {filters.map((filter) => {
+                switch (filter.type) {
+                  case FilterType.SELECT:
+                  return (
+                      <div key={filter.id}>
+                        <Label>{filter.name}</Label>
+                        <Select
+                          value={selectedFilters[filter.id]?.toString() || ""}
+                          onValueChange={(val) => handleFilterChange(filter.id, val)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={`Выберите ${filter.name}`} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {filter.values.map((val) => (
+                              <SelectItem key={val} value={val}>
+                                {val}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    );
+                  case FilterType.CHECKBOX:
+                    return (
+                      <div key={filter.id} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`filter-${filter.id}`}
+                          checked={!!selectedFilters[filter.id]}
+                          onChange={(e) =>
+                            handleFilterChange(filter.id, e.target.checked)
+                          }
+                        />
+                        <Label htmlFor={`filter-${filter.id}`}>{filter.name}</Label>
+                      </div>
+                    );
+                  
+                  case FilterType.RANGE:
+                    return (
+                      <div key={filter.id}>
+                        <Label>{filter.name}</Label>
+                        <Input
+                          type="number"
+                          value={selectedFilters[filter.id]?.toString() || ""}
+                          onChange={(e) =>
+                            handleFilterChange(filter.id, Number(e.target.value))
+                          }
+                        />
+                      </div>
+                    );
+                  default:
+                    return null;
+                }
+              })}
+            </CardContent>
+          </Card>
+        )}
+
+        <Button type="submit" className="w-full">
+          Опубликовать
+        </Button>
       </form>
     </div>
   );

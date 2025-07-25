@@ -10,50 +10,63 @@ import type { Review, Ad } from "@/lib/types";
 
 const AvitoProfileMain = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [adsCount, setAdsCount] = useState({ active: 0, inactive: 0 });
   const [reviews, setReviews] = useState<Review[]>([]);
   const [recentAds, setRecentAds] = useState<Ad[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
-      if (!user) return;
+    if (!authLoading && user) {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const [ads, adsCountRes] = await Promise.all([
+            storeApi.getUserAds(user.id),
+            storeApi.countUserAds(user.id),
+          ]);
 
-      try {
-        const [userReviews, userAds, adsCountRes] = await Promise.all([
-          storeApi.getReviewsByUserId(user.id),
-          storeApi.getUserAds(user.id),
-          storeApi.countUserAds(user.id),
-        ]);
+          const reviewsArrays = await Promise.all(
+            ads.map((ad) => storeApi.getReviewsByAdId(ad.id))
+          );
+          const allReviews = reviewsArrays.flat();
 
-        setAdsCount(adsCountRes);
-        setReviews(userReviews);
-        setRecentAds(userAds.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 3));
-      } catch (e) {
-        console.error("Ошибка загрузки данных профиля", e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+          setReviews(allReviews);
+          setAdsCount(adsCountRes);
 
-    loadData();
-  }, [user]);
+          const sortedAds = [...ads].sort(
+            (a, b) =>
+              new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+          );
+          setRecentAds(sortedAds.slice(0, 3));
+        } catch (err: any) {
+          setError(err.message || "Ошибка загрузки данных");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  if (!user || isLoading) return null;
+      fetchData();
+    } else if (!authLoading && !user) {
+      setReviews([]);
+      setLoading(false);
+    }
+  }, [user, authLoading]);
+
+  if (authLoading || loading) return <div>Загрузка...</div>;
+  if (error) return <div className="text-red-600">Ошибка: {error}</div>;
 
   const averageRating =
     reviews.length > 0
-      ? (
-          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        ).toFixed(1)
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
       : "—";
 
   const userStats = [
     {
       label: "Баланс",
-      value: `${user.balance} ₽`,
+      value: `${user?.balance ?? 0} ₽`,
       icon: "Money",
       color: "text-green-600",
     },
@@ -77,27 +90,28 @@ const AvitoProfileMain = () => {
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start space-x-6">
-            {user.photoUrl ? (
-            <img
-              src={user.photoUrl}
-              alt="Аватар пользователя"
-              className="w-24 h-24 rounded-full object-cover mb-4 border border-gray-300"
-            />
-          ) : (
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Icon name="User" size={32} className="text-white" />
-            </div>
-          )}
+            {user?.photoUrl ? (
+              <img
+                src={user.photoUrl}
+                alt="Аватар пользователя"
+                className="w-24 h-24 rounded-full object-cover mb-4 border border-gray-300"
+              />
+            ) : (
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Icon name="User" size={32} className="text-white" />
+              </div>
+            )}
+
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                {user.firstName} {user.lastName}
+                {user?.firstName} {user?.lastName}
               </h1>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span className="flex items-center">
                   <Icon name="Mail" size={16} className="mr-1" />
-                  {user.email}
+                  {user?.email}
                 </span>
-                {user.status === "ACTIVE" && (
+                {user?.status === "ACTIVE" && (
                   <Badge variant="secondary" className="bg-green-100 text-green-700">
                     <Icon name="Shield" size={12} className="mr-1" />
                     Проверен
@@ -106,7 +120,7 @@ const AvitoProfileMain = () => {
               </div>
               <div
                 className="flex items-center space-x-2 cursor-pointer hover:opacity-80"
-                onClick={() => navigate("/avito/profile/reviews")}
+                onClick={() => navigate("/profile/reviews")}
               >
                 <div className="flex text-yellow-400">
                   {[...Array(5)].map((_, i) => (
@@ -123,8 +137,9 @@ const AvitoProfileMain = () => {
                 </span>
               </div>
             </div>
+
             <Button
-              onClick={() => navigate("/avito/profile/settings")}
+              onClick={() => navigate("/profile/settings")}
               className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
             >
               Редактировать профиль
@@ -162,7 +177,7 @@ const AvitoProfileMain = () => {
             <Button
               variant="outline"
               className="h-16 flex-col space-y-2 border-blue-200 text-blue-600 hover:bg-blue-50"
-              onClick={() => navigate("/avito/sell")}
+              onClick={() => navigate("/profile/sell")}
             >
               <Icon name="Plus" size={24} />
               <span>Подать объявление</span>
@@ -170,7 +185,7 @@ const AvitoProfileMain = () => {
             <Button
               variant="outline"
               className="h-16 flex-col space-y-2 border-purple-200 text-purple-600 hover:bg-purple-50"
-              onClick={() => navigate("/avito/profile/ads")}
+              onClick={() => navigate("/profile/ads")}
             >
               <Icon name="Package" size={24} />
               <span>Мои объявления</span>
@@ -178,7 +193,7 @@ const AvitoProfileMain = () => {
             <Button
               variant="outline"
               className="h-16 flex-col space-y-2 border-blue-200 text-blue-600 hover:bg-blue-50"
-              onClick={() => navigate("/avito/profile/messages")}
+              onClick={() => navigate("/profile/messages")}
             >
               <Icon name="MessageCircle" size={24} />
               <span>Сообщения</span>

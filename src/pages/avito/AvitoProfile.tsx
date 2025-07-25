@@ -10,54 +10,62 @@ import AvitoProfileFavorites from "@/components/avito/profile/AvitoProfileFavori
 import AvitoProfileReviews from "@/components/avito/profile/AvitoProfileReviews";
 import AvitoProfileSettings from "@/components/avito/profile/AvitoProfileSettings";
 import AvitoSell from "@/components/avito/profile/AvitoSell";
+import AvitoProfileGamePage from "@/components/avito/profile/AvitoProfileGamePage";
+import AdStatistics from "@/components/avito/profile/AdStatistics";
+import { Helmet } from "react-helmet-async";
+import { useAuth } from "@/hooks/useAuth";
+import { TemplateKeys, usePageTitle } from "@/hooks/usePageTitle";
 
 const AvitoProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+  const { getPageTitle, settings } = usePageTitle();
 
   const menuItems = [
-    { id: "", label: "Профиль", icon: "User", path: "/avito/profile" },
-    {
-      id: "ads",
-      label: "Мои объявления",
-      icon: "Package",
-      path: "/avito/profile/ads",
-      count: 3,
-    },
-    {
-      id: "messages",
-      label: "Сообщения",
-      icon: "MessageCircle",
-      path: "/avito/profile/messages",
-      count: 2,
-    },
-    {
-      id: "favorites",
-      label: "Избранное",
-      icon: "Heart",
-      path: "/avito/profile/favorites",
-      count: 5,
-    },
-    {
-      id: "settings",
-      label: "Настройки",
-      icon: "Settings",
-      path: "/avito/profile/settings",
-    },
+    { id: "", label: "Профиль", icon: "User", path: "/profile" },
+    { id: "ads", label: "Мои объявления", icon: "Package", path: "/profile/ads", count: 3 },
+    { id: "messages", label: "Сообщения", icon: "MessageCircle", path: "/profile/messages", count: 2 },
+    { id: "favorites", label: "Избранное", icon: "Heart", path: "/profile/favorites", count: 5 },
+    { id: "game", label: "Игра", icon: "Game", path: "/profile/game", count: 2 },
+    { id: "settings", label: "Настройки", icon: "Settings", path: "/profile/settings" },
   ];
 
-  const isActive = (path: string) => {
-    if (path === "/avito/profile") {
-      return location.pathname === "/avito/profile";
-    }
-    return location.pathname.startsWith(path);
+  const isActive = (path: string) =>
+    path === "/profile"
+      ? location.pathname === "/profile"
+      : location.pathname.startsWith(path);
+
+  const getTitleTemplateKey = (): TemplateKeys | null => {
+    const path = location.pathname;
+  
+    if (path === "/profile") return "profileMain";
+    if (path.startsWith("/profile/ads")) return "profileAds";
+    if (path.startsWith("/profile/messages")) return "profileMessages";
+    if (path.startsWith("/profile/favorites")) return "profileFavorites";
+    if (path.startsWith("/profile/game")) return "profileGame";
+    if (path.startsWith("/profile/settings")) return "profileSettings";
+    if (path.startsWith("/profile/sell")) return "profileNewAd";
+    return null;
   };
 
+  const titleKey = getTitleTemplateKey();
+  const title =
+    titleKey && settings
+      ? getPageTitle(titleKey, {
+          profilename: user?.firstName || user?.lastName || "Пользователь",
+        })
+      : "Личный кабинет";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+
       <AvitoHeader />
 
-      <div className="bg-white">
+      <main className="flex-grow bg-white">
         <div className="max-w-[94rem] mx-auto px-6 sm:px-8 lg:px-12 pt-10 pb-6">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
@@ -100,20 +108,22 @@ const AvitoProfile = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1">
+            <section className="flex-1">
               <Routes>
                 <Route index element={<AvitoProfileMain />} />
                 <Route path="sell" element={<AvitoSell />} />
                 <Route path="ads" element={<AvitoProfileAds />} />
+                <Route path="game" element={<AvitoProfileGamePage />} />
                 <Route path="messages" element={<AvitoProfileMessages />} />
                 <Route path="favorites" element={<AvitoProfileFavorites />} />
                 <Route path="reviews" element={<AvitoProfileReviews />} />
                 <Route path="settings" element={<AvitoProfileSettings />} />
+                <Route path=":adId/statistic" element={<AdStatistics />} />
               </Routes>
-            </main>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
 
       <AvitoFooter />
     </div>

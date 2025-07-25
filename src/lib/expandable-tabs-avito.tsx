@@ -31,37 +31,31 @@ interface ExpandableTabsProps {
   className?: string;
   activeColor?: string;
   defaultTabId?: string;
-  activeIndex?: number | null;              // новый проп для контроля активного таба
+  activeIndex?: number | null;
   onChange?: (index: number | null) => void;
+  isGuest?: boolean;
 }
-
-const buttonVariants = {
-  initial: {
-    gap: 0,
-    paddingLeft: ".5rem",
-    paddingRight: ".5rem",
-  },
-  animate: (isSelected: boolean) => ({
-    gap: isSelected ? ".5rem" : 0,
-    paddingLeft: isSelected ? "1rem" : ".5rem",
-    paddingRight: isSelected ? "1rem" : ".5rem",
-  }),
-};
 
 const spanVariants = {
   initial: { width: 0, opacity: 0 },
-  animate: (isSelected: boolean) => ({
-    width: isSelected ? "auto" : 0,
-    opacity: isSelected ? 1 : 0,
+  animate: (show: boolean) => ({
+    width: show ? "auto" : 0,
+    opacity: show ? 1 : 0,
   }),
 };
 
 const ExpandableTabsAvito = React.forwardRef<HTMLDivElement, ExpandableTabsProps>(
   (
-    { tabs, className, activeColor = "#00A046", activeIndex, onChange },
-    ref,
+    {
+      tabs,
+      className,
+      activeColor = "#00A046",
+      activeIndex,
+      onChange,
+      isGuest = false,
+    },
+    ref
   ) => {
-    // Локальный стейт только если activeIndex не контролируется снаружи
     const [selected, setSelected] = React.useState<number | null>(null);
     const divRef = React.useRef<HTMLDivElement>(null);
 
@@ -75,29 +69,26 @@ const ExpandableTabsAvito = React.forwardRef<HTMLDivElement, ExpandableTabsProps
     const currentSelected = activeIndex !== undefined ? activeIndex : selected;
 
     const handleTabClick = (index: number, tab: TabItem) => {
-  if (tab.type === "separator") return;
+      if (tab.type === "separator") return;
 
-  if (currentSelected === index) {
-    // клик по открытому табу - закрыть
-    onChange?.(null);
-    if (activeIndex === undefined) setSelected(null);
-  } else {
-    if (tab.action) tab.action();
-    // НЕ вызываем onChange(null), а вызываем onChange(index)
-    onChange?.(index);
-    if (activeIndex === undefined) setSelected(index);
-  }
-};
+      if (tab.action) tab.action();
 
-
+      if (currentSelected === index) {
+        onChange?.(null);
+        if (activeIndex === undefined) setSelected(null);
+      } else {
+        onChange?.(index);
+        if (activeIndex === undefined) setSelected(index);
+      }
+    };
 
     return (
-      <div className="relative">
+      <div className="relative" ref={ref}>
         <div
           ref={divRef}
           className={cn(
             "flex h-fit items-center rounded-lg border border-white/20 bg-white/10 p-1 shadow-sm backdrop-blur-sm",
-            className,
+            className
           )}
         >
           {tabs.map((tab, index) => {
@@ -113,32 +104,47 @@ const ExpandableTabsAvito = React.forwardRef<HTMLDivElement, ExpandableTabsProps
             const isSelected = currentSelected === index;
             const IconComponent = tab.icon;
 
+            // Для гостей: всегда показываем текст, увеличиваем padding и gap
+            const showText = isGuest || isSelected;
+            const paddingLR = isGuest || isSelected ? "1.25rem" : ".5rem";
+            const gapSize = isGuest || isSelected ? ".75rem" : 0;
+
             return (
               <motion.button
                 key={index}
-                variants={buttonVariants}
                 initial="initial"
                 animate="animate"
-                custom={isSelected}
+                variants={{
+                  initial: {
+                    gap: gapSize,
+                    paddingLeft: paddingLR,
+                    paddingRight: paddingLR,
+                  },
+                  animate: {
+                    gap: gapSize,
+                    paddingLeft: paddingLR,
+                    paddingRight: paddingLR,
+                  },
+                }}
                 onClick={() => handleTabClick(index, tab)}
                 style={{ color: isSelected ? activeColor : undefined }}
                 className={cn(
                   "relative flex items-center rounded-md p-2 text-sm font-medium transition-colors",
-                  isSelected
+                  isSelected || isGuest
                     ? "bg-white/20 text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white",
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
                 )}
                 type="button"
               >
                 <IconComponent size={16} />
                 <AnimatePresence>
-                  {isSelected && (
+                  {showText && (
                     <motion.span
                       variants={spanVariants}
                       initial="initial"
                       animate="animate"
                       exit="initial"
-                      custom={isSelected}
+                      custom={showText}
                       className="overflow-hidden whitespace-nowrap text-sm"
                     >
                       {tab.title}
@@ -150,22 +156,24 @@ const ExpandableTabsAvito = React.forwardRef<HTMLDivElement, ExpandableTabsProps
           })}
         </div>
 
-        {/* Dropdown Content */}
+        {/* Dropdown Content (только для не-гостей) */}
         <AnimatePresence>
-          {currentSelected !== null && tabs[currentSelected]?.content && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full right-0 mt-2 z-50"
-            >
-              {tabs[currentSelected]?.content}
-            </motion.div>
-          )}
+          {!isGuest &&
+            currentSelected !== null &&
+            tabs[currentSelected]?.content && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-full right-0 mt-2 z-50"
+              >
+                {tabs[currentSelected]?.content}
+              </motion.div>
+            )}
         </AnimatePresence>
       </div>
     );
-  },
+  }
 );
 
 ExpandableTabsAvito.displayName = "ExpandableTabsAvito";

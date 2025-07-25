@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // добавлен импорт Textarea
+import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
 import { storeApi } from "@/lib/store";
 import { SystemSettings } from "@/lib/types";
@@ -21,10 +21,22 @@ const SettingsTab = () => {
     siteDescription: "",
     seoTitle: "",
     seoDescription: "",
-    supportEmail: "",
-    maintenanceMode: false,
+    mainPageTitle: "",
+    adTitle: "",
+    userProfile: "",
+    categoryTitle: "",
+    authTitle: "",
+    registerTitle: "",
+    profileMain: "",
+    profileAds: "",
+    profileMessages: "",
+    profileFavorites: "",
+    profileGame: "",
+    profileSettings: "",
+    profileNewAd: "",
     commission: 0,
   });
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -41,6 +53,13 @@ const SettingsTab = () => {
     };
     fetchSettings();
   }, []);
+
+  const handleChange = (field: keyof SystemSettings, value: string | number | boolean) => {
+    setSystemSettings(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const saveSettings = async () => {
     setLoading(true);
@@ -60,7 +79,7 @@ const SettingsTab = () => {
       <Card>
         <CardHeader>
           <CardTitle>Настройки системы</CardTitle>
-          <CardDescription>Основные параметры сайта</CardDescription>
+          <CardDescription>Основные параметры сайта и шаблоны</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -69,13 +88,8 @@ const SettingsTab = () => {
                 <Label htmlFor="siteName">Название сайта</Label>
                 <Input
                   id="siteName"
-                  value={systemSettings.siteName ?? ""}
-                  onChange={(e) =>
-                    setSystemSettings({
-                      ...systemSettings,
-                      siteName: e.target.value,
-                    })
-                  }
+                  value={systemSettings.siteName}
+                  onChange={e => handleChange("siteName", e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -84,13 +98,8 @@ const SettingsTab = () => {
                 <Label htmlFor="siteDescription">Описание сайта</Label>
                 <Textarea
                   id="siteDescription"
-                  value={systemSettings.siteDescription ?? ""}
-                  onChange={(e) =>
-                    setSystemSettings({
-                      ...systemSettings,
-                      siteDescription: e.target.value,
-                    })
-                  }
+                  value={systemSettings.siteDescription}
+                  onChange={e => handleChange("siteDescription", e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -100,13 +109,8 @@ const SettingsTab = () => {
                 <Input
                   id="commission"
                   type="number"
-                  value={systemSettings.commission ?? 0}
-                  onChange={(e) =>
-                    setSystemSettings({
-                      ...systemSettings,
-                      commission: Number(e.target.value),
-                    })
-                  }
+                  value={systemSettings.commission}
+                  onChange={e => handleChange("commission", Number(e.target.value))}
                   disabled={loading}
                 />
               </div>
@@ -117,13 +121,8 @@ const SettingsTab = () => {
                 <Label htmlFor="seoTitle">SEO заголовок</Label>
                 <Input
                   id="seoTitle"
-                  value={systemSettings.seoTitle ?? ""}
-                  onChange={(e) =>
-                    setSystemSettings({
-                      ...systemSettings,
-                      seoTitle: e.target.value,
-                    })
-                  }
+                  value={systemSettings.seoTitle}
+                  onChange={e => handleChange("seoTitle", e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -132,55 +131,140 @@ const SettingsTab = () => {
                 <Label htmlFor="seoDescription">SEO описание</Label>
                 <Textarea
                   id="seoDescription"
-                  value={systemSettings.seoDescription ?? ""}
-                  onChange={(e) =>
-                    setSystemSettings({
-                      ...systemSettings,
-                      seoDescription: e.target.value,
-                    })
-                  }
+                  value={systemSettings.seoDescription}
+                  onChange={e => handleChange("seoDescription", e.target.value)}
                   disabled={loading}
                 />
               </div>
             </div>
           </div>
 
-          <div className="mt-6">
-            <Label htmlFor="supportEmail">Email поддержки</Label>
-            <Input
-              id="supportEmail"
-              type="email"
-              value={systemSettings.supportEmail ?? ""}
-              onChange={(e) =>
-                setSystemSettings({
-                  ...systemSettings,
-                  supportEmail: e.target.value,
-                })
-              }
-              disabled={loading}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="mainPageTitle">Главная страница</Label>
+                <Input
+                  id="mainPageTitle"
+                  value={systemSettings.mainPageTitle}
+                  onChange={e => handleChange("mainPageTitle", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="adTitle">Шаблон объявления</Label>
+                <Input
+                  id="adTitle"
+                  value={systemSettings.adTitle}
+                  onChange={e => handleChange("adTitle", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="userProfile">Шаблон пользователя</Label>
+                <Input
+                  id="userProfile"
+                  value={systemSettings.userProfile}
+                  onChange={e => handleChange("userProfile", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="categoryTitle">Шаблон категории</Label>
+                <Input
+                  id="categoryTitle"
+                  value={systemSettings.categoryTitle}
+                  onChange={e => handleChange("categoryTitle", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="authTitle">Шаблон входа</Label>
+                <Input
+                  id="authTitle"
+                  value={systemSettings.authTitle}
+                  onChange={e => handleChange("authTitle", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="registerTitle">Шаблон регистрации</Label>
+                <Input
+                  id="registerTitle"
+                  value={systemSettings.registerTitle}
+                  onChange={e => handleChange("registerTitle", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="profileMain">Профиль: Главная</Label>
+                <Input
+                  id="profileMain"
+                  value={systemSettings.profileMain}
+                  onChange={e => handleChange("profileMain", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileAds">Профиль: Мои объявления</Label>
+                <Input
+                  id="profileAds"
+                  value={systemSettings.profileAds}
+                  onChange={e => handleChange("profileAds", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileMessages">Профиль: Сообщения</Label>
+                <Input
+                  id="profileMessages"
+                  value={systemSettings.profileMessages}
+                  onChange={e => handleChange("profileMessages", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileFavorites">Профиль: Избранное</Label>
+                <Input
+                  id="profileFavorites"
+                  value={systemSettings.profileFavorites}
+                  onChange={e => handleChange("profileFavorites", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileGame">Профиль: Игра</Label>
+                <Input
+                  id="profileGame"
+                  value={systemSettings.profileGame}
+                  onChange={e => handleChange("profileGame", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileSettings">Профиль: Настройки</Label>
+                <Input
+                  id="profileSettings"
+                  value={systemSettings.profileSettings}
+                  onChange={e => handleChange("profileSettings", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profileNewAd">Профиль: Новое объявление</Label>
+                <Input
+                  id="profileNewAd"
+                  value={systemSettings.profileNewAd}
+                  onChange={e => handleChange("profileNewAd", e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2 mt-6">
-            <input
-              id="maintenanceMode"
-              type="checkbox"
-              checked={systemSettings.maintenanceMode}
-              onChange={(e) =>
-                setSystemSettings({
-                  ...systemSettings,
-                  maintenanceMode: e.target.checked,
-                })
-              }
-              disabled={loading}
-              className="w-4 h-4"
-            />
-            <Label htmlFor="maintenanceMode" className="mb-0 cursor-pointer">
-              Режим обслуживания
-            </Label>
-          </div>
-
-          <Button className="w-full mt-6" onClick={saveSettings} disabled={loading}>
+          <Button className="w-full mt-8" onClick={saveSettings} disabled={loading}>
             <Icon name="Save" className="h-4 w-4 mr-2" />
             Сохранить настройки
           </Button>

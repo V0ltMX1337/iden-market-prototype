@@ -103,11 +103,18 @@ const AvitoProfileReviews = () => {
           <Card key={review.id}>
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
-                <img
-                  src={review.fromUser.photoUrl}
-                  alt={`${review.fromUser.firstName} ${review.fromUser.lastName}`}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                {review.fromUser.photoUrl ? (
+                  <img
+                    src={review.fromUser.photoUrl}
+                    alt={`${review.fromUser.firstName} ${review.fromUser.lastName}`}
+                    className="w-12 h-12 rounded-full object-cover mb-4 border border-gray-300"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <Icon name="User" size={32} className="text-white" />
+                  </div>
+                )}
+                
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
                     <div>

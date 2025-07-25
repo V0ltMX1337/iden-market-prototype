@@ -12,6 +12,8 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { usePageTitle } from "@/hooks/usePageTitle";
+import { Helmet } from "react-helmet-async";
 
 const AvitoLogin = () => {
   const navigate = useNavigate();
@@ -20,6 +22,8 @@ const AvitoLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -27,7 +31,7 @@ const AvitoLogin = () => {
     try {
       const success = await login(email, password);
       if (success) {
-        navigate("/avito");
+        navigate("/");
       } else {
         setError("Неверный email или пароль");
       }
@@ -37,19 +41,32 @@ const AvitoLogin = () => {
   };
 
   const handleLoginAsUser = () => {
-    navigate("/avito");
+    navigate("/");
   };
 
   const handleLogout = async () => {
     await logout();
   };
 
+  // Формируем заголовок
+  const pageTitle =
+   systemSettings
+      ? getPageTitle("authTitle", {})
+      : "Страница авторизации";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta
+          name="description"
+          content={`Авторизация TrivoID. Подробнее на Trivo.`}
+        />
+      </Helmet>
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <Link
-            to="/avito"
+            to="/"
             className="inline-flex items-center text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
           >
             <Icon name="ArrowLeft" size={24} className="mr-3 text-blue-600" />
@@ -105,7 +122,7 @@ const AvitoLogin = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium">
-                    Email или телефон
+                    Email
                   </Label>
                   <Input
                     id="email"
@@ -168,7 +185,7 @@ const AvitoLogin = () => {
                 <p className="text-sm text-gray-600">
                   Нет аккаунта?{" "}
                   <Link
-                    to="/avito/register"
+                    to="/register"
                     className="font-medium text-blue-600 hover:text-blue-500"
                   >
                     Создать TRIVO ID

@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { User, Category, City, SystemSettings, Subcategory, Ad, Review, Message, ChatSummary } from "../lib/types";
+import type { User, Category, City, SystemSettings, Subcategory, Ad, Review, Message, ChatSummary, Track, Video, FilterDefinition } from "../lib/types";
 
-const API_BASE = "http://94.156.112.180:7000";
+const API_BASE = "https://api.trivoads.ru";
 
 export const storeApi = {
   // USERS
@@ -68,6 +68,47 @@ export const storeApi = {
     return res.data;
   },
 
+  async updateAd(id: string, ad: Omit<Ad, "id">): Promise<void> {
+    await axios.put(`${API_BASE}/ads/${id}`, ad);
+  },
+
+  // Получить список id избранных объявлений
+  async getFavorites(userId: string): Promise<string[]> {
+    const res = await axios.get<string[]>(`${API_BASE}/users/${userId}/favorites`, { withCredentials: true });
+    return res.data;
+  },
+
+  // Получить список id объявлений в корзине
+  async getCart(userId: string): Promise<string[]> {
+    const res = await axios.get<string[]>(`${API_BASE}/users/${userId}/cart`, { withCredentials: true });
+    return res.data;
+  },
+
+  // По массиву id получить массив объявлений с типом Ad
+  async getAdsByIds(ids: string[]): Promise<Ad[]> {
+    // Асинхронно забираем каждое объявление
+    const ads = await Promise.all(ids.map(id => this.getAdById(id)));
+    return ads;
+  },
+
+  // Добавление и удаление из избранного и корзины — по твоему коду без изменений
+  async addFavorite(userId: string, adId: string): Promise<void> {
+    await axios.post(`${API_BASE}/users/${userId}/favorites/${adId}`, null, { withCredentials: true });
+  },
+
+  async removeFavorite(userId: string, adId: string): Promise<void> {
+    await axios.delete(`${API_BASE}/users/${userId}/favorites/${adId}`, { withCredentials: true });
+  },
+
+  async addToCart(userId: string, adId: string): Promise<void> {
+    await axios.post(`${API_BASE}/users/${userId}/cart/${adId}`, null, { withCredentials: true });
+  },
+
+  async removeFromCart(userId: string, adId: string): Promise<void> {
+    await axios.delete(`${API_BASE}/users/${userId}/cart/${adId}`, { withCredentials: true });
+  },
+
+  // --- MESSAGES AND CHARTS ---
   async sendMessage(message: Omit<Message, "id" | "timestamp">): Promise<Message> {
     const res = await axios.post(`${API_BASE}/api/messages`, message);
     return res.data;
@@ -109,9 +150,41 @@ export const storeApi = {
     return res.data;
   },
 
-  // CATEGORIES
+  // --- FILTERS ---
+  async getFilters(): Promise<FilterDefinition[]> {
+    const res = await axios.get(`${API_BASE}/filters`, { withCredentials: true });
+    return res.data;
+  },
+  
+  async getFilterById(id: string): Promise<FilterDefinition> {
+    const res = await axios.get(`${API_BASE}/filters/${id}`, { withCredentials: true });
+    return res.data;
+  },
+  
+  async addFilter(filter: Omit<FilterDefinition, "id">): Promise<FilterDefinition> {
+    const res = await axios.post(`${API_BASE}/filters`, filter, { withCredentials: true });
+    return res.data;
+  },
+  
+  async updateFilter(id: string, updates: Partial<FilterDefinition>): Promise<boolean> {
+    await axios.put(`${API_BASE}/filters/${id}`, updates, { withCredentials: true });
+    return true;
+  },
+  
+  async deleteFilter(id: string): Promise<boolean> {
+    await axios.delete(`${API_BASE}/filters/${id}`, { withCredentials: true });
+    return true;
+  },
+
+
+  // --- CATEGORIES ---
   async getCategories(): Promise<Category[]> {
     const res = await axios.get(`${API_BASE}/categories`, { withCredentials: true });
+    return res.data;
+  },
+
+  async getCategoryById(id: string): Promise<Category | undefined> {
+    const res = await axios.get(`${API_BASE}/categories/${id}`, { withCredentials: true });
     return res.data;
   },
 
@@ -121,7 +194,7 @@ export const storeApi = {
   },
 
   async updateCategory(id: string, updates: Partial<Category>): Promise<boolean> {
-    await axios.patch(`${API_BASE}/categories/${id}`, updates, { withCredentials: true });
+    await axios.put(`${API_BASE}/categories/${id}`, updates, { withCredentials: true });
     return true;
   },
 
@@ -130,33 +203,55 @@ export const storeApi = {
     return true;
   },
 
-  async addSubcategory(categoryId: string, subcategory: Subcategory): Promise<boolean> {
-    await axios.post(`${API_BASE}/categories/${categoryId}/subcategories`, subcategory, {
-      withCredentials: true,
-    });
+  // --- SUBCATEGORIES (by ID) ---
+
+  /**
+   * Получить подкатегории, вложенные в parentSubcategoryId (или корневые, если null)
+   */
+  async getSubcategoriesById(categoryId: string, parentSubcategoryId: string | null): Promise<Subcategory[]> {
+    const res = await axios.post(
+      `${API_BASE}/categories/${categoryId}/subcategories/resolve`,
+      { parentSubcategoryId },
+      { withCredentials: true }
+    );
+    return res.data;
+  },
+
+  /**
+   * Добавить подкатегорию внутрь родителя (если parentSubcategoryId = null, то в корень)
+   */
+  async addSubcategoryById(categoryId: string, parentSubcategoryId: string | null, subcategory: Subcategory): Promise<boolean> {
+    await axios.post(
+      `${API_BASE}/categories/${categoryId}/subcategories`,
+      { parentSubcategoryId, subcategory },
+      { withCredentials: true }
+    );
     return true;
   },
 
-  async updateSubcategory(
-    categoryId: string,
-    subcategoryName: string,
-    updates: Subcategory
-  ): Promise<boolean> {
+  /**
+   * Обновить подкатегорию по её ID
+   */
+  async updateSubcategoryById(categoryId: string, subcategoryId: string, updated: Subcategory): Promise<boolean> {
     await axios.put(
-      `${API_BASE}/categories/${categoryId}/subcategories/${encodeURIComponent(subcategoryName)}`,
-      updates,
+      `${API_BASE}/categories/${categoryId}/subcategories/${subcategoryId}`,
+      updated,
       { withCredentials: true }
     );
     return true;
   },
 
-  async deleteSubcategory(categoryId: string, subcategoryName: string): Promise<boolean> {
+  /**
+   * Удалить подкатегорию по её ID
+   */
+  async deleteSubcategoryById(categoryId: string, subcategoryId: string): Promise<boolean> {
     await axios.delete(
-      `${API_BASE}/categories/${categoryId}/subcategories/${encodeURIComponent(subcategoryName)}`,
+      `${API_BASE}/categories/${categoryId}/subcategories/${subcategoryId}`,
       { withCredentials: true }
     );
     return true;
   },
+
 
   // CITIES
   async getCities(): Promise<City[]> {
@@ -211,17 +306,101 @@ export const storeApi = {
     return res.data;
   },
 
+  async getMusic(): Promise<Track[]> {
+    return axios.get(`${API_BASE}/api/music`, {
+      withCredentials: true
+    }).then(res => res.data);
+  },
 
-  // STATS
-  async getStats(): Promise<{
-    totalUsers: number;
-    activeUsers: number;
-    totalCategories: number;
-    totalCities: number;
-    totalRevenue: number;
-    monthlyRevenue: number;
-  }> {
-    const res = await axios.get(`${API_BASE}/stats`, { withCredentials: true });
+  async uploadMusic(formData: FormData): Promise<any> {
+    const res = await axios.post(`${API_BASE}/api/uploadmusic`, formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   },
+
+  async deleteMusic(filename: string): Promise<void> {
+    await axios.delete(`${API_BASE}/api/music/${encodeURIComponent(filename)}`, {
+      withCredentials: true,
+    });
+  },
+
+  async getVideo(): Promise<Video[]> {
+    return axios.get(`${API_BASE}/api/video`, {
+      withCredentials: true
+    }).then(res => res.data);
+  },
+  
+  async uploadVideo(formData: FormData): Promise<any> {
+    const res = await axios.post(`${API_BASE}/api/uploadvideo`, formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  },
+  
+  async deleteVideo(filename: string): Promise<void> {
+    await axios.delete(`${API_BASE}/api/video/${encodeURIComponent(filename)}`, {
+      withCredentials: true,
+    });
+  },
+
+  async fetchVideoFromUrl(url: string): Promise<any> {
+    if (!url || url.trim() === "") {
+      throw new Error("URL is required");
+    }
+
+    const data = new URLSearchParams();
+    data.append("url", url.trim());
+
+    const res = await axios.post(`${API_BASE}/api/fetchvideo`, data, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    return res.data;
+  },
+
+
+  async getVideoDownloadProgress(taskId: string): Promise<{ progress: number }> {
+    const res = await axios.get(`${API_BASE}/api/fetchvideo/progress`, {
+      params: { id: taskId },
+      withCredentials: true,
+    });
+    return res.data;
+  },
+
+
+  // STATS
+async getStats(): Promise<{
+  totalIncome: number;
+  monthlyIncome: number;
+  averageCheck: number;
+  totalUsers: number;
+  newUsersThisMonth: number;
+  averageBalance: number;
+  totalAds: number;
+  activeAds: number;
+  top5ExpensiveAds: Array<{
+    id: string;
+    title: string;
+    price: number;
+    [key: string]: any; // другие возможные поля объявления
+  }>;
+  usersByCity: Record<string, number>;
+  userGrowthLast30Days: Record<string, number>;
+  adsByCategory: Record<string, number>;
+  top5UsersByAds: Array<{
+    userId: string;
+    count: number;
+  }>;
+  avgAdLifetimeDays: number;
+}> {
+  const res = await axios.get(`${API_BASE}/api/admin/stats`, { withCredentials: true });
+  return res.data;
+}
+
 };

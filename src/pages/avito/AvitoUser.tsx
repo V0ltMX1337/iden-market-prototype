@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,27 +18,9 @@ import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
-import type { User, Ad, Review } from "@/lib/types";
-
-interface UserDisplayData {
-  user: User;
-  averageRating: number;
-  reviewCount: number;
-  joinDate: string;
-  responseTime: string;
-  deliveryCount: number;
-  salesCount: number;
-}
-
-interface AdWithStatus extends Ad {
-  status: "active" | "sold" | "archived";
-  isDeliveryAvailable: boolean;
-  isFavorite: boolean;
-  formattedPrice: string;
-  location: string;
-  date: string;
-  image: string;
-}
+import { type User, type Ad, type Review, type UserDisplayData, type AdWithStatus, AdStatus } from "@/lib/types";
+import { Helmet } from "react-helmet-async";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const AvitoUser = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -53,6 +35,7 @@ const AvitoUser = () => {
   const [reviewSortOrder, setReviewSortOrder] = useState("new");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
   const scrollToReviews = () => {
     const reviewsSection = document.getElementById("reviews-section");
@@ -62,56 +45,53 @@ const AvitoUser = () => {
   };
 
   const navigateToAddReview = () => {
-    navigate(`/avito/user/${userId}/addReview`);
+    navigate(`/user/${userId}/addReview`);
   };
 
   useEffect(() => {
     const loadUserData = async () => {
       if (!userId) return;
-
+        
       try {
         setLoading(true);
         setError(null);
-
-        // Параллельная загрузка данных
-        const [user, userAds, userReviews] = await Promise.all([
+      
+        const [user, userAds] = await Promise.all([
           storeApi.getUserById(userId),
           storeApi.getUserAds(userId),
-          storeApi.getReviewsByUserId(userId),
         ]);
-
-        // Обрабатываем данные пользователя
+      
+        // Получаем отзывы по каждому объявлению
+        const reviewsArrays = await Promise.all(
+          userAds.map((ad) => storeApi.getReviewsByAdId(ad.id))
+        );
+        const allReviews = reviewsArrays.flat();
+      
         const averageRating =
-          userReviews.length > 0
-            ? userReviews.reduce((sum, review) => sum + review.rating, 0) /
-              userReviews.length
-            : 0;
-
+          allReviews.reduce((sum, review) => sum + review.rating, 0) /
+          (allReviews.length || 1); // на случай деления на 0
+      
         const joinDate = new Date(user.registrationDate).toLocaleDateString(
           "ru-RU",
           {
             year: "numeric",
             month: "long",
-          },
+          }
         );
-
+      
         const displayData: UserDisplayData = {
           user,
           averageRating: Math.round(averageRating * 10) / 10,
-          reviewCount: userReviews.length,
+          reviewCount: allReviews.length,
           joinDate,
-          responseTime: "30 минут", // Можно добавить в User модель
+          responseTime: "15-30 минут",
           deliveryCount: Math.floor(Math.random() * 10) + 1,
           salesCount: userAds.length,
         };
-
-        setUserDisplayData(displayData);
-
-        // Обрабатываем объявления
+      
         const adsWithStatus: AdWithStatus[] = userAds.map((ad) => ({
           ...ad,
-          status: ad.active ? "active" : "sold",
-          isDeliveryAvailable: Math.random() > 0.5,
+          isDeliveryAvailable: false,
           isFavorite: false,
           formattedPrice: `${ad.price.toLocaleString()} ₽`,
           location: `${ad.city.region}, ${ad.city.name}`,
@@ -120,9 +100,10 @@ const AvitoUser = () => {
             ad.links[0] ||
             "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
         }));
-
+      
+        setUserDisplayData(displayData);
         setAds(adsWithStatus);
-        setReviews(userReviews);
+        setReviews(allReviews); // ✅ правильные отзывы
       } catch (err) {
         console.error("Ошибка загрузки данных пользователя:", err);
         setError("Ошибка загрузки данных пользователя");
@@ -135,16 +116,17 @@ const AvitoUser = () => {
   }, [userId]);
 
   const filteredAds = ads.filter((ad) => {
-    const matchesTab =
-      activeTab === "active" ? ad.status === "active" : ad.status === "sold";
-    const matchesSearch = ad.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
+    if (activeTab === "active") {
+      return ad.adStatus === AdStatus.ACTIVE;
+    } else {
+      return ad.adStatus === AdStatus.SOLD || ad.adStatus === AdStatus.TIME_OUT;
+    }
+  }).filter((ad) =>
+    ad.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const activeCount = ads.filter((ad) => ad.status === "active").length;
-  const soldCount = ads.filter((ad) => ad.status === "sold").length;
+  const activeCount = ads.filter((ad) => ad.adStatus === AdStatus.ACTIVE).length;
+  const soldCount = ads.filter((ad) => ad.adStatus === AdStatus.SOLD || ad.adStatus === AdStatus.TIME_OUT).length;
 
   // Вычисляем распределение оценок
   const ratingDistribution = reviews.reduce(
@@ -161,6 +143,14 @@ const AvitoUser = () => {
     }
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
+
+  // Формируем заголовок
+  const pageTitle =
+    userDisplayData && systemSettings
+      ? getPageTitle("userProfile", {
+          profilename: `${userDisplayData.user.firstName} ${userDisplayData.user.lastName}`,
+        })
+      : "";
 
   if (loading) {
     return (
@@ -188,6 +178,9 @@ const AvitoUser = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+      </Helmet>
       <AvitoHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -248,7 +241,7 @@ const AvitoUser = () => {
                   {userDisplayData.user.email}
                 </div>
                 <div className="text-sm text-gray-600">
-                  На Авито с {userDisplayData.joinDate}
+                  На Trivo с {userDisplayData.joinDate}
                 </div>
               </div>
 
@@ -261,19 +254,19 @@ const AvitoUser = () => {
                 <div className="flex items-center gap-2">
                   <Icon name="ShoppingCart" className="w-4 h-4 text-gray-500" />
                   <span className="text-sm">
-                    {userProfile.deliveryCount} покупок с Авито Доставкой
+                    0 покупок с Trivo Доставкой
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="Package" className="w-4 h-4 text-gray-500" />
                   <span className="text-sm">
-                    {userProfile.salesCount} продажа с Авито Доставкой
+                    0 продажа с Trivo Доставкой
                   </span>
                 </div>
               </div>
 
               <div className="text-sm text-gray-600 mb-6">
-                Отвечает около {userProfile.responseTime}
+                Отвечает около 30 минут
               </div>
 
               <div className="space-y-3">
@@ -340,6 +333,7 @@ const AvitoUser = () => {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredAds.map((ad) => (
+                      <Link to={`/product/${ad.id}`}>
                       <Card
                         key={ad.id}
                         className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
@@ -388,6 +382,7 @@ const AvitoUser = () => {
                           </div>
                         </CardContent>
                       </Card>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -443,14 +438,14 @@ const AvitoUser = () => {
         <div className="mt-12" id="reviews-section">
           <Card className="p-6">
             <h2 className="text-2xl font-bold mb-6">
-              Отзывы о {userProfile.name}
+              Отзывы о {userDisplayData.user.firstName} {userDisplayData.user.lastName}
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               {/* Рейтинг и статистика */}
               <div>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="text-5xl font-bold">{userProfile.rating}</div>
+                  <div className="text-5xl font-bold">{userDisplayData.averageRating}</div>
                   <div>
                     <div className="flex items-center gap-1 mb-1">
                       {[...Array(5)].map((_, i) => (
@@ -458,7 +453,7 @@ const AvitoUser = () => {
                           key={i}
                           name="Star"
                           className={`w-5 h-5 ${
-                            i < Math.floor(userProfile.rating)
+                            i < Math.floor(userDisplayData.averageRating)
                               ? "text-yellow-400 fill-current"
                               : "text-gray-300"
                           }`}
@@ -466,7 +461,7 @@ const AvitoUser = () => {
                       ))}
                     </div>
                     <div className="text-sm text-gray-600">
-                      на основании {userProfile.reviewCount} оценок
+                      на основании {userDisplayData.reviewCount} оценок
                     </div>
                   </div>
                 </div>
@@ -497,7 +492,7 @@ const AvitoUser = () => {
                             (ratingDistribution[
                               stars as keyof typeof ratingDistribution
                             ] /
-                              userProfile.reviewCount) *
+                              userDisplayData.reviewCount) *
                             100
                           }
                           className="h-2"
@@ -553,26 +548,41 @@ const AvitoUser = () => {
                   className="border-b border-gray-200 pb-6 last:border-b-0"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      {review.userAvatar.startsWith("http") ? (
+                    {review.fromUser.photoUrl ? (
                         <img
-                          src={review.userAvatar}
-                          alt={review.userName}
-                          className="w-10 h-10 rounded-full object-cover"
+                          src={review.fromUser.photoUrl}
+                          alt={`${review.fromUser.firstName} ${review.fromUser.lastName}`}
+                          className="w-12 h-12 rounded-full object-cover mb-4 border border-gray-300"
                         />
                       ) : (
-                        <span className="text-white font-medium">
-                          {review.userAvatar}
-                        </span>
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                          <Icon name="User" size={32} className="text-white" />
+                        </div>
                       )}
-                    </div>
                     <div className="flex-1">
+                      <Link to={`/user/${review.fromUser.id}`}>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-medium">{review.userName}</span>
+                        <span className="font-medium">{review.fromUser.firstName} {review.fromUser.lastName} </span>
                         <span className="text-sm text-gray-500">
-                          {review.date}
+                          {review.createdAt}
                         </span>
                       </div>
+                      </Link>
+                      {review.ad && (
+                        <Link
+                          to={`/product/${review.ad.id}`}
+                          className="flex items-center gap-3 mb-3 group"
+                        >
+                          <img
+                            src={review.ad.links[0]}
+                            alt={review.ad.title}
+                            className="w-12 h-12 rounded-md object-cover"
+                          />
+                          <span className="text-sm font-medium text-blue-600 group-hover:underline line-clamp-2">
+                            {review.ad.title}
+                          </span>
+                        </Link>
+                      )}
                       <div className="flex items-center gap-1 mb-2">
                         {[...Array(5)].map((_, i) => (
                           <Icon
@@ -585,9 +595,6 @@ const AvitoUser = () => {
                             }`}
                           />
                         ))}
-                      </div>
-                      <div className="text-sm text-gray-600 mb-3">
-                        {review.dealInfo}
                       </div>
                       <div className="text-gray-900">{review.comment}</div>
                     </div>

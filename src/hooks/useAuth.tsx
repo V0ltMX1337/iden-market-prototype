@@ -11,12 +11,12 @@ interface AuthContextType {
   isModerator: () => boolean;
 }
 
-axios.defaults.baseURL = "http://94.156.112.180:7000";
+axios.defaults.baseURL = "https://api.trivoads.ru";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = "http://94.156.112.180:7000";
+const API_BASE = "https://api.trivoads.ru";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);

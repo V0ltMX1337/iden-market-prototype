@@ -19,15 +19,15 @@ const ProtectedRoute = ({
   }
 
   if (!user) {
-    return <Navigate to="/avito/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (requireAdmin && !isAdmin()) {
-    return <Navigate to="/avito" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (requireModerator && !isModerator()) {
-    return <Navigate to="/avito" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

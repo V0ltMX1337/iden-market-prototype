@@ -3,12 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-}
+import { useNavigate } from "react-router-dom";
+import type { Category } from "@/lib/types";
 
 interface AvitoCategorySwiperProps {
   products: Category[];
@@ -17,6 +13,8 @@ interface AvitoCategorySwiperProps {
 const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
   products,
 }) => {
+  const navigate = useNavigate();
+
   const swiperStyles = `
     .swiper-button-next,
     .swiper-button-prev {
@@ -39,7 +37,7 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
     .swiper-button-next:hover,
     .swiper-button-prev:hover {
       color: #2563eb !important;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5x rgba(0, 0, 0, 0.04) !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     }
 
     .swiper-button-next::after,
@@ -57,9 +55,9 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
     }
   `;
 
-  const handleCategoryClick = (categoryId: string) => {
-    console.log("Выбрана категория:", categoryId);
-    // Здесь будет переход к объявлениям категории
+  const handleCategoryClick = (category: Category) => {
+    // Навигация по slug
+    navigate(`/category/${category.slug}`);
   };
 
   return (
@@ -90,16 +88,16 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
             }}
             className="!pb-2"
           >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
+            {products.map((category) => (
+              <SwiperSlide key={category.id}>
                 <div
                   className="bg-gray-50 rounded-2xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group/card h-32 flex flex-col items-center justify-center"
-                  onClick={() => handleCategoryClick(product.id)}
+                  onClick={() => handleCategoryClick(category)}
                 >
                   <div className="w-12 h-12 mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={category.icon}
+                      alt={category.name}
                       className="w-8 h-8 object-cover rounded-full"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -109,11 +107,11 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
                       }}
                     />
                     <span className="text-white text-xs font-medium hidden">
-                      {product.name.charAt(0)}
+                      {category.name.charAt(0)}
                     </span>
                   </div>
                   <h3 className="text-sm font-medium text-gray-900 text-center line-clamp-2">
-                    {product.name}
+                    {category.name}
                   </h3>
                 </div>
               </SwiperSlide>
