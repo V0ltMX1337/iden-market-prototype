@@ -117,21 +117,23 @@ const AvitoProfileAds = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Мои объявления</h1>
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-3 md:space-y-0">
+        <h1 className="text-lg md:text-2xl font-bold">Мои объявления</h1>
         <Button
-          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white w-full md:w-auto"
           onClick={() => (window.location.href = "/profile/sell")}
+          size="sm"
         >
-          <Icon name="Plus" size={16} className="mr-2" />
-          Подать объявление
+          <Icon name="Plus" size={14} className="mr-2" />
+          <span className="md:hidden">Подать</span>
+          <span className="hidden md:inline">Подать объявление</span>
         </Button>
       </div>
 
-      <div className="flex space-x-4 border-b border-gray-200 mb-4">
+      <div className="flex space-x-2 md:space-x-4 border-b border-gray-200 mb-4 overflow-x-auto">
         <button
-          className={`py-2 px-4 font-semibold ${
+          className={`py-2 px-3 md:px-4 font-semibold text-sm md:text-base whitespace-nowrap ${
             activeTab === "active"
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-blue-600"
@@ -141,7 +143,7 @@ const AvitoProfileAds = () => {
           Активные
         </button>
         <button
-          className={`py-2 px-4 font-semibold ${
+          className={`py-2 px-3 md:px-4 font-semibold text-sm md:text-base whitespace-nowrap ${
             activeTab === "sold"
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-blue-600"
@@ -151,7 +153,7 @@ const AvitoProfileAds = () => {
           Проданные
         </button>
         <button
-          className={`py-2 px-4 font-semibold ${
+          className={`py-2 px-3 md:px-4 font-semibold text-sm md:text-base whitespace-nowrap ${
             activeTab === "needs_action"
               ? "border-b-2 border-red-600 text-red-600"
               : "text-gray-600 hover:text-red-600"
@@ -162,18 +164,21 @@ const AvitoProfileAds = () => {
         </button>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-3 md:gap-6">
         {filteredAds.length === 0 && (
-          <p className="text-center text-gray-500">
-            Объявлений в этой категории пока нет.
-          </p>
+          <div className="text-center text-gray-500 py-8">
+            <Icon name="Package" size={48} className="mx-auto mb-4 text-gray-300" />
+            <p className="text-sm md:text-base">
+              Объявлений в этой категории пока нет.
+            </p>
+          </div>
         )}
         {filteredAds.map((ad) => (
           <Card key={ad.id}>
-            <CardContent className="p-6">
-              <div className="flex gap-6">
+            <CardContent className="p-3 md:p-6">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-6">
                 <div
-                  className="w-32 h-24 flex-shrink-0 cursor-pointer"
+                  className="w-full h-32 md:w-32 md:h-24 flex-shrink-0 cursor-pointer"
                   onClick={() => navigate(`/ad/${ad.id}`)}
                 >
                   <img
@@ -183,36 +188,36 @@ const AvitoProfileAds = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex flex-col md:flex-row md:items-start justify-between mb-2 space-y-2 md:space-y-0">
                     <h3
-                      className="text-lg font-semibold cursor-pointer hover:underline"
+                      className="text-base md:text-lg font-semibold cursor-pointer hover:underline line-clamp-2"
                       onClick={() => navigate(`/product/${ad.id}`)}
                     >
                       {ad.title}
                     </h3>
-                    <Badge className={getStatusColor(ad.adStatus)}>
+                    <Badge className={`${getStatusColor(ad.adStatus)} text-xs md:text-sm w-fit`}>
                       {getStatusText(ad.adStatus)}
                     </Badge>
                   </div>
-                  <p className="text-2xl font-bold text-green-600 mb-3">
+                  <p className="text-lg md:text-2xl font-bold text-green-600 mb-2 md:mb-3">
                     {ad.price.toLocaleString()} ₽
                   </p>
-                  <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
+                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-xs md:text-sm text-gray-600 mb-3 md:mb-4">
                     <span className="flex items-center">
-                      <Icon name="Eye" size={14} className="mr-1" />
+                      <Icon name="Eye" size={12} className="mr-1" />
                       {ad.views} просмотров
                     </span>
                     <span className="flex items-center">
-                      <Icon name="Heart" size={14} className="mr-1" />
+                      <Icon name="Heart" size={12} className="mr-1" />
                       {ad.favoritesCount} в избранном
                     </span>
                     <span>{formatDate(ad.publishedAt)}</span>
                   </div>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="grid grid-cols-2 md:flex gap-2 md:flex-wrap">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                      className="border-blue-200 text-blue-600 hover:bg-blue-50 text-xs md:text-sm"
                       onClick={() => navigate(`/profile/edit/${ad.id}`)}
                     >
                       Редактировать
@@ -221,7 +226,7 @@ const AvitoProfileAds = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(`/profile/${ad.id}/statistic`)}
-                      className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                      className="border-purple-200 text-purple-600 hover:bg-purple-50 text-xs md:text-sm"
                     >
                       Статистика
                     </Button>
@@ -230,7 +235,7 @@ const AvitoProfileAds = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleRemoveFromSale(ad.id)}
-                        className="border-red-200 text-red-600 hover:bg-red-50"
+                        className="border-red-200 text-red-600 hover:bg-red-50 text-xs md:text-sm col-span-2 md:col-span-1"
                       >
                         Снять с продажи
                       </Button>
@@ -240,7 +245,7 @@ const AvitoProfileAds = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleExtendAd(ad.id)}
-                        className="border-green-200 text-green-600 hover:bg-green-50"
+                        className="border-green-200 text-green-600 hover:bg-green-50 text-xs md:text-sm col-span-2 md:col-span-1"
                       >
                         Продлить
                       </Button>

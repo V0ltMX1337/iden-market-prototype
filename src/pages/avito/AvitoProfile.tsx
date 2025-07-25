@@ -3,6 +3,10 @@ import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
+import { useState, useEffect } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 import AvitoProfileMain from "@/components/avito/profile/AvitoProfileMain";
 import AvitoProfileAds from "@/components/avito/profile/AvitoProfileAds";
 import AvitoProfileMessages from "@/components/avito/profile/AvitoProfileMessages";
@@ -21,6 +25,18 @@ const AvitoProfile = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { getPageTitle, settings } = usePageTitle();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const menuItems = [
     { id: "", label: "Профиль", icon: "User", path: "/profile" },
@@ -66,10 +82,70 @@ const AvitoProfile = () => {
       <AvitoHeader />
 
       <main className="flex-grow bg-white">
-        <div className="max-w-[94rem] mx-auto px-6 sm:px-8 lg:px-12 pt-10 pb-6">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Sidebar */}
-            <aside className="lg:w-64 flex-shrink-0">
+        <div className="max-w-[94rem] mx-auto px-3 md:px-6 lg:px-12 pt-4 md:pt-10 pb-6">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden mb-4">
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                    <Menu className="w-4 h-4" />
+                    Меню профиля
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-80">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center justify-between text-left">
+                      Меню профиля
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <nav className="space-y-2 mt-6">
+                    {menuItems.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          navigate(item.path);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-3 text-left transition-colors group rounded-lg ${
+                          isActive(item.path)
+                            ? "text-blue-600 bg-blue-50"
+                            : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon
+                            name={item.icon as any}
+                            size={18}
+                            className={`${
+                              isActive(item.path)
+                                ? "text-blue-600"
+                                : "text-purple-500"
+                            }`}
+                          />
+                          <span className="font-medium text-sm">{item.label}</span>
+                        </div>
+                        {item.count && (
+                          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                            {item.count}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+            {/* Desktop Sidebar */}
+            <aside className="hidden lg:block lg:w-64 flex-shrink-0">
               <Card className="border-0 shadow-sm">
                 <CardContent className="p-6">
                   <nav className="space-y-2">
