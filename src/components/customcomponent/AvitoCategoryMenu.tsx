@@ -25,7 +25,7 @@ const SubcategoryList = ({
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setHoveredIndex(null), 100);
+    timeoutRef.current = setTimeout(() => setHoveredIndex(null), 200);
   };
 
   return (
@@ -50,10 +50,19 @@ const SubcategoryList = ({
 
             {hasChildren && hoveredIndex === idx && (
               <div
-                className="absolute top-0 left-full ml-2 md:ml-4 w-[250px] md:w-[300px] bg-white border border-gray-200 rounded-lg shadow-xl p-3 md:p-4"
-                style={{ zIndex: 200 + idx }}
-                onMouseEnter={() => handleMouseEnter(idx)}
-                onMouseLeave={handleMouseLeave}
+                className="absolute top-0 left-full ml-2 md:ml-4 w-[250px] md:w-[300px] bg-white border border-gray-200 rounded-lg shadow-xl p-3 md:p-4 pointer-events-auto"
+                style={{ 
+                  zIndex: 2000 + idx,
+                  position: 'absolute',
+                  transform: 'translateZ(0)'
+                }}
+                onMouseEnter={() => {
+                  if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                  setHoveredIndex(idx);
+                }}
+                onMouseLeave={() => {
+                  timeoutRef.current = setTimeout(() => setHoveredIndex(null), 200);
+                }}
               >
                 <SubcategoryList
                   subcategories={subcat.children ?? []} // если undefined, передаём пустой массив
@@ -93,7 +102,7 @@ export const AvitoCategoryMenu = ({ categories }: AvitoCategoryMenuProps) => {
 
   const handleMouseLeave = () => {
     if (isMobile) return;
-    timeoutRef.current = setTimeout(() => setHoveredIndex(null), 150);
+    timeoutRef.current = setTimeout(() => setHoveredIndex(null), 300);
   };
 
   const handleClick = (index: number) => {
@@ -139,14 +148,20 @@ export const AvitoCategoryMenu = ({ categories }: AvitoCategoryMenuProps) => {
               {/* Desktop подменю */}
               {!isMobile && isOpen && hasSubcategories && (
                 <div
-                  className="absolute top-0 left-full ml-2 w-[350px] md:w-[400px] bg-white border border-gray-200 rounded-lg shadow-2xl p-4 md:p-6 transition-all duration-300 ease-out overflow-visible"
+                  className="absolute top-0 left-full ml-2 w-[350px] md:w-[400px] bg-white border border-gray-200 rounded-lg shadow-2xl p-4 md:p-6 pointer-events-auto"
                   style={{ 
-                    zIndex: 1000 + index,
-                    position: 'absolute',
-                    willChange: 'transform'
+                    zIndex: 10000 + index,
+                    position: 'fixed',
+                    transform: 'translateZ(0)',
+                    isolation: 'isolate'
                   }}
-                  onMouseEnter={() => handleMouseEnter(index)}
-                  onMouseLeave={handleMouseLeave}
+                  onMouseEnter={() => {
+                    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                    setHoveredIndex(index);
+                  }}
+                  onMouseLeave={() => {
+                    timeoutRef.current = setTimeout(() => setHoveredIndex(null), 300);
+                  }}
                 >
                   <div className="flex items-center mb-3 md:mb-4 pb-2 md:pb-3 border-b border-gray-100">
                     <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 mr-2 md:mr-3">
@@ -155,7 +170,7 @@ export const AvitoCategoryMenu = ({ categories }: AvitoCategoryMenuProps) => {
                     <span className="text-base md:text-lg font-bold text-gray-800">{category.name}</span>
                   </div>
 
-                  <div style={{ position: 'relative', zIndex: 1000 + index }}>
+                  <div className="relative" style={{ zIndex: 1 }}>
                     <SubcategoryList
                       subcategories={category.subcategories}
                       categorySlug={category.slug}
