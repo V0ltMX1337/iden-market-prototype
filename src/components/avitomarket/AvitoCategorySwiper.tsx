@@ -63,16 +63,16 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: swiperStyles }} />
-      <div className="w-full max-w-[1440px] mx-auto px-8">
-        <div className="group bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Категории</h2>
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
+        <div className="group bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4 md:mb-8">
+            <h2 className="text-lg md:text-2xl font-bold text-gray-900">Категории</h2>
           </div>
 
           <Swiper
             modules={[Autoplay, Navigation]}
-            spaceBetween={24}
-            slidesPerView={1}
+            spaceBetween={16}
+            slidesPerView={2}
             navigation={true}
             loop={products.length > 6}
             autoplay={{
@@ -80,37 +80,38 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
               disableOnInteraction: false,
             }}
             breakpoints={{
-              480: { slidesPerView: 2 },
-              640: { slidesPerView: 3 },
-              768: { slidesPerView: 4 },
-              1024: { slidesPerView: 6 },
-              1200: { slidesPerView: 8 },
+              320: { slidesPerView: 2, spaceBetween: 12 },
+              480: { slidesPerView: 3, spaceBetween: 16 },
+              640: { slidesPerView: 4, spaceBetween: 20 },
+              768: { slidesPerView: 5, spaceBetween: 24 },
+              1024: { slidesPerView: 6, spaceBetween: 24 },
+              1200: { slidesPerView: 8, spaceBetween: 24 },
             }}
             className="!pb-2"
           >
             {products.map((category) => (
               <SwiperSlide key={category.id}>
                 <div
-                  className="bg-gray-50 rounded-2xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group/card h-32 flex flex-col items-center justify-center"
+                  className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group/card h-24 md:h-32 flex flex-col items-center justify-center"
                   onClick={() => handleCategoryClick(category)}
                 >
-                  <div className="w-12 h-12 mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <div className="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                     <img
                       src={category.icon}
                       alt={category.name}
-                      className="w-8 h-8 object-cover rounded-full"
+                      className="w-5 h-5 md:w-8 md:h-8 object-cover rounded-full"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.style.display = "none";
                         target.nextElementSibling!.className =
-                          "text-white text-sm";
+                          "text-white text-xs md:text-sm";
                       }}
                     />
-                    <span className="text-white text-xs font-medium hidden">
+                    <span className="text-white text-xs md:text-xs font-medium hidden">
                       {category.name.charAt(0)}
                     </span>
                   </div>
-                  <h3 className="text-sm font-medium text-gray-900 text-center line-clamp-2">
+                  <h3 className="text-xs md:text-sm font-medium text-gray-900 text-center leading-tight" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {category.name}
                   </h3>
                 </div>
