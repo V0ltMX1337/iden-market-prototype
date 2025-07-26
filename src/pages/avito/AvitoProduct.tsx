@@ -173,7 +173,7 @@ const AvitoProduct = () => {
   // Формируем заголовок
   const pageTitle =
     product && systemSettings && categoryPath.length
-      ? getPageTitle("userProfile", {
+      ? getPageTitle("adTitle", {
           adtitle: product.title,
           adcity: product.city.name,
           categorytitle: categoryPath[categoryPath.length - 1].name,
@@ -284,14 +284,16 @@ const AvitoProduct = () => {
             <ProductInfo
               title={product.title}
               isUsed={product.adSold !== AdSold.NEW}
+              adSold={product.adSold}
               price={product.price}
               city={product.city}
               views={product.views}
               favorites={product.favoritesCount}
               publishedAt={product.publishedAt}
               phone={seller.phone}
-              latitude={55.75}
-              longitude={37.61}
+              latitude={product.latitude}
+              longitude={product.longitude}
+              fullAdress={product.fullAdress}
               onDeliveryClick={() => navigate("/delivery")}
               onChatClick={() => navigate("/profile/chat")}
               onShowPhoneClick={() => navigate("/phone")}

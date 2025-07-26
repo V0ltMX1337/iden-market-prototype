@@ -179,7 +179,7 @@ const AvitoProfileAds = () => {
               <div className="flex flex-col md:flex-row gap-3 md:gap-6">
                 <div
                   className="w-full h-32 md:w-32 md:h-24 flex-shrink-0 cursor-pointer"
-                  onClick={() => navigate(`/ad/${ad.id}`)}
+                  onClick={() => navigate(`/product/${ad.id}`)}
                 >
                   <img
                     src={ad.links[0] || "/placeholder.png"}
@@ -218,7 +218,7 @@ const AvitoProfileAds = () => {
                       variant="outline"
                       size="sm"
                       className="border-blue-200 text-blue-600 hover:bg-blue-50 text-xs md:text-sm"
-                      onClick={() => navigate(`/profile/edit/${ad.id}`)}
+                      onClick={() => navigate(`/profile/${ad.id}/edit`)}
                     >
                       Редактировать
                     </Button>

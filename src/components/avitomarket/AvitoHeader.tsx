@@ -112,7 +112,7 @@ const AvitoHeader = () => {
         <div className="h-auto">
           <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-lg">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-              <div className="flex flex-wrap items-center justify-between h-20 gap-y-4 sm:gap-y-0">
+              <div className="flex items-center justify-between min-h-20 gap-y-4 sm:gap-y-0 relative">
                 {/* Левая часть */}
                 <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0">
                   <DropdownMenu>
@@ -123,7 +123,7 @@ const AvitoHeader = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="start"
-                      className="w-full max-w-xs sm:w-[18rem] bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0"
+                      className="relative z-[9999] w-full max-w-xs sm:w-[18rem] bg-white/95 backdrop-blur-sm border border-gray-200 shadow-2xl rounded-xl p-0 overflow-visible"
                       sideOffset={12}
                     >
                       <div className="px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b border-gray-100 whitespace-nowrap">

@@ -1,17 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDropzone } from "react-dropzone";
-
+import React, { useState, useEffect, useRef } from "react";
+import { useAvitoSellLogic } from "@/hooks/useAvitoSellLogic";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectTrigger,
@@ -19,265 +13,157 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
-import type { Ad, AdFilter, Category, City, FilterDefinition } from "@/lib/types";
-import { AdStatus, AdSold, FilterType } from "@/lib/types";
-import { useAuth } from "@/hooks/useAuth";
-import { storeApi } from "@/lib/store";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { YMaps, Map, Placemark } from "react-yandex-maps";
+import { FilterType } from "@/lib/types";
 
 const AvitoSell = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const {
+    formData,
+    subcategoryPath,
+    subcategoryLevels,
+    categories,
+    cities,
+    photos,
+    filters,
+    selectedFilters,
+    conditions,
+    handleInputChange,
+    handleFilterChange,
+    handleSubcategorySelect,
+    handleSubmit,
+    getRootProps,
+    getInputProps,
+    open,
+    inputRef,
+    isDragActive,
+    setAsMain,
+  } = useAvitoSellLogic();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: "",
-    category: "",
-    condition: "",
-    cityId: "",
-    address: "",
-  });
-
-  const [subcategoryPath, setSubcategoryPath] = useState<string[]>([]);
-  const [subcategoryLevels, setSubcategoryLevels] = useState<
-    Array<{ name: string; slug: string }[]>
-  >([]);
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [photos, setPhotos] = useState<
-    Array<{ file: File; preview: string; isMain: boolean }>
-  >([]);
-
-  const [allFilters, setAllFilters] = useState<FilterDefinition[]>([]);
-  const [filters, setFilters] = useState<FilterDefinition[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<
-    Record<string, string | number | boolean>
-  >({});
-
-  const conditions = [
-    "Новое",
-    "Отличное",
-    "Очень хорошее",
-    "Хорошее",
-    "Удовлетворительное",
-  ];
-
-  const mapConditionToAdSold = (condition: string): AdSold => {
-    switch (condition) {
-      case "Новое":
-        return AdSold.NEW;
-      case "Отличное":
-        return AdSold.OTLICHNOE;
-      case "Очень хорошее":
-        return AdSold.XOROSHEE;
-      case "Хорошее":
-        return AdSold.XOROSHEE;
-      case "Удовлетворительное":
-        return AdSold.YDVORITEL;
-      default:
-        return AdSold.NEW;
-    }
-  };
-
-  useEffect(() => {
-    storeApi.getCategories().then(setCategories);
-    storeApi.getCities().then(setCities);
-    storeApi.getFilters().then(setAllFilters);
-
-    return () => {
-      photos.forEach((p) => URL.revokeObjectURL(p.preview));
-    };
-  }, []);
-
-  useEffect(() => {
-    if (formData.category) {
-      const cat = categories.find((c) => c.slug === formData.category);
-      if (cat) {
-        setSubcategoryPath([]);
-        setSubcategoryLevels([cat.subcategories]);
-      } else {
-        setSubcategoryLevels([]);
-        setSubcategoryPath([]);
-      }
-      setFilters([]);
-      setSelectedFilters({});
-    } else {
-      setSubcategoryLevels([]);
-      setSubcategoryPath([]);
-      setFilters([]);
-      setSelectedFilters({});
-    }
-  }, [formData.category, categories]);
-
-  const findSubcategoryByPath = (
-    subcategories: Category["subcategories"],
-    path: string[]
-  ): Category["subcategories"][0] | undefined => {
-    if (path.length === 0) return undefined;
-    let currentLevel = subcategories;
-    let foundSubcat;
-
-    for (const slug of path) {
-      foundSubcat = currentLevel.find((sub) => sub.slug === slug);
-      if (!foundSubcat) return undefined;
-      currentLevel = foundSubcat.children || [];
-    }
-    return foundSubcat;
-  };
-
-  const handleSubcategorySelect = (levelIndex: number, slug: string) => {
-    const newPath = [...subcategoryPath.slice(0, levelIndex), slug];
-    setSubcategoryPath(newPath);
-
-    const cat = categories.find((c) => c.slug === formData.category);
-    if (!cat) return;
-
-    const currentSubcat = findSubcategoryByPath(cat.subcategories, newPath);
-
-    const children = currentSubcat?.children || [];
-
-    if (children.length > 0) {
-      setSubcategoryLevels((prev) => [
-        ...prev.slice(0, levelIndex + 1),
-        children,
-      ]);
-    } else {
-      setSubcategoryLevels((prev) => prev.slice(0, levelIndex + 1));
-    }
-
-    if (currentSubcat) {
-      const filterDefs = currentSubcat.filters
-        .map((fa) => allFilters.find((f) => f.id === fa.filterId))
-        .filter((f): f is FilterDefinition => f !== undefined);
-
-      setFilters(filterDefs);
-      setSelectedFilters({});
-    } else {
-      setFilters([]);
-      setSelectedFilters({});
-    }
-  };
-
-  const handleFilterChange = (filterId: string, value: any) => {
-    setSelectedFilters((prev) => ({ ...prev, [filterId]: value }));
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const mapped = acceptedFiles.map((file, idx) => ({
-        file,
-        preview: URL.createObjectURL(file),
-        isMain: photos.length + idx === 0,
-      }));
-      setPhotos((prev) => [...prev, ...mapped]);
-    },
-    [photos]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { "image/*": [] },
-  });
-
-  const setAsMain = (index: number) => {
-    setPhotos((prev) =>
-      prev.map((p, i) => ({ ...p, isMain: i === index }))
-    );
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!user) {
-      alert("Пожалуйста, войдите в систему для публикации объявления.");
-      return;
-    }
-
-    const requiredFields = [
-      formData.title,
-      formData.description,
-      formData.price,
-      formData.category,
-      subcategoryPath.length > 0,
-      formData.condition,
-      formData.cityId,
-    ];
-
-    if (requiredFields.includes("") || requiredFields.includes(false)) {
-      alert("Пожалуйста, заполните все обязательные поля.");
-      return;
-    }
-
-    const city = cities.find((c) => c.id === formData.cityId);
-    if (!city) {
-      alert("Пожалуйста, выберите корректный город.");
-      return;
-    }
+  const geocodeCity = async (cityName: string, regionName: string) => {
+    if (!ymapsRef.current) return;
 
     try {
-      let photoLinks: string[] = [];
-
-      if (photos.length > 0) {
-        const uploadResult = await storeApi.uploadPhotos(
-          "ads",
-          photos.map((p) => p.file)
-        );
-        photoLinks = uploadResult.urls;
+      const res = await ymapsRef.current.geocode(`${cityName}, ${regionName}`);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const coords = firstGeoObject.geometry.getCoordinates();
+        handleInputChange("latitude", coords[0]);
+        handleInputChange("longitude", coords[1]);
+        if (mapRef.current) {
+          mapRef.current.setCenter(coords, 10, { duration: 300 });
+        }
       }
-
-      const category = categories.find((c) => c.slug === formData.category);
-      if (!category) {
-        alert("Невалидная категория.");
-        return;
-      }
-
-      const lastSubcategory = findSubcategoryByPath(
-        category.subcategories,
-        subcategoryPath
-      );
-      if (!lastSubcategory) {
-        alert("Невалидная подкатегория.");
-        return;
-      }
-
-      const filtersArray: AdFilter[] = Object.entries(selectedFilters).map(
-        ([filterId, value]) => ({
-          filterId,
-          value: String(value),
-        })
-      );
-      
-      const newAd: Omit<Ad, "id"> = {
-        title: formData.title,
-        description: formData.description,
-        price: Number(formData.price),
-        city,
-        links: photoLinks,
-        views: 0,
-        favoritesCount: 0,
-        publishedAt: new Date().toISOString(),
-        userId: user.id,
-        adStatus: AdStatus.ACTIVE,
-        adSold: mapConditionToAdSold(formData.condition),
-        categoryId: category.id,
-        subcategoryId: lastSubcategory.id,
-        filters: filtersArray, // 👈 сюда добавили
-      };
-
-      await storeApi.addAd(newAd);
-      navigate("/profile/ads");
-    } catch (error) {
-      console.error(error);
-      alert("Ошибка при публикации объявления. Попробуйте позже.");
+    } catch (e) {
+      console.error("Geocode city error", e);
     }
   };
 
+  const [addressInput, setAddressInput] = useState(formData.fullAdress || "");
+
+  const mapRef = useRef<any>(null);
+  const ymapsRef = useRef<any>(null);
+  const suggestViewRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (formData.cityId) {
+      const city = cities.find(c => c.id === formData.cityId);
+      if (city) {
+        const addressStr = `${city.region}, ${city.name}`;
+        setAddressInput(addressStr);
+        handleInputChange("fullAdress", addressStr);
+
+        if (ymapsRef.current) {
+          geocodeCity(city.name, city.region);
+        }
+      }
+    }
+  }, [formData.cityId]);
+
+  const addressInputRef = useRef<HTMLInputElement>(null);
+
+  const onMapLoad = (ymapsInstance: any) => {
+    ymapsRef.current = ymapsInstance;
+
+    if (!suggestViewRef.current && addressInputRef.current) {
+      const suggest = new ymapsInstance.SuggestView(addressInputRef.current);
+      suggest.events.add("select", async (event: any) => {
+        const address = event.get("item").value;
+        setAddressInput(address);
+        handleInputChange("fullAdress", address);
+
+        try {
+          const res = await ymapsInstance.geocode(address);
+          const firstGeoObject = res.geoObjects.get(0);
+          if (firstGeoObject) {
+            const coords = firstGeoObject.geometry.getCoordinates();
+            handleInputChange("latitude", coords[0]);
+            handleInputChange("longitude", coords[1]);
+            if (mapRef.current) {
+              mapRef.current.setCenter(coords, 10, { duration: 300 });
+            }
+          }
+        } catch (error) {
+          console.error("Geocode error:", error);
+        }
+      });
+      suggestViewRef.current = suggest;
+    }
+  };
+
+  const onAddressBlur = async () => {
+    if (!ymapsRef.current) return;
+    try {
+      const res = await ymapsRef.current.geocode(addressInput);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const coords = firstGeoObject.geometry.getCoordinates();
+        handleInputChange("latitude", coords[0]);
+        handleInputChange("longitude", coords[1]);
+        if (mapRef.current) {
+          mapRef.current.setCenter(coords, 10, { duration: 300 });
+        }
+        const newAddress = firstGeoObject.getAddressLine();
+        setAddressInput(newAddress);
+        handleInputChange("fullAdress", newAddress);
+      }
+    } catch (error) {
+      console.error("Geocode error:", error);
+    }
+  };
+
+  const onPlacemarkDragEnd = async (e: any) => {
+    if (!ymapsRef.current) return;
+
+    const coords = e.get("target").geometry.getCoordinates();
+    handleInputChange("latitude", coords[0]);
+    handleInputChange("longitude", coords[1]);
+
+    try {
+      const res = await ymapsRef.current.geocode(coords);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const newAddress = firstGeoObject.getAddressLine();
+        setAddressInput(newAddress);
+        handleInputChange("fullAdress", newAddress);
+      }
+    } catch (error) {
+      console.error("Reverse geocode error:", error);
+    }
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setAddressInput(val);
+    handleInputChange("fullAdress", val);
+  };
+
+  useEffect(() => {
+    setAddressInput(formData.fullAdress || "");
+  }, [formData.fullAdress]);
 
   return (
     <div className="space-y-6">
@@ -293,7 +179,6 @@ const AvitoSell = () => {
       </Card>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Photo uploader */}
         <Card>
           <CardHeader>
             <CardTitle>Фотографии</CardTitle>
@@ -302,12 +187,15 @@ const AvitoSell = () => {
             <div
               {...getRootProps()}
               className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer"
-            >
-              <input {...getInputProps()} />
-              {isDragActive
-                ? "Отпустите файлы здесь..."
-                : "Перетяните фото или нажмите, чтобы выбрать"}
-            </div>
+              
+              >
+              <input
+              {...getInputProps()}
+            />
+            {isDragActive
+              ? "Отпустите файлы здесь..."
+              : "Перетяните фото или нажмите, чтобы выбрать"}
+          </div>
             {photos.length > 0 && (
               <div className="grid grid-cols-3 gap-4 mt-4">
                 {photos.map((p, i) => (
@@ -335,7 +223,6 @@ const AvitoSell = () => {
           </CardContent>
         </Card>
 
-        {/* Basic info */}
         <Card>
           <CardHeader>
             <CardTitle>Основная информация</CardTitle>
@@ -396,7 +283,6 @@ const AvitoSell = () => {
               </Select>
             </div>
 
-            {/* Подкатегории по уровням */}
             {subcategoryLevels.map((levelSubcats, idx) => (
               <div key={idx}>
                 <Label>Подкатегория (уровень {idx + 1})</Label>
@@ -461,16 +347,47 @@ const AvitoSell = () => {
             <div>
               <Label htmlFor="address">Адрес</Label>
               <Input
+                ref={addressInputRef}
                 id="address"
-                value={formData.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
+                value={addressInput}
+                onChange={handleAddressChange}
+                onBlur={onAddressBlur}
                 placeholder="Введите адрес"
+                autoComplete="off"
               />
+            </div>
+
+            <div className="rounded border border-gray-300" style={{ height: 400 }}>
+              <YMaps
+                query={{
+                  lang: "ru_RU",
+                  apikey: "254a1844-cf4b-49db-836c-c5aa61915d75",
+                  load: "package.full",
+                }}
+              >
+                <Map
+                  state={{
+                    center: [formData.latitude, formData.longitude],
+                    zoom: 10,
+                    controls: ["zoomControl"],
+                  }}
+                  instanceRef={(ref) => { mapRef.current = ref; }}
+                  onLoad={onMapLoad}
+                  
+                  width="100%"
+                  height="100%"
+                >
+                  <Placemark
+                    geometry={[formData.latitude, formData.longitude]}
+                    options={{ draggable: true, preset: "islands#redIcon" }}
+                    onDragEnd={onPlacemarkDragEnd}
+                  />
+                </Map>
+              </YMaps>
             </div>
           </CardContent>
         </Card>
 
-        {/* Фильтры */}
         {filters.length > 0 && (
           <Card>
             <CardHeader>
@@ -480,7 +397,7 @@ const AvitoSell = () => {
               {filters.map((filter) => {
                 switch (filter.type) {
                   case FilterType.SELECT:
-                  return (
+                    return (
                       <div key={filter.id}>
                         <Label>{filter.name}</Label>
                         <Select
@@ -514,7 +431,7 @@ const AvitoSell = () => {
                         <Label htmlFor={`filter-${filter.id}`}>{filter.name}</Label>
                       </div>
                     );
-                  
+
                   case FilterType.RANGE:
                     return (
                       <div key={filter.id}>

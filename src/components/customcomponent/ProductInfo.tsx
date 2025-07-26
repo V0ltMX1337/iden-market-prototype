@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { City } from "@/lib/types";
+import { AdSold, City } from "@/lib/types";
 
 interface ProductInfoProps {
   title: string;
@@ -37,6 +37,8 @@ interface ProductInfoProps {
   phone: string;
   latitude: number;
   longitude: number;
+  fullAdress: string;
+  adSold: AdSold;
 
 }
 
@@ -57,10 +59,27 @@ const ProductInfo = ({
   phone,
   latitude,
   longitude,
+  fullAdress,
+  adSold
 }: ProductInfoProps) => {
   const [isPhoneModalOpen, setPhoneModalOpen] = useState(false);
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const mapConditionToAdSold = (condition: AdSold): string => {
+    switch (condition) {
+      case AdSold.NEW:
+        return "Новое";
+        case AdSold.OTLICHNOE:
+        return "Отличное";
+        case AdSold.XOROSHEE:
+        return "Хорошее";
+        case AdSold.YDVORITEL:
+        return "Удовлетворительное";
+      default:
+        return "Новое";
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -69,7 +88,7 @@ const ProductInfo = ({
           <div className="flex items-start justify-between mb-3">
             <div>
               <Badge className="bg-green-100 text-green-800 mb-2">
-                {isUsed ? "Б/у" : "Новый"}
+                {mapConditionToAdSold(adSold)}
               </Badge>
               <h1 className="text-xl font-bold mb-2">{title}</h1>
             </div>
@@ -135,7 +154,7 @@ const ProductInfo = ({
               <p>Гарантия возврата денег, если товар не подойдёт</p>
               <button
                 className="text-blue-600 hover:underline transition-colors"
-                onClick={() => navigate("/delivery")}
+                
               >
                 Об Trivo Доставке
               </button>
@@ -203,23 +222,32 @@ const ProductInfo = ({
 
       {/* Модалка Яндекс карты */}
       <Dialog open={isMapModalOpen} onOpenChange={setMapModalOpen}>
-        <DialogContent className="max-w-3xl h-[450px] p-0 overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="px-6 pt-6">Расположение на карте</DialogTitle>
-          </DialogHeader>
-          <div className="h-full px-6 pb-6">
-            <YMaps>
-              <Map
-                defaultState={{ center: [latitude, longitude], zoom: 14 }}
-                width="100%"
-                height="100%"
-              >
-                <Placemark geometry={[latitude, longitude]} />
-              </Map>
-            </YMaps>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <DialogContent className="max-w-4xl h-[600px] p-0 overflow-hidden">
+        <DialogHeader>
+          <DialogTitle className="px-6 pt-6">Расположение на карте</DialogTitle>
+        </DialogHeader>
+        <div className="px-6 pb-4">
+          <p className="mb-4 text-gray-700">{fullAdress}</p>
+        </div>
+        <div className="h-[520px] px-6 pb-6">
+          <YMaps
+            query={{
+              lang: "ru_RU",
+              apikey: "254a1844-cf4b-49db-836c-c5aa61915d75",
+              load: "package.full",
+            }}
+          >
+            <Map
+              defaultState={{ center: [latitude, longitude], zoom: 14 }}
+              width="100%"
+              height="100%"
+            >
+              <Placemark geometry={[latitude, longitude]} />
+            </Map>
+          </YMaps>
+        </div>
+      </DialogContent>
+    </Dialog>
     </TooltipProvider>
   );
 };

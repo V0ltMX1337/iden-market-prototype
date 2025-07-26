@@ -19,6 +19,7 @@ import AdStatistics from "@/components/avito/profile/AdStatistics";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/hooks/useAuth";
 import { TemplateKeys, usePageTitle } from "@/hooks/usePageTitle";
+import AdEdit from "@/components/avito/profile/AdEdit";
 
 const AvitoProfile = () => {
   const navigate = useNavigate();
@@ -43,7 +44,6 @@ const AvitoProfile = () => {
     { id: "ads", label: "Мои объявления", icon: "Package", path: "/profile/ads", count: 3 },
     { id: "messages", label: "Сообщения", icon: "MessageCircle", path: "/profile/messages", count: 2 },
     { id: "favorites", label: "Избранное", icon: "Heart", path: "/profile/favorites", count: 5 },
-    { id: "game", label: "Игра", icon: "Game", path: "/profile/game", count: 2 },
     { id: "settings", label: "Настройки", icon: "Settings", path: "/profile/settings" },
   ];
 
@@ -195,6 +195,7 @@ const AvitoProfile = () => {
                 <Route path="reviews" element={<AvitoProfileReviews />} />
                 <Route path="settings" element={<AvitoProfileSettings />} />
                 <Route path=":adId/statistic" element={<AdStatistics />} />
+                <Route path=":adId/edit" element={<AdEdit />} />
               </Routes>
             </section>
           </div>

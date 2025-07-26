@@ -326,25 +326,6 @@ const AvitoProfileSettings = () => {
             <Icon name="Shield" size={16} className="mr-2" />
             Двухфакторная аутентификация
           </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start border-blue-200 text-blue-600 hover:bg-blue-50"
-          >
-            <Icon name="Download" size={16} className="mr-2" />
-            Скачать мои данные
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="border-red-200">
-        <CardHeader>
-          <CardTitle className="text-red-600">Опасная зона</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button variant="destructive" className="w-full">
-            <Icon name="Trash2" size={16} className="mr-2" />
-            Удалить аккаунт
-          </Button>
         </CardContent>
       </Card>
     </div>

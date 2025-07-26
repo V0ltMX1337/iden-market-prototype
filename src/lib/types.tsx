@@ -52,6 +52,7 @@ export interface AdFilter {
 
 
 export interface FilterDefinition {
+  options: any;
   id: string;
   name: string;
   values: string[];
@@ -100,6 +101,9 @@ export interface Ad {
   description: string;
   price: number;
   city: City;
+  fullAdress: string;
+  latitude: number;
+  longitude: number;
   links: string[];
   views: number;
   favoritesCount: number;
