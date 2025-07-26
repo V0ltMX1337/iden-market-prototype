@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
@@ -40,6 +41,21 @@ const AvitoProfileSettings = () => {
   const [saving, setSaving] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  
+  // Состояния для модалок
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+  const [twoFactorForm, setTwoFactorForm] = useState({
+    telegramId: "",
+    step: "input" as "input" | "instruction"
+  });
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [settingTwoFactor, setSettingTwoFactor] = useState(false);
 
   useEffect(() => {
     const loadCities = async () => {
@@ -154,6 +170,65 @@ const AvitoProfileSettings = () => {
     },
     []
   );
+
+  // Обработчики для смены пароля
+  const handlePasswordChange = async () => {
+    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
+      alert("Заполните все поля");
+      return;
+    }
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      alert("Новые пароли не совпадают");
+      return;
+    }
+    
+    if (passwordForm.newPassword.length < 6) {
+      alert("Пароль должен содержать минимум 6 символов");
+      return;
+    }
+    
+    setChangingPassword(true);
+    try {
+      // Здесь должен быть вызов API для смены пароля
+      // await storeApi.changePassword(user.id, passwordForm.currentPassword, passwordForm.newPassword);
+      
+      alert("Пароль успешно изменен");
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setShowPasswordModal(false);
+    } catch (error) {
+      console.error("Ошибка смены пароля:", error);
+      alert("Ошибка при смене пароля");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+  
+  // Обработчики для двухфакторной аутентификации
+  const handleTwoFactorSetup = async () => {
+    if (!twoFactorForm.telegramId.trim()) {
+      alert("Введите Telegram ID");
+      return;
+    }
+    
+    setSettingTwoFactor(true);
+    try {
+      // Здесь должен быть вызов API для настройки 2FA
+      // await storeApi.setupTwoFactor(user.id, twoFactorForm.telegramId);
+      
+      setTwoFactorForm(prev => ({ ...prev, step: "instruction" }));
+    } catch (error) {
+      console.error("Ошибка настройки 2FA:", error);
+      alert("Ошибка при настройке двухфакторной аутентификации");
+    } finally {
+      setSettingTwoFactor(false);
+    }
+  };
+  
+  const resetTwoFactorModal = () => {
+    setTwoFactorForm({ telegramId: "", step: "input" });
+    setShowTwoFactorModal(false);
+  };
 
   if (loading) return <div>Загрузка...</div>;
   if (!user) return <div>Пользователь не авторизован</div>;
@@ -312,20 +387,181 @@ const AvitoProfileSettings = () => {
           <CardTitle>Безопасность</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full justify-start border-blue-200 text-blue-600 hover:bg-blue-50"
-          >
-            <Icon name="Key" size={16} className="mr-2" />
-            Изменить пароль
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start border-purple-200 text-purple-600 hover:bg-purple-50"
-          >
-            <Icon name="Shield" size={16} className="mr-2" />
-            Двухфакторная аутентификация
-          </Button>
+          <Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start border-blue-200 text-blue-600 hover:bg-blue-50"
+              >
+                <Icon name="Key" size={16} className="mr-2" />
+                Изменить пароль
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-2">
+                  <Icon name="Key" className="w-5 h-5" />
+                  <span>Смена пароля</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="current-password">Текущий пароль</Label>
+                  <Input
+                    id="current-password"
+                    type="password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                    placeholder="Введите текущий пароль"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">Новый пароль</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                    placeholder="Минимум 6 символов"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Подтвердите пароль</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    placeholder="Повторите новый пароль"
+                  />
+                </div>
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPasswordModal(false)}
+                    className="flex-1"
+                  >
+                    Отмена
+                  </Button>
+                  <Button
+                    onClick={handlePasswordChange}
+                    disabled={changingPassword}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  >
+                    {changingPassword ? "Изменение..." : "Изменить"}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          
+          <Dialog open={showTwoFactorModal} onOpenChange={setShowTwoFactorModal}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start border-purple-200 text-purple-600 hover:bg-purple-50"
+              >
+                <Icon name="Shield" size={16} className="mr-2" />
+                Двухфакторная аутентификация
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-2">
+                  <Icon name="Shield" className="w-5 h-5" />
+                  <span>Двухфакторная аутентификация</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                {twoFactorForm.step === "input" ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="telegram-id">Telegram ID</Label>
+                      <Input
+                        id="telegram-id"
+                        value={twoFactorForm.telegramId}
+                        onChange={(e) => setTwoFactorForm(prev => ({ ...prev, telegramId: e.target.value }))}
+                        placeholder="Например: @username или 123456789"
+                      />
+                      <p className="text-sm text-gray-600">
+                        Введите ваш Telegram ID для настройки двухфакторной аутентификации
+                      </p>
+                    </div>
+                    <div className="flex space-x-2 pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={resetTwoFactorModal}
+                        className="flex-1"
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        onClick={handleTwoFactorSetup}
+                        disabled={settingTwoFactor}
+                        className="flex-1 bg-purple-600 hover:bg-purple-700"
+                      >
+                        {settingTwoFactor ? "Настройка..." : "Продолжить"}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <Icon name="CheckCircle" className="w-5 h-5 text-green-600 mb-2" />
+                        <h3 className="font-medium text-green-800 mb-2">Шаг 1: Отправьте команду боту</h3>
+                        <p className="text-sm text-green-700 mb-3">
+                          Отправьте следующую команду нашему боту в Telegram:
+                        </p>
+                        <code className="block p-2 bg-white rounded border text-sm font-mono break-all">
+                          /start&siteid={user?.id}&verif={twoFactorForm.telegramId}
+                        </code>
+                      </div>
+                      
+                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <Icon name="MessageCircle" className="w-5 h-5 text-blue-600 mb-2" />
+                        <h3 className="font-medium text-blue-800 mb-2">Шаг 2: Найдите бота</h3>
+                        <p className="text-sm text-blue-700">
+                          Найдите нашего бота в Telegram по имени: 
+                          <strong>@avitobot</strong> и отправьте команду выше.
+                        </p>
+                      </div>
+                      
+                      <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <Icon name="AlertTriangle" className="w-5 h-5 text-yellow-600 mb-2" />
+                        <h3 className="font-medium text-yellow-800 mb-2">Важно!</h3>
+                        <p className="text-sm text-yellow-700">
+                          После отправки команды бот подтвердит настройку 2FA. 
+                          Можете закрыть это окно.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-2 pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={resetTwoFactorModal}
+                        className="flex-1"
+                      >
+                        Закрыть
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const command = `/start&siteid=${user?.id}&verif=${twoFactorForm.telegramId}`;
+                          navigator.clipboard.writeText(command);
+                          alert("Команда скопирована в буфер обмена");
+                        }}
+                        className="flex-1 bg-purple-600 hover:bg-purple-700"
+                      >
+                        <Icon name="Copy" className="w-4 h-4 mr-2" />
+                        Копировать команду
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </div>

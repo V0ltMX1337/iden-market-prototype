@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { FilterType } from "@/lib/types";
+import Icon from "@/components/ui/icon";
 
 const AvitoSell = () => {
   const {
@@ -166,55 +167,85 @@ const AvitoSell = () => {
   }, [formData.fullAdress]);
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardContent className="p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Подать объявление
-          </h1>
-          <p className="text-gray-600">
-            Заполните информацию о товаре для размещения объявления
-          </p>
+    <div className="space-y-4 md:space-y-6 max-w-4xl mx-auto">
+      <Card className="shadow-lg">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex items-center space-x-3 md:space-x-4">
+            <div className="p-2 md:p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
+              <Icon name="Plus" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-900">
+                Подать объявление
+              </h1>
+              <p className="text-sm md:text-base text-gray-600">
+                Заполните информацию о товаре
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Фотографии</CardTitle>
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <Card className="shadow-lg">
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-base md:text-lg flex items-center space-x-2">
+              <Icon name="Camera" className="w-4 h-4 md:w-5 md:h-5" />
+              <span>Фотографии</span>
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 md:p-6">
             <div
               {...getRootProps()}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer"
-              
-              >
-              <input
-              {...getInputProps()}
-            />
-            {isDragActive
-              ? "Отпустите файлы здесь..."
-              : "Перетяните фото или нажмите, чтобы выбрать"}
-          </div>
+              className={`border-2 border-dashed rounded-lg p-4 md:p-8 text-center cursor-pointer transition-colors ${
+                isDragActive 
+                  ? "border-blue-500 bg-blue-50" 
+                  : "border-gray-300 hover:border-blue-400 hover:bg-gray-50"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <Icon name="Upload" className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-4 text-gray-400" />
+              <p className="text-sm md:text-base text-gray-600">
+                {isDragActive
+                  ? "Отпустите файлы здесь..."
+                  : "Перетяните фото или нажмите"}
+              </p>
+              <p className="text-xs md:text-sm text-gray-400 mt-1 md:mt-2">
+                Максимум 10 фото, JPG/PNG
+              </p>
+            </div>
             {photos.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mt-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-4">
                 {photos.map((p, i) => (
-                  <div key={i} className="relative">
+                  <div key={i} className="relative group">
                     <img
                       src={p.preview}
-                      className={`w-full h-32 object-cover rounded ${
-                        p.isMain ? "ring-4 ring-green-500" : ""
+                      className={`w-full h-24 md:h-32 object-cover rounded-lg transition-all ${
+                        p.isMain ? "ring-2 md:ring-4 ring-green-500 ring-offset-1" : ""
                       }`}
                       alt="Фото объявления"
                     />
+                    <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
                     <Button
                       size="sm"
-                      variant="outline"
-                      className="absolute bottom-2 left-2"
+                      variant={p.isMain ? "default" : "outline"}
+                      className={`absolute bottom-1 md:bottom-2 left-1 md:left-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity ${
+                        p.isMain ? "bg-green-600 hover:bg-green-700" : "bg-white/90 hover:bg-white"
+                      }`}
                       onClick={() => setAsMain(i)}
                       type="button"
                     >
-                      {p.isMain ? "Главное" : "Сделать главным"}
+                      {p.isMain ? (
+                        <span className="flex items-center space-x-1">
+                          <Icon name="Star" className="w-3 h-3" />
+                          <span className="hidden md:inline">Главное</span>
+                        </span>
+                      ) : (
+                        <span className="md:hidden">Главное</span>
+                      )}
+                      <span className="hidden md:inline">
+                        {p.isMain ? "Главное" : "Сделать главным"}
+                      </span>
                     </Button>
                   </div>
                 ))}
@@ -223,54 +254,63 @@ const AvitoSell = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Основная информация</CardTitle>
+        <Card className="shadow-lg">
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-base md:text-lg flex items-center space-x-2">
+              <Icon name="FileText" className="w-4 h-4 md:w-5 md:h-5" />
+              <span>Основная информация</span>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="title">Название</Label>
+          <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-sm md:text-base font-medium">Название *</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
-                placeholder="Введите название"
+                placeholder="Например: iPhone 13 Pro Max 128GB"
+                className="text-sm md:text-base h-10 md:h-11"
                 required
               />
             </div>
 
-            <div>
-              <Label htmlFor="description">Описание</Label>
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm md:text-base font-medium">Описание *</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
-                placeholder="Введите описание"
+                placeholder="Опишите товар: состояние, особенности, почему продаете..."
+                className="text-sm md:text-base min-h-[80px] md:min-h-[100px] resize-none"
                 required
-                rows={4}
+                rows={3}
               />
             </div>
 
-            <div>
-              <Label htmlFor="price">Цена</Label>
-              <Input
-                id="price"
-                type="number"
-                value={formData.price}
-                onChange={(e) => handleInputChange("price", e.target.value)}
-                placeholder="Введите цену"
-                required
-              />
+            <div className="space-y-2">
+              <Label htmlFor="price" className="text-sm md:text-base font-medium">Цена *</Label>
+              <div className="relative">
+                <Input
+                  id="price"
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => handleInputChange("price", e.target.value)}
+                  placeholder="0"
+                  className="text-sm md:text-base h-10 md:h-11 pr-12"
+                  required
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm md:text-base">₽</span>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="category">Категория</Label>
+            <div className="space-y-2">
+              <Label htmlFor="category" className="text-sm md:text-base font-medium">Категория *</Label>
               <Select
                 value={formData.category}
                 onValueChange={(value) => handleInputChange("category", value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                   <SelectValue placeholder="Выберите категорию" />
                 </SelectTrigger>
                 <SelectContent>
@@ -284,13 +324,13 @@ const AvitoSell = () => {
             </div>
 
             {subcategoryLevels.map((levelSubcats, idx) => (
-              <div key={idx}>
-                <Label>Подкатегория (уровень {idx + 1})</Label>
+              <div key={idx} className="space-y-2">
+                <Label className="text-sm md:text-base font-medium">Подкатегория (уровень {idx + 1})</Label>
                 <Select
                   value={subcategoryPath[idx] || ""}
                   onValueChange={(value) => handleSubcategorySelect(idx, value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                     <SelectValue placeholder="Выберите подкатегорию" />
                   </SelectTrigger>
                   <SelectContent>
@@ -304,14 +344,14 @@ const AvitoSell = () => {
               </div>
             ))}
 
-            <div>
-              <Label htmlFor="condition">Состояние</Label>
+            <div className="space-y-2">
+              <Label htmlFor="condition" className="text-sm md:text-base font-medium">Состояние *</Label>
               <Select
                 value={formData.condition}
                 onValueChange={(value) => handleInputChange("condition", value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                   <SelectValue placeholder="Выберите состояние" />
                 </SelectTrigger>
                 <SelectContent>
@@ -324,14 +364,14 @@ const AvitoSell = () => {
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="cityId">Город</Label>
+            <div className="space-y-2">
+              <Label htmlFor="cityId" className="text-sm md:text-base font-medium">Город *</Label>
               <Select
                 value={formData.cityId}
                 onValueChange={(value) => handleInputChange("cityId", value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                   <SelectValue placeholder="Выберите город" />
                 </SelectTrigger>
                 <SelectContent>
@@ -344,20 +384,23 @@ const AvitoSell = () => {
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="address">Адрес</Label>
+            <div className="space-y-2">
+              <Label htmlFor="address" className="text-sm md:text-base font-medium">Адрес</Label>
               <Input
                 ref={addressInputRef}
                 id="address"
                 value={addressInput}
                 onChange={handleAddressChange}
                 onBlur={onAddressBlur}
-                placeholder="Введите адрес"
+                placeholder="Улица, дом, квартира"
+                className="text-sm md:text-base h-10 md:h-11"
                 autoComplete="off"
               />
             </div>
 
-            <div className="rounded border border-gray-300" style={{ height: 400 }}>
+            <div className="space-y-2">
+              <Label className="text-sm md:text-base font-medium">Место на карте</Label>
+              <div className="rounded-lg border border-gray-300 overflow-hidden" style={{ height: window.innerWidth < 768 ? 250 : 400 }}>
               <YMaps
                 query={{
                   lang: "ru_RU",
@@ -384,27 +427,31 @@ const AvitoSell = () => {
                   />
                 </Map>
               </YMaps>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {filters.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Фильтры</CardTitle>
+          <Card className="shadow-lg">
+            <CardHeader className="pb-3 md:pb-6">
+              <CardTitle className="text-base md:text-lg flex items-center space-x-2">
+                <Icon name="Settings" className="w-4 h-4 md:w-5 md:h-5" />
+                <span>Дополнительные фильтры</span>
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-4 md:p-6">
               {filters.map((filter) => {
                 switch (filter.type) {
                   case FilterType.SELECT:
                     return (
-                      <div key={filter.id}>
-                        <Label>{filter.name}</Label>
+                      <div key={filter.id} className="space-y-2">
+                        <Label className="text-sm md:text-base font-medium">{filter.name}</Label>
                         <Select
                           value={selectedFilters[filter.id]?.toString() || ""}
                           onValueChange={(val) => handleFilterChange(filter.id, val)}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                             <SelectValue placeholder={`Выберите ${filter.name}`} />
                           </SelectTrigger>
                           <SelectContent>
@@ -434,14 +481,15 @@ const AvitoSell = () => {
 
                   case FilterType.RANGE:
                     return (
-                      <div key={filter.id}>
-                        <Label>{filter.name}</Label>
+                      <div key={filter.id} className="space-y-2">
+                        <Label className="text-sm md:text-base font-medium">{filter.name}</Label>
                         <Input
                           type="number"
                           value={selectedFilters[filter.id]?.toString() || ""}
                           onChange={(e) =>
                             handleFilterChange(filter.id, Number(e.target.value))
                           }
+                          className="text-sm md:text-base h-10 md:h-11"
                         />
                       </div>
                     );
@@ -453,9 +501,15 @@ const AvitoSell = () => {
           </Card>
         )}
 
-        <Button type="submit" className="w-full">
-          Опубликовать
-        </Button>
+        <div className="pt-4 md:pt-6">
+          <Button 
+            type="submit" 
+            className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
+          >
+            <Icon name="Send" className="w-5 h-5 mr-2" />
+            Опубликовать объявление
+          </Button>
+        </div>
       </form>
     </div>
   );
