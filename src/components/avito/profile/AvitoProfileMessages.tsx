@@ -21,6 +21,25 @@ const AvitoProfileMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+
+  // Отслеживание размера экрана
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setShowSidebar(!selectedChat);
+      } else {
+        setShowSidebar(true);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [selectedChat]);
 
   useEffect(() => {
     if (!user) return;
@@ -66,6 +85,15 @@ const AvitoProfileMessages = () => {
   const handleSelectChat = async (chat: Chat) => {
     setSelectedChat(chat);
     await loadMessages(chat);
+    // На мобильных скрываем сайдбар при выборе чата
+    if (isMobile) {
+      setShowSidebar(false);
+    }
+  };
+
+  const handleBackToChats = () => {
+    setSelectedChat(null);
+    setShowSidebar(true);
   };
 
   const handleSendMessage = async () => {
@@ -83,10 +111,14 @@ const AvitoProfileMessages = () => {
   };
 
   return (
-    <div className="flex h-[700px] bg-white rounded-lg overflow-hidden border shadow-sm">
+    <div className="flex h-[700px] md:h-[700px] h-[calc(100vh-120px)] bg-white rounded-lg overflow-hidden border shadow-sm">
       {/* Sidebar */}
-      <div className="w-80 border-r bg-gray-50 flex flex-col">
-        <div className="p-4 border-b bg-white">
+      <div className={`${
+        isMobile 
+          ? (showSidebar ? 'w-full' : 'hidden') 
+          : 'w-80'
+      } border-r bg-gray-50 flex flex-col`}>
+        <div className="p-3 md:p-4 border-b bg-white">
           <h3 className="font-semibold text-lg">Диалоги</h3>
         </div>
         <div className="flex-1 overflow-y-auto">
@@ -94,22 +126,28 @@ const AvitoProfileMessages = () => {
             <div
               key={`${chat.adId}-${chat.otherUserId}`}
               onClick={() => handleSelectChat(chat)}
-              className={`p-4 cursor-pointer hover:bg-white ${selectedChat?.adId === chat.adId && selectedChat.otherUserId === chat.otherUserId ? "bg-white font-bold" : ""}`}
+              className={`p-3 md:p-4 cursor-pointer hover:bg-white transition-colors ${selectedChat?.adId === chat.adId && selectedChat.otherUserId === chat.otherUserId ? "bg-white border-l-2 border-blue-500" : ""}`}
             >
               <div className="flex items-center space-x-3">
-                <Avatar className="cursor-pointer" onClick={() => navigate(`/user/${chat.otherUserId}`)}>
+                <Avatar className="cursor-pointer w-10 h-10 md:w-10 md:h-10" onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/user/${chat.otherUserId}`);
+                }}>
                   <AvatarImage src={chat.interlocutorPhotoUrl} />
-                  <AvatarFallback>{chat.interlocutorName.charAt(0) || "?"}</AvatarFallback>
+                  <AvatarFallback className="text-sm">{chat.interlocutorName.charAt(0) || "?"}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{chat.interlocutorName}</span>
-                    <span className="text-xs text-gray-400">
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-medium text-sm md:text-base truncate pr-2">{chat.interlocutorName}</span>
+                    <span className="text-xs text-gray-400 flex-shrink-0">
                       {chat.lastTimestamp && new Date(chat.lastTimestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-500 truncate">{chat.lastMessage}</div>
-                  <div className="text-xs text-blue-600 hover:underline cursor-pointer" onClick={() => navigate(`/product/${chat.adId}`)}>
+                  <div className="text-xs md:text-sm text-gray-500 truncate mb-1">{chat.lastMessage}</div>
+                  <div className="text-xs text-blue-600 hover:underline cursor-pointer truncate" onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/product/${chat.adId}`);
+                  }}>
                     {chat.adTitle}
                   </div>
                 </div>
@@ -120,53 +158,83 @@ const AvitoProfileMessages = () => {
       </div>
 
       {/* Chat */}
-      <div className="flex-1 flex flex-col">
+      <div className={`${
+        isMobile 
+          ? (showSidebar ? 'hidden' : 'w-full') 
+          : 'flex-1'
+      } flex flex-col`}>
         {selectedChat ? (
           <>
-            <div className="p-4 border-b bg-white flex justify-between items-center" onClick={() => navigate(`/user/${selectedChat.otherUserId}`)}>
-              <div className="flex items-center space-x-3">
-                <Avatar>
+            <div className="p-3 md:p-4 border-b bg-white flex justify-between items-center">
+              <div className="flex items-center space-x-2 md:space-x-3 flex-1 min-w-0">
+                {isMobile && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleBackToChats}
+                    className="p-1 mr-1 flex-shrink-0"
+                  >
+                    <Icon name="ArrowLeft" size={16} />
+                  </Button>
+                )}
+                <Avatar className="w-8 h-8 md:w-10 md:h-10 cursor-pointer flex-shrink-0" onClick={() => navigate(`/user/${selectedChat.otherUserId}`)}>
                   <AvatarImage src={selectedChat.interlocutorPhotoUrl} />
-                  <AvatarFallback>{selectedChat.interlocutorName.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="text-sm">{selectedChat.interlocutorName.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="font-semibold">{selectedChat.interlocutorName}</div>
-                  <div className="text-xs text-gray-500 cursor-pointer hover:underline" onClick={() => navigate(`/product/${selectedChat.adId}`)}>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-sm md:text-base truncate">{selectedChat.interlocutorName}</div>
+                  <div className="text-xs text-gray-500 cursor-pointer hover:underline truncate" onClick={() => navigate(`/product/${selectedChat.adId}`)}>
                     {selectedChat.adTitle}
                   </div>
                 </div>
               </div>
-              <Button variant="outline" size="sm" onClick={() => navigate(`/user/${selectedChat.otherUserId}`)}>
-                Перейти к пользователю
-              </Button>
+              {!isMobile && (
+                <Button variant="outline" size="sm" onClick={() => navigate(`/user/${selectedChat.otherUserId}`)} className="flex-shrink-0">
+                  Перейти к пользователю
+                </Button>
+              )}
             </div>
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50">
+            <div className="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 md:space-y-3 bg-gray-50">
               {messages.map((msg) => (
                 <div key={msg.id} className={`flex ${msg.senderId === user?.id ? "justify-end" : "justify-start"}`}>
-                  <div className={`px-4 py-2 rounded-lg max-w-sm ${msg.senderId === user?.id ? "bg-blue-500 text-white" : "bg-white text-black shadow"}`}>
-                    <p>{msg.content}</p>
-                    <div className="text-xs text-gray-300 mt-1 text-right">
+                  <div className={`px-3 md:px-4 py-2 rounded-lg max-w-xs md:max-w-sm ${msg.senderId === user?.id ? "bg-blue-500 text-white" : "bg-white text-black shadow"}`}>
+                    <p className="text-sm md:text-base break-words">{msg.content}</p>
+                    <div className={`text-xs mt-1 text-right ${msg.senderId === user?.id ? "text-blue-100" : "text-gray-400"}`}>
                       {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
                 </div>
               ))}
+              {messages.length === 0 && (
+                <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                  Сообщений пока нет
+                </div>
+              )}
             </div>
-            <div className="p-4 border-t bg-white flex items-center space-x-2">
+            <div className="p-3 md:p-4 border-t bg-white flex items-center space-x-2">
               <Input
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSendMessage()}
+                onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
                 placeholder="Введите сообщение..."
+                className="text-sm md:text-base"
               />
-              <Button onClick={handleSendMessage}>
-                <Icon name="Send" size={16} />
+              <Button 
+                onClick={handleSendMessage}
+                disabled={!newMessage.trim()}
+                size={isMobile ? "sm" : "default"}
+                className="flex-shrink-0"
+              >
+                <Icon name="Send" size={isMobile ? 14 : 16} />
               </Button>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
-            Выберите диалог
+          <div className="flex-1 flex items-center justify-center text-gray-500 p-4">
+            <div className="text-center">
+              <Icon name="MessageCircle" size={48} className="mx-auto mb-4 text-gray-300" />
+              <p className="text-sm md:text-base">{isMobile ? "Выберите диалог" : "Выберите диалог для просмотра сообщений"}</p>
+            </div>
           </div>
         )}
       </div>

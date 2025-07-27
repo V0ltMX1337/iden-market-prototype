@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import CookieBanner from "@/components/ui/CookieBanner";
 import AvitoMain from "./pages/avito/AvitoMain";
 import AvitoLogin from "./pages/avito/AvitoLogin";
 import AvitoRegister from "./pages/avito/AvitoRegister";
@@ -14,6 +15,12 @@ import AvitoAdmin from "./pages/avito/AvitoAdmin";
 import AvitoUser from "./pages/avito/AvitoUser";
 import AvitoAddReview from "./pages/avito/AvitoAddReview";
 import AvitoCategoryPage from "./pages/avito/AvitoCategoryPage";
+import AboutPage from "./pages/AboutPage";
+import ContactsPage from "./pages/ContactsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsPage from "./pages/TermsPage";
+import SitemapPage from "./pages/SitemapPage";
+import HowToBuyPage from "./pages/HowToBuyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +32,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <Router>
+          <CookieBanner />
           <Routes>
             {/* Все маршруты /avito/* с AuthProvider */}
             <Route
@@ -38,10 +46,18 @@ const App = () => {
                     <Route path="product/:id" element={<AvitoProduct />} />
                     <Route path="user/:userId" element={<AvitoUser />} />
                     <Route path="category/:categoryid/*" element={<AvitoCategoryPage />} />
+                    <Route path="catalog" element={<AvitoCategoryPage />} />
                     <Route
                       path="user/:userId/addReview"
                       element={<AvitoAddReview />}
                     />
+                    {/* Информационные страницы */}
+                    <Route path="about" element={<AboutPage />} />
+                    <Route path="contacts" element={<ContactsPage />} />
+                    <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+                    <Route path="terms" element={<TermsPage />} />
+                    <Route path="sitemap" element={<SitemapPage />} />
+                    <Route path="how-to-buy" element={<HowToBuyPage />} />
                     <Route
                       path="profile/*"
                       element={
