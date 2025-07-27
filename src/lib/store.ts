@@ -47,7 +47,7 @@ export const storeApi = {
     return res.data;
   },
 
-  async countUserAds(userId: string): Promise<{ active: number; inactive: number }> {
+  async countUserAds(userId: string): Promise<{ active: number; blocked: number, sold: number, time_out: number }> {
     const res = await axios.get(`${API_BASE}/users/${userId}/adscount`);
     return res.data;
   },

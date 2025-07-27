@@ -11,6 +11,7 @@ import { storeApi } from "@/lib/store";
 export const useAvitoSellLogic = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -162,6 +163,8 @@ export const useAvitoSellLogic = () => {
     }));
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const mapped = acceptedFiles.map((file, idx) => ({
@@ -180,19 +183,36 @@ export const useAvitoSellLogic = () => {
   noKeyboard: true,  // отключаем клавиатуру
 });
 
-const inputRef = useRef<HTMLInputElement>(null);
-
   const setAsMain = (index: number) => {
     setPhotos((prev) =>
       prev.map((p, i) => ({ ...p, isMain: i === index }))
     );
   };
 
+  const handleRemovePhoto = (index: number) => {
+  setPhotos((prev) => {
+    const newPhotos = [...prev];
+    const removed = newPhotos.splice(index, 1);
+    if (removed[0]?.preview) URL.revokeObjectURL(removed[0].preview);
+
+    // если удалили главное фото — делаем первым оставшееся главным
+    if (removed[0]?.isMain && newPhotos.length > 0) {
+      newPhotos[0].isMain = true;
+    }
+
+    return newPhotos;
+  });
+};
+
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
+  if (isSubmitting) return; // блокируем повторные клики
+  setIsSubmitting(true);
+
   if (!user) {
     alert("Пожалуйста, войдите в систему для публикации объявления.");
+    setIsSubmitting(false);
     return;
   }
 
@@ -211,12 +231,14 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   if (errors.length > 0) {
     alert("Пожалуйста, исправьте следующие ошибки:\n\n" + errors.join("\n"));
+    setIsSubmitting(false);
     return;
   }
 
   const city = cities.find((c) => c.id === formData.cityId);
   if (!city) {
     alert("Пожалуйста, выберите корректный город.");
+    setIsSubmitting(false);
     return;
   }
 
@@ -232,6 +254,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     const category = categories.find((c) => c.slug === formData.category);
     if (!category) {
       alert("Невалидная категория.");
+      setIsSubmitting(false);
       return;
     }
 
@@ -241,6 +264,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     );
     if (!lastSubcategory) {
       alert("Невалидная подкатегория.");
+      setIsSubmitting(false);
       return;
     }
 
@@ -276,6 +300,9 @@ const handleSubmit = async (e: React.FormEvent) => {
   } catch (error) {
     console.error(error);
     alert("Ошибка при публикации объявления. Попробуйте позже.");
+    
+  } finally {
+    setIsSubmitting(false); // всегда разблокируем
   }
 };
 
@@ -302,5 +329,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     subcategoryPath,
     subcategoryLevels,
     handleSubcategorySelect,
+    handleRemovePhoto,
+    isSubmitting,
   };
 };

@@ -108,6 +108,26 @@ const AvitoProfileSettings = () => {
   const handleSave = async () => {
     if (!user?.id) return;
   
+    if (!formData.firstName) {
+      alert("Пожалуйста, укажите имя");
+      return;
+    }
+
+    if (!formData.lastName) {
+      alert("Пожалуйста, укажите фамилию");
+      return;
+    }
+
+    if (!formData.email) {
+      alert("Пожалуйста, укажите емейл");
+      return;
+    }
+
+    if (!formData.phone) {
+      alert("Пожалуйста, укажите номер телефона");
+      return;
+    }
+
     if (!formData.cityId) {
       alert("Пожалуйста, выберите город");
       return;

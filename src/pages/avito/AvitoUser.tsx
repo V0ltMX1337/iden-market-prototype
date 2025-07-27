@@ -238,9 +238,6 @@ const AvitoUser = () => {
 
               <div className="space-y-3 mb-6">
                 <div className="text-sm text-gray-600">
-                  {userDisplayData.user.email}
-                </div>
-                <div className="text-sm text-gray-600">
                   На Trivo с {userDisplayData.joinDate}
                 </div>
               </div>

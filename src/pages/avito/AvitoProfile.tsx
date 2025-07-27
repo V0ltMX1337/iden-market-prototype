@@ -41,9 +41,9 @@ const AvitoProfile = () => {
 
   const menuItems = [
     { id: "", label: "Профиль", icon: "User", path: "/profile" },
-    { id: "ads", label: "Мои объявления", icon: "Package", path: "/profile/ads", count: 3 },
-    { id: "messages", label: "Сообщения", icon: "MessageCircle", path: "/profile/messages", count: 2 },
-    { id: "favorites", label: "Избранное", icon: "Heart", path: "/profile/favorites", count: 5 },
+    { id: "ads", label: "Мои объявления", icon: "Package", path: "/profile/ads"},
+    { id: "messages", label: "Сообщения", icon: "MessageCircle", path: "/profile/messages"},
+    { id: "favorites", label: "Избранное", icon: "Heart", path: "/profile/favorites"},
     { id: "settings", label: "Настройки", icon: "Settings", path: "/profile/settings" },
   ];
 

@@ -1,4 +1,5 @@
 import Icon from "@/components/ui/icon";
+import { Link } from "react-router-dom";
 
 const AvitoFooter = () => {
   return (
@@ -11,11 +12,13 @@ const AvitoFooter = () => {
               Крупнейшая площадка объявлений в России
             </p>
             <div className="flex space-x-4">
+              <Link to={"https://t.me/trivo_net"}>
               <Icon
-                name="Facebook"
+                name="Send"
                 size={20}
                 className="text-blue-200 hover:text-white cursor-pointer"
               />
+              </Link>
               <Icon
                 name="Twitter"
                 size={20}

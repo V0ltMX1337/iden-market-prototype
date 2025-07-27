@@ -34,7 +34,10 @@ const AvitoProfileMain = () => {
           const allReviews = reviewsArrays.flat();
 
           setReviews(allReviews);
-          setAdsCount(adsCountRes);
+          setAdsCount({
+            active: adsCountRes.active,
+            inactive: adsCountRes.blocked + adsCountRes.sold + adsCountRes.time_out,
+          });
 
           const sortedAds = [...ads].sort(
             (a, b) =>

@@ -19,6 +19,7 @@ import {
   Subcategory,
   SystemSettings,
   AdSold,
+  Review,
 } from "@/lib/types";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
@@ -43,6 +44,8 @@ const AvitoProduct = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [inCart, setInCart] = useState(false);
   const [categoryFullSlug, setCategoryFullSlug] = useState("");
+
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const { getPageTitle, settings: systemSettings } = usePageTitle();
 
@@ -146,11 +149,19 @@ const AvitoProduct = () => {
         storeApi.updateAd(id, updatedAd).catch(console.error);
         setProduct(updatedAd);
 
-        const [userData, pathData] = await Promise.all([
+        const [userData, pathData, userAds] = await Promise.all([
           storeApi.getUserById(updatedAd.userId),
           buildCategoryPath(updatedAd.categoryId, updatedAd.subcategoryId),
+          storeApi.getUserAds(updatedAd.userId),
         ]);
 
+        // Получаем отзывы по каждому объявлению
+        const reviewsArrays = await Promise.all(
+          userAds.map((ad) => storeApi.getReviewsByAdId(ad.id))
+        );
+        const allReviews = reviewsArrays.flat();
+      
+        
         setSeller(userData);
         setCategoryPath(pathData);
 
@@ -164,6 +175,7 @@ const AvitoProduct = () => {
           ]);
           setIsFavorite(favorites.includes(id));
           setInCart(cart.includes(id));
+          setReviews(allReviews); // ✅ правильные отзывы
         }
       })
       .catch((err) => console.error("Ошибка загрузки:", err))
@@ -294,15 +306,16 @@ const AvitoProduct = () => {
               latitude={product.latitude}
               longitude={product.longitude}
               fullAdress={product.fullAdress}
-              onDeliveryClick={() => navigate("/delivery")}
-              onChatClick={() => navigate("/profile/chat")}
+              onDeliveryClick={() => alert("Функция находится в разработке")}
+              onChatClick={() => navigate("/profile/messages")}
               onShowPhoneClick={() => navigate("/phone")}
               isFavorite={isFavorite}
               inCart={inCart}
               onToggleFavorite={toggleFavorite}
               onToggleCart={toggleCart}
             />
-            <SellerInfo seller={seller} averageRating={0} />
+
+            <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
             <SafetyTips />
           </div>
         </div>

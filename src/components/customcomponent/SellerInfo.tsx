@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
+import { Review } from "@/lib/types";
 
 interface SellerInfoProps {
   seller: {
@@ -12,14 +13,17 @@ interface SellerInfoProps {
     registrationDate: string;
     city: { name: string };
   };
-  averageRating?: number; // сделал необязательным на всякий случай
+  reviewCount: number;
+  reviews: Review[]; // сделал необязательным на всякий случай
 }
 
-const SellerInfo = ({ seller, averageRating = 0 }: SellerInfoProps) => {
+const SellerInfo = ({ seller, reviews, reviewCount }: SellerInfoProps) => {
   const navigate = useNavigate();
 
   const formattedDate = new Date(seller.registrationDate).toLocaleDateString("ru-RU");
-  const safeRating = typeof averageRating === "number" ? averageRating : 0;
+  const averageRating =
+          reviews.reduce((sum, review) => sum + review.rating, 0) /
+          (reviews.length || 1);
 
   return (
     <Card className="mt-6 h-fit">
@@ -53,11 +57,11 @@ const SellerInfo = ({ seller, averageRating = 0 }: SellerInfoProps) => {
                     key={i}
                     name="Star"
                     size={20}
-                    className={i < Math.floor(safeRating) ? "fill-current" : "text-gray-300"}
+                    className={i < Math.round(averageRating * 10) / 10 ? "fill-current" : "text-gray-300"}
                   />
                 ))}
               </div>
-              <span className="font-semibold">{safeRating.toFixed(1)}</span>
+              <span className="font-semibold">{reviewCount}</span>
             </div>
           </div>
         </div>

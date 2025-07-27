@@ -109,7 +109,7 @@ const AvitoProfileMessages = () => {
                     </span>
                   </div>
                   <div className="text-sm text-gray-500 truncate">{chat.lastMessage}</div>
-                  <div className="text-xs text-blue-600 hover:underline cursor-pointer" onClick={() => navigate(`/proudct/${chat.adId}`)}>
+                  <div className="text-xs text-blue-600 hover:underline cursor-pointer" onClick={() => navigate(`/product/${chat.adId}`)}>
                     {chat.adTitle}
                   </div>
                 </div>
