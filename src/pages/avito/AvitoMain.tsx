@@ -7,6 +7,7 @@ import { storeApi } from "@/lib/store";
 import type { Ad, Category, User } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 import AvitoRecommendations from "@/components/avitomarket/AvitoRecommendations";
+import AlertTester from "@/components/AlertTester";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { Engine } from "tsparticles-engine";
@@ -234,7 +235,7 @@ const AvitoMain = () => {
         </section>
 
         {/* Security Tips */}
-        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8 pb-8 md:pb-12">
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8 pb-4 md:pb-8">
           <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
             <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">🛡 Советы по безопасности</h2>
             <ul className="list-disc pl-4 md:pl-5 space-y-2 text-xs md:text-sm text-gray-700">
@@ -243,6 +244,13 @@ const AvitoMain = () => {
               <li>Проверяйте товар перед покупкой.</li>
               <li>Сохраняйте переписку в чате — это ваша защита.</li>
             </ul>
+          </div>
+        </section>
+
+        {/* Alert System Demo */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-12">
+          <div className="flex justify-center">
+            <AlertTester />
           </div>
         </section>
       </main>

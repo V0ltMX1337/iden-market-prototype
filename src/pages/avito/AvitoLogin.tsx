@@ -13,14 +13,15 @@ import { useNavigate, Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { useAlertContext } from "@/contexts/AlertContext";
 import { Helmet } from "react-helmet-async";
 
 const AvitoLogin = () => {
   const navigate = useNavigate();
   const { user, login, logout, checkPendingLoginStatus } = useAuth();
+  const { showError, showSuccess, showInfo } = useAlertContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [waitingTelegram, setWaitingTelegram] = useState(false);
 
   const { getPageTitle, settings: systemSettings } = usePageTitle();
@@ -29,20 +30,23 @@ const AvitoLogin = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setWaitingTelegram(false);
 
     try {
       const result = await login(email, password);
       if (result === "success") {
+        showSuccess("Добро пожаловать!", "Успешный вход");
         navigate("/");
       } else if (result === "waiting") {
         setWaitingTelegram(true);
+        showInfo("Подтвердите вход через Telegram", "Ожидание подтверждения", {
+          duration: 0 // Не исчезает автоматически
+        });
       } else {
-        setError("Неверный email или пароль");
+        showError("Неверный email или пароль", "Ошибка входа");
       }
     } catch {
-      setError("Ошибка при входе в систему");
+      showError("Произошла ошибка при входе в систему", "Системная ошибка");
     }
   };
 
@@ -53,7 +57,7 @@ const AvitoLogin = () => {
   const handleLogout = async () => {
     await logout();
     setWaitingTelegram(false);
-    setError("");
+    showInfo("Вы можете войти как другой пользователь", "Выход выполнен");
   };
 
   useEffect(() => {
@@ -69,6 +73,7 @@ const AvitoLogin = () => {
 
       if (confirmed) {
         setWaitingTelegram(false);
+        showSuccess("Вход подтвержден через Telegram!", "Добро пожаловать");
         navigate("/");
       } else {
         setTimeout(poll, 1000); // Запускаем следующий опрос через 1 секунду
@@ -195,9 +200,7 @@ const AvitoLogin = () => {
                   />
                 </div>
 
-                {error && (
-                  <div className="text-red-600 text-sm text-center">{error}</div>
-                )}
+
 
                 <div className="flex items-center justify-between">
                   <label className="flex items-center">

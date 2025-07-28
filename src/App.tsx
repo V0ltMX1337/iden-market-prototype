@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AlertProvider } from "@/contexts/AlertContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import CookieBanner from "@/components/ui/CookieBanner";
 import AvitoMain from "./pages/avito/AvitoMain";
@@ -28,9 +29,10 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
+      <AlertProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
         <Router>
           <CookieBanner />
           <Routes>
@@ -82,7 +84,8 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
-      </TooltipProvider>
+        </TooltipProvider>
+      </AlertProvider>
     </QueryClientProvider>
   );
 };

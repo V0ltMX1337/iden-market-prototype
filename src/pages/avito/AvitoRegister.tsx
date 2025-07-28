@@ -16,10 +16,12 @@ import { City, UserRole, UserStatus } from "@/lib/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { useAlertContext } from "@/contexts/AlertContext";
 
 const AvitoRegister = () => {
   const navigate = useNavigate();
   const { getPageTitle, settings: systemSettings } = usePageTitle();
+  const { showError, showSuccess, showWarning } = useAlertContext();
 
   const [cities, setCities] = useState<City[]>([]);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
@@ -33,7 +35,6 @@ const AvitoRegister = () => {
     confirmPassword: "",
     city: null as City | null,
   });
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -46,45 +47,50 @@ const AvitoRegister = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
+    // Валидация полей
     if (!formData.login) {
-      setError("Введите логин");
+      showError("Пожалуйста, введите логин", "Обязательное поле");
       return;
     }
 
     if (!formData.firstName) {
-      setError("Введите Имя");
+      showError("Пожалуйста, введите ваше имя", "Обязательное поле");
       return;
     }
 
     if (!formData.lastName) {
-      setError("Введите Фамилию");
+      showError("Пожалуйста, введите вашу фамилию", "Обязательное поле");
       return;
     }
 
     if (!formData.email) {
-      setError("Введите email");
+      showError("Пожалуйста, введите адрес электронной почты", "Обязательное поле");
       return;
     }
 
-     if (!formData.phone) {
-      setError("Введите номер телефона");
+    if (!formData.phone) {
+      showError("Пожалуйста, введите номер телефона", "Обязательное поле");
       return;
     }
 
     if (!formData.city) {
-      setError("Выберите город");
+      showError("Пожалуйста, выберите город", "Обязательное поле");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      showWarning("Пароль должен содержать минимум 6 символов", "Слабый пароль");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Пароли не совпадают!");
+      showError("Введенные пароли не совпадают", "Ошибка пароля");
       return;
     }
 
     if (!agreeToTerms) {
-      setError("Вы должны согласиться с условиями использования.");
+      showWarning("Для продолжения нужно согласиться с условиями", "Согласие обязательно");
       return;
     }
 
@@ -104,12 +110,29 @@ const AvitoRegister = () => {
       };
 
       await storeApi.addUser(userData);
-      navigate("/login");
+      showSuccess(
+        `Аккаунт ${formData.firstName} ${formData.lastName} успешно создан! Сейчас вы будете перенаправлены на страницу входа.`,
+        "Регистрация завершена",
+        { duration: 6000 }
+      );
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
       if (error.response?.status === 409) {
-        setError("Пользователь с таким email или логином уже зарегистрирован.");
+        showError(
+          "Пользователь с таким email или логином уже существует. Попробуйте другие данные.",
+          "Пользователь уже существует",
+          {
+            action: {
+              label: "Перейти ко входу",
+              onClick: () => navigate("/login")
+            }
+          }
+        );
       } else {
-        setError("Ошибка при регистрации. Попробуйте еще раз.");
+        showError(
+          "Произошла ошибка при создании аккаунта. Пожалуйста, попробуйте ещё раз.",
+          "Ошибка регистрации"
+        );
       }
     } finally {
       setIsLoading(false);
@@ -162,11 +185,7 @@ const AvitoRegister = () => {
           </CardHeader>
 
           <CardContent>
-            {error && (
-              <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                {error}
-              </div>
-            )}
+
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
