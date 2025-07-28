@@ -335,22 +335,6 @@ const AvitoProduct = () => {
           {/* Характеристики */}
           <ProductFeatures filters={product.filters} />
           
-          {/* Задать вопрос продавцу */}
-          <AskSeller
-            messageText={messageText}
-            setMessageText={setMessageText}
-            selectedQuestion={selectedQuestion}
-            setSelectedQuestion={setSelectedQuestion}
-            questions={questions}
-            onSendMessage={handleSendMessage}
-          />
-          
-          {/* Похожие объявления */}
-          <SimilarProducts
-            products={staticSimilarProducts}
-            onViewAllClick={() => navigate("/similar")}
-          />
-          
           {/* Информация о товаре */}
           <ProductInfo
             title={product.title}
@@ -377,8 +361,24 @@ const AvitoProduct = () => {
           {/* Продавец */}
           <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
           
+          {/* Задать вопрос продавцу */}
+          <AskSeller
+            messageText={messageText}
+            setMessageText={setMessageText}
+            selectedQuestion={selectedQuestion}
+            setSelectedQuestion={setSelectedQuestion}
+            questions={questions}
+            onSendMessage={handleSendMessage}
+          />
+          
           {/* Безопасная сделка */}
           <SafetyTips />
+          
+          {/* Похожие объявления */}
+          <SimilarProducts
+            products={staticSimilarProducts}
+            onViewAllClick={() => navigate("/similar")}
+          />
         </div>
       </main>
 
