@@ -1,319 +1,217 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/ui/icon";
 import { useNavigate } from "react-router-dom";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
+import Icon from "@/components/ui/icon";
+import { Helmet } from "react-helmet-async";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const SitemapPage = () => {
   const navigate = useNavigate();
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const siteStructure = [
+  const pageTitle = systemSettings
+    ? getPageTitle("sitemapPageTitle", {})
+    : "Карта сайта - TRIVO";
+
+  const siteMap = [
     {
-      title: "Главная страница",
-      path: "/",
+      title: "Главные страницы",
       icon: "Home",
-      color: "blue",
-      description: "Поиск товаров и услуг"
+      links: [
+        { name: "Главная", url: "/", description: "Основная страница с объявлениями" },
+        { name: "Категории", url: "/categories", description: "Все категории товаров" },
+        { name: "Поиск", url: "/search", description: "Расширенный поиск товаров" }
+      ]
     },
     {
-      title: "Каталог",
-      path: "/",
-      icon: "Grid3X3",
-      color: "green",
-      description: "Все объявления по категориям"
-    },
-    {
-      title: "Личный кабинет",
+      title: "Пользователь",
       icon: "User",
-      color: "purple",
-      description: "Управление профилем и объявлениями",
-      children: [
-        { title: "Профиль", path: "/profile", icon: "UserCircle" },
-        { title: "Мои объявления", path: "/profile/ads", icon: "Package" },
-        { title: "Сообщения", path: "/profile/messages", icon: "MessageCircle" },
-        { title: "Настройки", path: "/profile/settings", icon: "Settings" },
-        { title: "Избранное", path: "/profile/favorites", icon: "Heart" }
+      links: [
+        { name: "Регистрация", url: "/register", description: "Создание нового аккаунта" },
+        { name: "Вход", url: "/login", description: "Авторизация пользователя" },
+        { name: "Профиль", url: "/profile", description: "Личный профиль пользователя" },
+        { name: "Мои объявления", url: "/my-ads", description: "Управление объявлениями" }
       ]
     },
     {
-      title: "Размещение объявлений",
-      icon: "Plus",
-      color: "orange",
-      description: "Продажа товаров и услуг",
-      children: [
-        { title: "Разместить объявление", path: "/sell", icon: "PlusCircle" },
-        { title: "Редактировать объявление", path: "/edit-ad/:id", icon: "Edit" }
+      title: "Информация",
+      icon: "Info",
+      links: [
+        { name: "О нас", url: "/about", description: "О компании TRIVO" },
+        { name: "Контакты", url: "/contacts", description: "Связаться с нами" },
+        { name: "Как купить", url: "/how-to-buy", description: "Руководство по покупке" },
+        { name: "Как продавать", url: "/how-to-sell", description: "Руководство по продаже" }
       ]
     },
     {
-      title: "Аутентификация",
-      icon: "Key",
-      color: "indigo",
-      description: "Вход и регистрация",
-      children: [
-        { title: "Вход", path: "/login", icon: "LogIn" },
-        { title: "Регистрация", path: "/register", icon: "UserPlus" },
-        { title: "Восстановление пароля", path: "/reset-password", icon: "RefreshCw" }
-      ]
-    },
-    {
-      title: "Информационные страницы",
+      title: "Документы",
       icon: "FileText",
-      color: "gray",
-      description: "Документы и справочная информация",
-      children: [
-        { title: "О нас", path: "/about", icon: "Info" },
-        { title: "Контакты", path: "/contacts", icon: "Phone" },
-        { title: "Политика конфиденциальности", path: "/privacy-policy", icon: "Shield" },
-        { title: "Условия использования", path: "/terms", icon: "FileCheck" },
-        { title: "Как покупать", path: "/how-to-buy", icon: "ShoppingCart" },
-        { title: "Карта сайта", path: "/sitemap", icon: "Map" }
+      links: [
+        { name: "Условия использования", url: "/terms", description: "Правила пользования сайтом" },
+        { name: "Политика конфиденциальности", url: "/privacy-policy", description: "Обработка персональных данных" }
+      ]
+    },
+    {
+      title: "Услуги",
+      icon: "Settings",
+      links: [
+        { name: "Тарифы", url: "/pricing", description: "Тарифные планы и цены" },
+        { name: "Реклама на TRIVO", url: "/advertising", description: "Рекламные возможности" },
+        { name: "Помощь", url: "/help", description: "Центр помощи и FAQ" }
       ]
     }
   ];
 
-  const getColorClasses = (color: string) => {
-    const colors: { [key: string]: string } = {
-      blue: "bg-blue-50 border-blue-200 text-blue-600",
-      green: "bg-green-50 border-green-200 text-green-600",
-      purple: "bg-purple-50 border-purple-200 text-purple-600",
-      orange: "bg-orange-50 border-orange-200 text-orange-600",
-      indigo: "bg-indigo-50 border-indigo-200 text-indigo-600",
-      gray: "bg-gray-50 border-gray-200 text-gray-600"
-    };
-    return colors[color] || colors.gray;
+  const handleLinkClick = (url: string) => {
+    navigate(url);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Карта сайта
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Полная структура нашего сайта для удобной навигации
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content="Карта сайта TRIVO. Полная структура навигации по всем разделам и страницам платформы." />
+      </Helmet>
 
-        {/* Quick Navigation */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="Zap" className="w-6 h-6 text-yellow-600" />
-              <span>Быстрая навигация</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/")}
-                className="justify-start"
-              >
-                <Icon name="Home" className="w-4 h-4 mr-2" />
-                Главная
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/")}
-                className="justify-start"
-              >
-                <Icon name="Grid3X3" className="w-4 h-4 mr-2" />
-                Каталог
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/profile/sell")}
-                className="justify-start"
-              >
-                <Icon name="Plus" className="w-4 h-4 mr-2" />
-                Продать
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/profile")}
-                className="justify-start"
-              >
-                <Icon name="User" className="w-4 h-4 mr-2" />
-                Профиль
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/about")}
-                className="justify-start"
-              >
-                <Icon name="Info" className="w-4 h-4 mr-2" />
-                О нас
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/contacts")}
-                className="justify-start"
-              >
-                <Icon name="Phone" className="w-4 h-4 mr-2" />
-                Контакты
-              </Button>
+      <AvitoHeader />
+
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-16">
+          <div className="text-center mb-12 md:mb-16">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="Map" size={32} className="text-white" />
             </div>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
+              Карта сайта
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Все разделы и страницы TRIVO в удобной структуре для быстрой навигации
+            </p>
+          </div>
+        </section>
 
-        {/* Site Structure */}
-        <div className="space-y-8">
-          {siteStructure.map((section, index) => (
-            <Card key={index} className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${getColorClasses(section.color)}`}>
-                    <Icon name={section.icon as any} className="w-6 h-6" />
+        {/* Search Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8">
+          <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
+            <div className="flex items-center gap-4 mb-4">
+              <Icon name="Search" size={24} className="text-blue-600" />
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+                Быстрый поиск страницы
+              </h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Воспользуйтесь поиском браузера (Ctrl+F / Cmd+F) для быстрого поиска нужной страницы
+            </p>
+          </div>
+        </section>
+
+        {/* Sitemap Sections */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="grid gap-6 md:gap-8">
+            {siteMap.map((section, index) => (
+              <div key={index} className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-lg border border-gray-100">
+                <div className="flex items-center gap-4 mb-6 md:mb-8">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <Icon name={section.icon as any} size={24} className="text-white md:w-8 md:h-8" />
                   </div>
-                  <div>
-                    <span className="text-xl">{section.title}</span>
-                    {section.path && (
-                      <p className="text-sm text-gray-500 font-normal mt-1">
-                        {section.path}
-                      </p>
-                    )}
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">{section.description}</p>
-                
-                {section.children && (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {section.children.map((child, childIndex) => (
-                      <div
-                        key={childIndex}
-                        onClick={() => child.path && navigate(child.path)}
-                        className={`p-3 rounded-lg border transition-colors ${
-                          child.path 
-                            ? 'cursor-pointer hover:bg-gray-50 border-gray-200' 
-                            : 'border-gray-100'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <Icon 
-                            name={child.icon as any} 
-                            className="w-4 h-4 text-gray-500" 
-                          />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900 text-sm">
-                              {child.title}
-                            </h4>
-                            {child.path && (
-                              <p className="text-xs text-gray-500 mt-1">
-                                {child.path}
-                              </p>
-                            )}
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+                    {section.title}
+                  </h2>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                  {section.links.map((link, linkIndex) => (
+                    <div
+                      key={linkIndex}
+                      onClick={() => handleLinkClick(link.url)}
+                      className="p-4 md:p-6 bg-gray-50 rounded-xl hover:bg-blue-50 hover:border-blue-200 border border-transparent cursor-pointer transition group"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition">
+                              {link.name}
+                            </h3>
+                            <Icon name="ExternalLink" size={16} className="text-gray-400 group-hover:text-blue-600 transition" />
                           </div>
-                          {child.path && (
-                            <Icon 
-                              name="ExternalLink" 
-                              className="w-3 h-3 text-gray-400" 
-                            />
-                          )}
+                          <p className="text-sm text-gray-600 leading-relaxed">
+                            {link.description}
+                          </p>
+                          <div className="text-xs text-blue-600 font-medium mt-2 opacity-70">
+                            {link.url}
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {section.path && !section.children && (
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate(section.path)}
-                    className="mt-4"
-                  >
-                    <Icon name="ExternalLink" className="w-4 h-4 mr-2" />
-                    Перейти к {section.title.toLowerCase()}
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Statistics */}
-        <Card className="border-0 shadow-lg mt-12">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="BarChart" className="w-6 h-6 text-blue-600" />
-              <span>Статистика сайта</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-2xl font-bold text-blue-600 mb-1">25+</div>
-                <div className="text-sm text-blue-800">Страниц</div>
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-lg border border-gray-100">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                Статистика сайта
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">25+</div>
+                <div className="text-sm text-gray-600">Страниц сайта</div>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-bold text-green-600 mb-1">6</div>
-                <div className="text-sm text-green-800">Основных разделов</div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">50+</div>
+                <div className="text-sm text-gray-600">Категорий товаров</div>
               </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <div className="text-2xl font-bold text-purple-600 mb-1">15+</div>
-                <div className="text-sm text-purple-800">Функций</div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-green-600 mb-2">100+</div>
+                <div className="text-sm text-gray-600">Функций сервиса</div>
               </div>
-              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="text-2xl font-bold text-orange-600 mb-1">50%</div>
-                <div className="text-sm text-orange-800">Мобильная адаптация</div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">24/7</div>
+                <div className="text-sm text-gray-600">Работа поддержки</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
-        {/* Help Section */}
-        <Card className="border-0 shadow-lg mt-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="HelpCircle" className="w-6 h-6 text-green-600" />
-              <span>Нужна помощь?</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <Icon name="MessageCircle" className="w-6 h-6 text-green-600 mb-3" />
-                <h4 className="font-semibold text-green-900 mb-2">Не можете найти нужную страницу?</h4>
-                <p className="text-green-800 text-sm mb-3">
-                  Воспользуйтесь поиском на сайте или обратитесь в службу поддержки
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate("/contacts")}
-                  className="border-green-300 text-green-700 hover:bg-green-100"
-                >
-                  Связаться с нами
-                </Button>
-              </div>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <Icon name="Book" className="w-6 h-6 text-blue-600 mb-3" />
-                <h4 className="font-semibold text-blue-900 mb-2">Нужна инструкция?</h4>
-                <p className="text-blue-800 text-sm mb-3">
-                  Узнайте, как пользоваться нашим сервисом максимально эффективно
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate("/how-to-buy")}
-                  className="border-blue-300 text-blue-700 hover:bg-blue-100"
-                >
-                  Как покупать
-                </Button>
-              </div>
+        {/* Contact Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl md:rounded-3xl p-8 md:p-12 text-center text-white">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="Navigation" size={32} className="text-white" />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Не нашли нужную страницу?
+            </h2>
+            <p className="text-lg md:text-xl mb-8 opacity-90">
+              Свяжитесь с нами, и мы поможем найти то, что вы ищете
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/contacts')}
+                className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-full shadow hover:bg-blue-50 transition"
+              >
+                Связаться с нами
+              </button>
+              <button
+                onClick={() => navigate('/help')}
+                className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-blue-600 transition"
+              >
+                Центр помощи
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <AvitoFooter />
     </div>
   );
 };

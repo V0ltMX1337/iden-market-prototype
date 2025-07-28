@@ -1,342 +1,188 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import Icon from "@/components/ui/icon";
+import { Helmet } from "react-helmet-async";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const TermsPage = () => {
+  const navigate = useNavigate();
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
+
+  const pageTitle = systemSettings
+    ? getPageTitle("termsPageTitle", {})
+    : "Условия использования - TRIVO";
+
+  const terms = [
+    {
+      title: "Общие положения",
+      items: [
+        "Настоящие Условия использования регулируют отношения между пользователями и администрацией сайта TRIVO",
+        "Используя сайт, вы соглашаетесь с данными условиями в полном объеме",
+        "Администрация оставляет за собой право изменять условия без предварительного уведомления"
+      ]
+    },
+    {
+      title: "Регистрация и аккаунт",
+      items: [
+        "Для размещения объявлений необходима регистрация с указанием достоверных данных",
+        "Пользователь несет ответственность за сохранность своих данных для входа",
+        "Запрещено создание множественных аккаунтов одним лицом",
+        "При нарушении правил аккаунт может быть заблокирован без предупреждения"
+      ]
+    },
+    {
+      title: "Размещение объявлений",
+      items: [
+        "Объявления должны содержать только актуальную и достоверную информацию",
+        "Запрещено размещение товаров, запрещенных к продаже законодательством РФ",
+        "Фотографии должны соответствовать описываемому товару",
+        "Цены должны быть указаны корректно и соответствовать реальной стоимости"
+      ]
+    },
+    {
+      title: "Правила поведения",
+      items: [
+        "Запрещены оскорбления, угрозы и неэтичное поведение по отношению к другим пользователям",
+        "Недопустимо использование нецензурной лексики в объявлениях и сообщениях",
+        "Запрещена рассылка спама и нерелевантных сообщений",
+        "Мошеннические действия преследуются по закону"
+      ]
+    },
+    {
+      title: "Ответственность",
+      items: [
+        "Администрация не несет ответственности за качество товаров и услуг",
+        "Все сделки совершаются на свой страх и риск",
+        "Пользователи самостоятельно решают спорные вопросы",
+        "Рекомендуется проверять товары перед покупкой"
+      ]
+    },
+    {
+      title: "Нарушения и санкции",
+      items: [
+        "За нарушение правил может быть наложено предупреждение или блокировка",
+        "Повторные нарушения ведут к постоянной блокировке аккаунта",
+        "Администрация может удалять объявления без объяснения причин",
+        "Решения модерации не подлежат обжалованию"
+      ]
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Условия использования
-          </h1>
-          <p className="text-gray-600">
-            Последнее обновление: 27 июля 2025 года
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content="Условия использования TRIVO. Правила размещения объявлений, поведения на платформе и ответственность пользователей." />
+      </Helmet>
 
-        <div className="space-y-8">
-          {/* Introduction */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="FileText" className="w-6 h-6 text-blue-600" />
-                <span>Общие положения</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed">
-                Настоящие Условия использования регулируют использование интернет-сервиса для 
-                размещения объявлений о продаже товаров и услуг. Используя наш сервис, вы 
-                соглашаетесь с данными условиями.
-              </p>
-            </CardContent>
-          </Card>
+      <AvitoHeader />
 
-          {/* Service Description */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="Globe" className="w-6 h-6 text-green-600" />
-                <span>Описание сервиса</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <p className="text-gray-700">
-                  Наш сервис предоставляет платформу для:
-                </p>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <Icon name="ShoppingBag" className="w-6 h-6 text-blue-600 mb-2" />
-                    <h4 className="font-semibold text-blue-900 mb-1">Продавцам</h4>
-                    <p className="text-blue-800 text-sm">
-                      Размещение объявлений, общение с покупателями, управление продажами
-                    </p>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-16">
+          <div className="text-center mb-12 md:mb-16">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="FileText" size={32} className="text-white" />
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
+              Условия использования
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Правила и условия пользования платформой TRIVO
+            </p>
+          </div>
+        </section>
+
+        {/* Last Updated */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8">
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 md:p-6 text-center">
+            <p className="text-blue-800">
+              <Icon name="Calendar" size={16} className="inline mr-2" />
+              Действует с: 15 января 2024 года
+            </p>
+          </div>
+        </section>
+
+        {/* Terms Sections */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="space-y-6 md:space-y-8">
+            {terms.map((section, index) => (
+              <div key={index} className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-lg border border-gray-100">
+                <div className="flex items-start gap-4 md:gap-6">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                    {index + 1}
                   </div>
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                    <Icon name="Search" className="w-6 h-6 text-green-600 mb-2" />
-                    <h4 className="font-semibold text-green-900 mb-1">Покупателям</h4>
-                    <p className="text-green-800 text-sm">
-                      Поиск товаров, связь с продавцами, безопасное совершение покупок
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Registration */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="UserPlus" className="w-6 h-6 text-purple-600" />
-                <span>Регистрация и аккаунт</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-gray-900">Требования к пользователям:</h4>
-                <ul className="text-gray-700 space-y-2 ml-4">
-                  <li>• Возраст не менее 18 лет или согласие родителей/опекунов</li>
-                  <li>• Предоставление достоверной информации при регистрации</li>
-                  <li>• Поддержание актуальности контактных данных</li>
-                  <li>• Ответственность за безопасность учетной записи</li>
-                </ul>
-                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <Icon name="AlertTriangle" className="w-5 h-5 text-yellow-600 mb-2" />
-                  <p className="text-yellow-800 text-sm">
-                    <strong>Важно:</strong> Один пользователь может иметь только один активный аккаунт. 
-                    Создание множественных аккаунтов запрещено.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* User Obligations */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="CheckCircle" className="w-6 h-6 text-green-600" />
-                <span>Обязанности пользователей</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Разрешено:</h4>
-                  <ul className="text-green-700 space-y-1 text-sm">
-                    <li>✓ Размещать честные и точные объявления</li>
-                    <li>✓ Использовать собственные фотографии товаров</li>
-                    <li>✓ Вежливо общаться с другими пользователями</li>
-                    <li>✓ Соблюдать договоренности о встречах</li>
-                    <li>✓ Оставлять честные отзывы</li>
-                    <li>✓ Сообщать о нарушениях администрации</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Запрещено:</h4>
-                  <ul className="text-red-700 space-y-1 text-sm">
-                    <li>✗ Размещать запрещенные к продаже товары</li>
-                    <li>✗ Использовать чужие фотографии без разрешения</li>
-                    <li>✗ Создавать фальшивые объявления</li>
-                    <li>✗ Заниматься мошенничеством</li>
-                    <li>✗ Спамить и рассылать рекламу</li>
-                    <li>✗ Нарушать права других пользователей</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Prohibited Items */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="Ban" className="w-6 h-6 text-red-600" />
-                <span>Запрещенные товары и услуги</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-                  <Icon name="Shield" className="w-6 h-6 text-red-600 mb-2" />
-                  <h4 className="font-semibold text-red-900 mb-2">Опасные предметы</h4>
-                  <ul className="text-red-800 text-sm space-y-1">
-                    <li>• Оружие и боеприпасы</li>
-                    <li>• Взрывчатые вещества</li>
-                    <li>• Яды и токсины</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <Icon name="AlertCircle" className="w-6 h-6 text-orange-600 mb-2" />
-                  <h4 className="font-semibold text-orange-900 mb-2">Контрафакт</h4>
-                  <ul className="text-orange-800 text-sm space-y-1">
-                    <li>• Поддельные товары</li>
-                    <li>• Пиратские копии</li>
-                    <li>• Нарушение авторских прав</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <Icon name="UserX" className="w-6 h-6 text-purple-600 mb-2" />
-                  <h4 className="font-semibold text-purple-900 mb-2">Недопустимое</h4>
-                  <ul className="text-purple-800 text-sm space-y-1">
-                    <li>• Наркотические средства</li>
-                    <li>• Органы и ткани</li>
-                    <li>• Интимные услуги</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Payments and Fees */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="CreditCard" className="w-6 h-6 text-blue-600" />
-                <span>Платежи и комиссии</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                    <Icon name="Gift" className="w-6 h-6 text-green-600 mb-2" />
-                    <h4 className="font-semibold text-green-900 mb-2">Бесплатные услуги</h4>
-                    <ul className="text-green-800 text-sm space-y-1">
-                      <li>• Регистрация и базовое использование</li>
-                      <li>• Размещение до 10 объявлений</li>
-                      <li>• Общение с пользователями</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <Icon name="Star" className="w-6 h-6 text-blue-600 mb-2" />
-                    <h4 className="font-semibold text-blue-900 mb-2">Платные услуги</h4>
-                    <ul className="text-blue-800 text-sm space-y-1">
-                      <li>• Продвижение объявлений</li>
-                      <li>• Дополнительные лимиты</li>
-                      <li>• Премиум-функции</li>
+                  <div className="flex-1">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">
+                      {section.title}
+                    </h2>
+                    <ul className="space-y-4">
+                      {section.items.map((item, itemIndex) => (
+                        <li key={itemIndex} className="flex items-start gap-3">
+                          <Icon name="Check" size={16} className="text-green-600 mt-1 flex-shrink-0" />
+                          <span className="text-gray-600 leading-relaxed">{item}</span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-700 text-sm">
-                    <strong>Важно:</strong> Все цены указываются с учетом НДС. Платежи обрабатываются 
-                    через защищенные платежные системы. Возврат средств возможен в соответствии с 
-                    нашей политикой возврата.
-                  </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Important Notice */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl md:rounded-3xl p-6 md:p-10">
+            <div className="flex items-start gap-4">
+              <Icon name="AlertTriangle" size={32} className="text-amber-600 flex-shrink-0" />
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-amber-900 mb-4">
+                  Важно помнить
+                </h3>
+                <div className="space-y-3 text-amber-800">
+                  <p>• Все сделки происходят между пользователями напрямую</p>
+                  <p>• TRIVO не является стороной в сделках и не несет ответственности за их результат</p>  
+                  <p>• Соблюдайте меры безопасности при встречах с незнакомыми людьми</p>
+                  <p>• При обнаружении мошенничества обращайтесь в службу поддержки</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+        </section>
 
-          {/* Liability */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="Scale" className="w-6 h-6 text-purple-600" />
-                <span>Ответственность</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-900 mb-2">Ответственность платформы:</h4>
-                  <p className="text-blue-800 text-sm">
-                    Мы обеспечиваем работу платформы и безопасность данных, но не несем ответственности 
-                    за качество товаров, честность сделок между пользователями или их действия.
-                  </p>
-                </div>
-                <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <h4 className="font-semibold text-orange-900 mb-2">Ответственность пользователей:</h4>
-                  <p className="text-orange-800 text-sm">
-                    Пользователи несут полную ответственность за размещаемый контент, соблюдение 
-                    законодательства, качество товаров и выполнение обязательств по сделкам.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Contact Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl md:rounded-3xl p-8 md:p-12 text-center text-white">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="HelpCircle" size={32} className="text-white" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Вопросы по условиям?
+            </h2>
+            <p className="text-lg md:text-xl mb-8 opacity-90">
+              Если что-то неясно, мы всегда готовы помочь
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/contacts')}
+                className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-full shadow hover:bg-blue-50 transition"
+              >
+                Связаться с поддержкой
+              </button>
+              <button
+                onClick={() => navigate('/help')}
+                className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-blue-600 transition"
+              >
+                Центр помощи
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
 
-          {/* Violations and Sanctions */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="AlertTriangle" className="w-6 h-6 text-red-600" />
-                <span>Нарушения и санкции</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <p className="text-gray-700">
-                  При нарушении условий использования мы можем применить следующие меры:
-                </p>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-3">
-                    <div className="flex items-start space-x-3">
-                      <Icon name="MessageSquare" className="w-5 h-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-sm">Предупреждение</h4>
-                        <p className="text-xs text-gray-600">За незначительные нарушения</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <Icon name="Clock" className="w-5 h-5 text-orange-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-sm">Временная блокировка</h4>
-                        <p className="text-xs text-gray-600">От 1 дня до 1 месяца</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-start space-x-3">
-                      <Icon name="Ban" className="w-5 h-5 text-red-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-sm">Постоянная блокировка</h4>
-                        <p className="text-xs text-gray-600">За серьезные нарушения</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <Icon name="Gavel" className="w-5 h-5 text-purple-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-sm">Правовые меры</h4>
-                        <p className="text-xs text-gray-600">При криминальных действиях</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Changes to Terms */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="RefreshCw" className="w-6 h-6 text-blue-600" />
-                <span>Изменения условий</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed">
-                Мы оставляем за собой право изменять настоящие условия использования. О существенных 
-                изменениях мы уведомим пользователей не менее чем за 30 дней. Продолжение использования 
-                сервиса после внесения изменений означает согласие с новыми условиями.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Contact Info */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Icon name="Phone" className="w-6 h-6 text-green-600" />
-                <span>Контактная информация</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <p className="text-green-800 mb-3">
-                  По вопросам, связанным с условиями использования, обращайтесь:
-                </p>
-                <div className="space-y-2">
-                  <p className="text-green-700">
-                    <strong>Email:</strong> legal@trivoads.ru
-                  </p>
-                  <p className="text-green-700">
-                    <strong>Телефон:</strong> Скоро...
-                  </p>
-                  <p className="text-green-700">
-                    <strong>Адрес:</strong> Скоро..."
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <AvitoFooter />
     </div>
   );
 };

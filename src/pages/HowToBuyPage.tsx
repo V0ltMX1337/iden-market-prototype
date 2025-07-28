@@ -1,88 +1,72 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/ui/icon";
 import { useNavigate } from "react-router-dom";
+import AvitoHeader from "@/components/avitomarket/AvitoHeader";
+import AvitoFooter from "@/components/avitomarket/AvitoFooter";
+import Icon from "@/components/ui/icon";
+import { Helmet } from "react-helmet-async";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const HowToBuyPage = () => {
   const navigate = useNavigate();
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
+
+  const pageTitle = systemSettings
+    ? getPageTitle("howToBuyPageTitle", {})
+    : "Как покупать - TRIVO";
 
   const steps = [
     {
       number: 1,
       title: "Найдите товар",
-      description: "Используйте поиск или просматривайте категории",
+      description: "Используйте поиск или просматривайте категории для поиска нужного товара",
       icon: "Search",
-      color: "blue",
-      details: [
-        "Введите название товара в поисковую строку",
-        "Используйте фильтры по цене, местоположению и состоянию",
-        "Просматривайте объявления в интересующих категориях",
-        "Сохраняйте понравившиеся товары в избранное"
+      tips: [
+        "Используйте фильтры для уточнения поиска",
+        "Сохраняйте понравившиеся объявления в избранное",
+        "Подписывайтесь на уведомления о новых товарах"
       ]
     },
     {
       number: 2,
       title: "Изучите объявление",
-      description: "Внимательно прочитайте описание и посмотрите фото",
+      description: "Внимательно прочитайте описание, посмотрите фотографии и проверьте цену",
       icon: "Eye",
-      color: "green",
-      details: [
-        "Ознакомьтесь с подробным описанием товара",
-        "Просмотрите все фотографии",
-        "Проверьте состояние и характеристики",
-        "Обратите внимание на местоположение продавца"
+      tips: [
+        "Обращайте внимание на состояние товара",
+        "Проверяйте рейтинг и отзывы продавца",
+        "Уточняйте все важные детали до встречи"
       ]
     },
     {
       number: 3,
       title: "Свяжитесь с продавцом",
-      description: "Задайте вопросы и договоритесь о встрече",
+      description: "Напишите продавцу или позвоните, чтобы уточнить детали и договориться о встрече",
       icon: "MessageCircle",
-      color: "purple",
-      details: [
-        "Нажмите кнопку 'Написать продавцу'",
-        "Задайте все интересующие вопросы",
-        "Уточните актуальность объявления",
-        "Договоритесь о времени и месте встречи"
+      tips: [
+        "Задавайте конкретные вопросы о товаре",
+        "Договаривайтесь о встрече в людном месте",
+        "Уточните время работы и способы связи"
       ]
     },
     {
       number: 4,
-      title: "Встретьтесь безопасно",
-      description: "Выберите общественное место для встречи",
-      icon: "MapPin",
-      color: "orange",
-      details: [
-        "Встречайтесь в людных общественных местах",
-        "Приходите не один, если это возможно",
-        "Проверьте товар при встрече",
-        "Не передавайте деньги до осмотра товара"
+      title: "Встретьтесь и проверьте",
+      description: "Встретьтесь с продавцом, внимательно осмотрите товар перед покупкой",
+      icon: "CheckCircle",
+      tips: [
+        "Проверьте товар на работоспособность",
+        "Сверьте товар с описанием и фотографиями",
+        "При необходимости торгуйтесь"
       ]
     },
     {
       number: 5,
-      title: "Проверьте товар",
-      description: "Убедитесь, что товар соответствует описанию",
-      icon: "CheckCircle",
-      color: "green",
-      details: [
-        "Внимательно осмотрите товар на предмет дефектов",
-        "Проверьте работоспособность (для техники)",
-        "Сверьте с описанием в объявлении",
-        "При необходимости попросите документы"
-      ]
-    },
-    {
-      number: 6,
       title: "Совершите покупку",
-      description: "Оплатите товар и получите чек",
+      description: "Если товар вас устраивает, произведите оплату и заберите покупку",
       icon: "CreditCard",
-      color: "blue",
-      details: [
-        "Договоритесь о способе оплаты",
-        "Передайте деньги только после проверки товара",
-        "Получите чек или расписку при необходимости",
-        "Оставьте отзыв о сделке"
+      tips: [
+        "Расплачивайтесь только после проверки товара",
+        "Требуйте чек или расписку при крупных покупках",
+        "Сохраняйте контакты продавца"
       ]
     }
   ];
@@ -90,291 +74,172 @@ const HowToBuyPage = () => {
   const safetyTips = [
     {
       icon: "Shield",
-      title: "Проверяйте продавца",
-      description: "Изучите рейтинг и отзывы других покупателей"
-    },
-    {
-      icon: "Clock",
-      title: "Не торопитесь",
-      description: "Тщательно изучите товар перед покупкой"
-    },
-    {
-      icon: "Users",
-      title: "Встречайтесь с другом",
-      description: "По возможности приходите на встречу не один"
-    },
-    {
-      icon: "Phone",
-      title: "Оставайтесь на связи",
-      description: "Сообщите близким о месте и времени встречи"
+      title: "Безопасность",
+      tips: [
+        "Встречайтесь только в людных местах",
+        "Берите с собой друга на важные покупки",
+        "Не передавайте деньги заранее",
+        "Доверяйте своей интуиции"
+      ]
     },
     {
       icon: "AlertTriangle",
-      title: "Доверяйте интуиции",
-      description: "Если что-то кажется подозрительным, лучше отказаться"
+      title: "Осторожно",
+      tips: [
+        "Подозрительно низкие цены могут быть обманом",
+        "Проверяйте документы на дорогие товары",
+        "Не покупайте товары сомнительного происхождения",
+        "Остерегайтесь предоплат и переводов"
+      ]
     },
     {
-      icon: "CreditCard",
-      title: "Безопасные платежи",
-      description: "Используйте наличные или безопасные способы оплаты"
+      icon: "Phone",
+      title: "Связь",
+      tips: [
+        "Сохраняйте всю переписку с продавцом",
+        "Звоните перед встречей для подтверждения",
+        "Используйте встроенный чат TRIVO",
+        "Сообщайте близким о месте встречи"
+      ]
     }
   ];
 
-  const getColorClasses = (color: string) => {
-    const colors: { [key: string]: string } = {
-      blue: "bg-blue-50 border-blue-200 text-blue-600",
-      green: "bg-green-50 border-green-200 text-green-600",
-      purple: "bg-purple-50 border-purple-200 text-purple-600",
-      orange: "bg-orange-50 border-orange-200 text-orange-600"
-    };
-    return colors[color] || colors.blue;
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Как покупать
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Пошаговое руководство для безопасных и успешных покупок на нашей платформе
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content="Как покупать на TRIVO - пошаговое руководство. Советы по безопасным покупкам и проверке товаров." />
+      </Helmet>
 
-        {/* Quick Start */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="Zap" className="w-6 h-6 text-yellow-600" />
-              <span>Быстрый старт</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-4">
-              <Button
-                onClick={() => navigate("/")}
-                className="bg-blue-600 hover:bg-blue-700 h-auto p-4 flex-col space-y-2"
-              >
-                <Icon name="Search" className="w-6 h-6" />
-                <span>Начать поиск</span>
-              </Button>
-              <Button
-                onClick={() => navigate("/register")}
-                variant="outline"
-                className="h-auto p-4 flex-col space-y-2"
-              >
-                <Icon name="UserPlus" className="w-6 h-6" />
-                <span>Зарегистрироваться</span>
-              </Button>
-              <Button
-                onClick={() => navigate("/contacts")}
-                variant="outline"
-                className="h-auto p-4 flex-col space-y-2"
-              >
-                <Icon name="HelpCircle" className="w-6 h-6" />
-                <span>Получить помощь</span>
-              </Button>
+      <AvitoHeader />
+
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-16">
+          <div className="text-center mb-12 md:mb-16">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="ShoppingBag" size={32} className="text-white" />
             </div>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
+              Как покупать на TRIVO
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Пошаговое руководство для безопасных и выгодных покупок на нашей платформе
+            </p>
+          </div>
+        </section>
 
-        {/* Step by Step Guide */}
-        <div className="space-y-6 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
-            Пошаговое руководство
-          </h2>
-          
-          {steps.map((step, index) => (
-            <Card key={index} className="border-0 shadow-lg overflow-hidden">
-              <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row">
-                  <div className={`p-6 md:w-1/3 ${getColorClasses(step.color)}`}>
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-lg">
-                        {step.number}
-                      </div>
-                      <Icon name={step.icon as any} className="w-8 h-8" />
+        {/* Steps Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="space-y-8 md:space-y-12">
+            {steps.map((step, index) => (
+              <div key={index} className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-lg border border-gray-100">
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+                  <div className="flex items-center gap-4 md:gap-6 md:flex-col md:items-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl md:text-2xl flex-shrink-0">
+                      {step.number}
                     </div>
-                    <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                    <p className="text-sm opacity-90">{step.description}</p>
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center md:mt-4">
+                      <Icon name={step.icon as any} size={24} className="text-blue-600 md:w-8 md:h-8" />
+                    </div>
                   </div>
-                  <div className="p-6 md:w-2/3 bg-white">
-                    <ul className="space-y-3">
-                      {step.details.map((detail, detailIndex) => (
-                        <li key={detailIndex} className="flex items-start space-x-3">
-                          <Icon name="Check" className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Safety Tips */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="Shield" className="w-6 h-6 text-red-600" />
-              <span>Советы по безопасности</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
-              {safetyTips.map((tip, index) => (
-                <div key={index} className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
-                  <Icon name={tip.icon as any} className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{tip.title}</h4>
-                    <p className="text-sm text-gray-600">{tip.description}</p>
+                  
+                  <div className="flex-1">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                      {step.title}
+                    </h2>
+                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                      {step.description}
+                    </p>
+                    
+                    <div className="bg-blue-50 rounded-xl p-4 md:p-6">
+                      <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                        <Icon name="Lightbulb" size={16} />
+                        Полезные советы:
+                      </h3>
+                      <ul className="space-y-2">
+                        {step.tips.map((tip, tipIndex) => (
+                          <li key={tipIndex} className="flex items-start gap-2 text-blue-800">
+                            <Icon name="Check" size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm">{tip}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* Warning Signs */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="AlertTriangle" className="w-6 h-6 text-yellow-600" />
-              <span>Признаки мошенничества</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-4">
-              <p className="text-yellow-800 font-medium mb-2">
-                Будьте осторожны, если продавец:
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <ul className="space-y-2">
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Просит предоплату без встречи</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Предлагает цену намного ниже рыночной</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Торопит с принятием решения</span>
-                </li>
-              </ul>
-              <ul className="space-y-2">
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Отказывается встречаться лично</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Использует только фото из интернета</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <Icon name="X" className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">Просит перевести деньги на карту заранее</span>
-                </li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Safety Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Советы по безопасности
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Следуйте этим рекомендациям для безопасных покупок
+            </p>
+          </div>
 
-        {/* FAQ */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <Icon name="HelpCircle" className="w-6 h-6 text-blue-600" />
-              <span>Часто задаваемые вопросы</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="border-b border-gray-200 pb-4">
-                <h4 className="font-semibold text-gray-900 mb-2">
-                  Что делать, если товар не соответствует описанию?
-                </h4>
-                <p className="text-gray-700 text-sm">
-                  Вы имеете право отказаться от покупки. Не передавайте деньги, если товар 
-                  отличается от заявленного в объявлении. Сообщите об этом продавцу и при 
-                  необходимости обратитесь в службу поддержки.
-                </p>
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {safetyTips.map((section, index) => (
+              <div key={index} className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Icon name={section.icon as any} size={32} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {section.title}
+                  </h3>
+                </div>
+                
+                <ul className="space-y-3">
+                  {section.tips.map((tip, tipIndex) => (
+                    <li key={tipIndex} className="flex items-start gap-3">
+                      <Icon name="AlertCircle" size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-600 leading-relaxed">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              
-              <div className="border-b border-gray-200 pb-4">
-                <h4 className="font-semibold text-gray-900 mb-2">
-                  Можно ли вернуть товар после покупки?
-                </h4>
-                <p className="text-gray-700 text-sm">
-                  Возврат товара зависит от договоренности с продавцом. Рекомендуем обсудить 
-                  условия возврата до совершения покупки. Для дорогих товаров можно составить 
-                  простую расписку.
-                </p>
-              </div>
-              
-              <div className="border-b border-gray-200 pb-4">
-                <h4 className="font-semibold text-gray-900 mb-2">
-                  Как проверить подлинность товара?
-                </h4>
-                <p className="text-gray-700 text-sm">
-                  Просите у продавца документы на товар, проверяйте серийные номера, 
-                  изучайте упаковку и маркировку. Для дорогих товаров можно воспользоваться 
-                  услугами экспертизы.
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">
-                  Что делать при возникновении спора?
-                </h4>
-                <p className="text-gray-700 text-sm">
-                  Сначала попытайтесь решить вопрос с продавцом напрямую. Если это не удается, 
-                  обратитесь в службу поддержки сайта. Мы поможем найти компромиссное решение.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        </section>
 
-        {/* Call to Action */}
-        <div className="text-center">
-          <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Готовы начать покупки?
-              </h2>
-              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Теперь вы знаете, как безопасно и эффективно покупать товары на нашей платформе. 
-                Начните поиск прямо сейчас!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  onClick={() => navigate('/')}
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <Icon name="Search" className="w-5 h-5 mr-2" />
-                  Искать товары
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/register')}
-                  size="lg"
-                >
-                  <Icon name="UserPlus" className="w-5 h-5 mr-2" />
-                  Создать аккаунт
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        {/* CTA Section */}
+        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-16">
+          <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl md:rounded-3xl p-8 md:p-12 text-center text-white">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="ShoppingCart" size={32} className="text-white" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Готовы начать покупки?
+            </h2>
+            <p className="text-lg md:text-xl mb-8 opacity-90">
+              Найдите нужный товар среди тысяч объявлений на TRIVO
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/')}
+                className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-full shadow hover:bg-blue-50 transition"
+              >
+                Начать покупки
+              </button>
+              <button
+                onClick={() => navigate('/how-to-sell')}
+                className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-blue-600 transition"
+              >
+                Как продавать
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <AvitoFooter />
     </div>
   );
 };

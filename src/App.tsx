@@ -22,6 +22,11 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import SitemapPage from "./pages/SitemapPage";
 import HowToBuyPage from "./pages/HowToBuyPage";
+import HowToSellPage from "./pages/HowToSellPage";
+import PricingPage from "./pages/PricingPage";
+import AdvertisingPage from "./pages/AdvertisingPage";
+import HelpPage from "./pages/HelpPage";
+import UnderDevelopmentPage from "./pages/UnderDevelopmentPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +65,11 @@ const App = () => {
                     <Route path="terms" element={<TermsPage />} />
                     <Route path="sitemap" element={<SitemapPage />} />
                     <Route path="how-to-buy" element={<HowToBuyPage />} />
+                    <Route path="how-to-sell" element={<HowToSellPage />} />
+                    <Route path="pricing" element={<PricingPage />} />
+                    <Route path="advertising" element={<AdvertisingPage />} />
+                    <Route path="help" element={<HelpPage />} />
+                    <Route path="under-development" element={<UnderDevelopmentPage />} />
                     <Route
                       path="profile/*"
                       element={

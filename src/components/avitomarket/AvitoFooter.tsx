@@ -33,10 +33,10 @@ const AvitoFooter = () => {
           <div>
             <h3 className="font-semibold mb-4">Продавцам</h3>
             <ul className="space-y-2 text-blue-100">
-              <li className="hover:text-white cursor-pointer">Как продавать</li>
-              <li className="hover:text-white cursor-pointer">Тарифы</li>
-              <li className="hover:text-white cursor-pointer">Реклама на TRIVO</li>
-              <li className="hover:text-white cursor-pointer">Помощь</li>
+              <li><Link to="/how-to-sell" className="hover:text-white">Как продавать</Link></li>
+              <li><Link to="/pricing" className="hover:text-white">Тарифы</Link></li>
+              <li><Link to="/advertising" className="hover:text-white">Реклама на TRIVO</Link></li>
+              <li><Link to="/help" className="hover:text-white">Помощь</Link></li>
             </ul>
           </div>
 
