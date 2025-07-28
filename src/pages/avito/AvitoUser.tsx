@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,9 +15,9 @@ import {
 import Icon from "@/components/ui/icon";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
-import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
-import { type User, type Ad, type Review, type UserDisplayData, type AdWithStatus, AdStatus } from "@/lib/types";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { AdStatus } from "@/lib/types.tsx";
 import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
@@ -26,16 +25,23 @@ const AvitoUser = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const [userDisplayData, setUserDisplayData] =
-    useState<UserDisplayData | null>(null);
-  const [ads, setAds] = useState<AdWithStatus[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [activeTab, setActiveTab] = useState("active");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [reviewSortOrder, setReviewSortOrder] = useState("new");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { getPageTitle, settings: systemSettings } = usePageTitle();
+  
+  const {
+    userDisplayData,
+    ads,
+    reviews,
+    loading,
+    error,
+    searchQuery,
+    setSearchQuery,
+    reviewSortOrder,
+    setReviewSortOrder,
+    activeTab,
+    setActiveTab,
+    filteredAds,
+    sortedReviews,
+  } = useUserProfile({ userId });
 
   const scrollToReviews = () => {
     const reviewsSection = document.getElementById("reviews-section");
@@ -47,83 +53,6 @@ const AvitoUser = () => {
   const navigateToAddReview = () => {
     navigate(`/user/${userId}/addReview`);
   };
-
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (!userId) return;
-        
-      try {
-        setLoading(true);
-        setError(null);
-      
-        const [user, userAds] = await Promise.all([
-          storeApi.getUserById(userId),
-          storeApi.getUserAds(userId),
-        ]);
-      
-        // Получаем отзывы по каждому объявлению
-        const reviewsArrays = await Promise.all(
-          userAds.map((ad) => storeApi.getReviewsByAdId(ad.id))
-        );
-        const allReviews = reviewsArrays.flat();
-      
-        const averageRating =
-          allReviews.reduce((sum, review) => sum + review.rating, 0) /
-          (allReviews.length || 1); // на случай деления на 0
-      
-        const joinDate = new Date(user.registrationDate).toLocaleDateString(
-          "ru-RU",
-          {
-            year: "numeric",
-            month: "long",
-          }
-        );
-      
-        const displayData: UserDisplayData = {
-          user,
-          averageRating: Math.round(averageRating * 10) / 10,
-          reviewCount: allReviews.length,
-          joinDate,
-          responseTime: "15-30 минут",
-          deliveryCount: Math.floor(Math.random() * 10) + 1,
-          salesCount: userAds.length,
-        };
-      
-        const adsWithStatus: AdWithStatus[] = userAds.map((ad) => ({
-          ...ad,
-          isDeliveryAvailable: false,
-          isFavorite: false,
-          formattedPrice: `${ad.price.toLocaleString()} ₽`,
-          location: `${ad.city.region}, ${ad.city.name}`,
-          date: new Date(ad.publishedAt).toLocaleDateString("ru-RU"),
-          image:
-            ad.links[0] ||
-            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
-        }));
-      
-        setUserDisplayData(displayData);
-        setAds(adsWithStatus);
-        setReviews(allReviews); // ✅ правильные отзывы
-      } catch (err) {
-        console.error("Ошибка загрузки данных пользователя:", err);
-        setError("Ошибка загрузки данных пользователя");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserData();
-  }, [userId]);
-
-  const filteredAds = ads.filter((ad) => {
-    if (activeTab === "active") {
-      return ad.adStatus === AdStatus.ACTIVE;
-    } else {
-      return ad.adStatus === AdStatus.SOLD || ad.adStatus === AdStatus.TIME_OUT;
-    }
-  }).filter((ad) =>
-    ad.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const activeCount = ads.filter((ad) => ad.adStatus === AdStatus.ACTIVE).length;
   const soldCount = ads.filter((ad) => ad.adStatus === AdStatus.SOLD || ad.adStatus === AdStatus.TIME_OUT).length;
@@ -137,12 +66,7 @@ const AvitoUser = () => {
     { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } as Record<number, number>,
   );
 
-  const sortedReviews = [...reviews].sort((a, b) => {
-    if (reviewSortOrder === "new") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    }
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+
 
   // Формируем заголовок
   const pageTitle =
@@ -184,6 +108,20 @@ const AvitoUser = () => {
       <AvitoHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Баннер пользователя */}
+        {userDisplayData.user.bannerUrl && (
+          <div className="mb-8 relative">
+            <div className="h-64 rounded-2xl overflow-hidden shadow-lg">
+              <img
+                src={userDisplayData.user.bannerUrl}
+                alt="Баннер профиля"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+          </div>
+        )}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Профиль пользователя */}
           <div className="lg:col-span-1">
@@ -240,6 +178,14 @@ const AvitoUser = () => {
                 <div className="text-sm text-gray-600">
                   На Trivo с {userDisplayData.joinDate}
                 </div>
+                {userDisplayData.user.description && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">О продавце</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {userDisplayData.user.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2 mb-6">

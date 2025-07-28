@@ -15,6 +15,8 @@ export interface User {
   reservedBalance: number;   // 🔒 Зарезервированные средства
   tgid: number;
   tgUrl: string;
+  description?: string;      // 📝 Описание профиля пользователя
+  bannerUrl?: string;        // 🖼️ Ссылка на баннер профиля
 }
 
 export enum UserRole {
@@ -204,4 +206,3 @@ export interface Video {
   duration?: number; // в секундах
   format?: string; // например, mp4
 }
-
