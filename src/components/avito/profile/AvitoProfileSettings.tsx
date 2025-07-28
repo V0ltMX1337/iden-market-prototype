@@ -1,254 +1,44 @@
-import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
-import { useAuth } from "@/hooks/useAuth";
-import { storeApi } from "@/lib/store";
-import { City, User } from "@/lib/types";
+import { useProfileSettings } from "@/hooks/useProfileSettings";
 
 const AvitoProfileSettings = () => {
-  const { user } = useAuth();
-
-  // formData хранит частично данные из User
-  const [formData, setFormData] = useState<{
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    cityId: string;
-    photoUrl?: string;
-  }>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    cityId: "",
-    photoUrl: "",
-  });
-
-  const [notifications, setNotifications] = useState({
-    email: true,
-    sms: false,
-    push: true,
-    marketing: false,
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [cities, setCities] = useState<City[]>([]);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  
-  // Состояния для модалок
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
-  const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: ""
-  });
-  const [twoFactorForm, setTwoFactorForm] = useState({
-    telegramId: "",
-    step: "input" as "input" | "instruction"
-  });
-  const [changingPassword, setChangingPassword] = useState(false);
-  const [settingTwoFactor, setSettingTwoFactor] = useState(false);
-
-  useEffect(() => {
-    const loadCities = async () => {
-      try {
-        const citiesData: City[] = await storeApi.getCities();
-        setCities(citiesData);
-      } catch (error) {
-        console.error("Ошибка загрузки городов", error);
-      }
-    };
-    loadCities();
-  }, []);
-
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const loadUserData = async () => {
-      setLoading(true);
-      try {
-        const freshUser: User = await storeApi.getUserById(user.id);
-        setFormData({
-          firstName: freshUser.firstName || "",
-          lastName: freshUser.lastName || "",
-          email: freshUser.email || "",
-          phone: freshUser.phone || "",
-          cityId: freshUser.city?.id || "",
-          photoUrl: freshUser.photoUrl || "",
-        });
-      } catch (error) {
-        console.error("Ошибка загрузки данных пользователя", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserData();
-  }, [user?.id]);
-
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleNotificationChange = (
-    field: keyof typeof notifications,
-    value: boolean
-  ) => {
-    setNotifications((prev) => ({ ...prev, [field]: value }));
-  };
-  
-  const handleSave = async () => {
-    if (!user?.id) return;
-  
-    if (!formData.firstName) {
-      alert("Пожалуйста, укажите имя");
-      return;
-    }
-
-    if (!formData.lastName) {
-      alert("Пожалуйста, укажите фамилию");
-      return;
-    }
-
-    if (!formData.email) {
-      alert("Пожалуйста, укажите емейл");
-      return;
-    }
-
-    if (!formData.phone) {
-      alert("Пожалуйста, укажите номер телефона");
-      return;
-    }
-
-    if (!formData.cityId) {
-      alert("Пожалуйста, выберите город");
-      return;
-    }
-  
-    setSaving(true);
-    try {
-      const cityObj = cities.find((c) => c.id === formData.cityId);
-      if (!cityObj) {
-        alert("Выбран неверный город");
-        setSaving(false);
-        return;
-      }
-    
-      // Объединяем полный объект пользователя с новыми данными из формы
-      const updatedUser: User = {
-        ...user,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        city: cityObj,
-        photoUrl: formData.photoUrl || "", // Гарантируем, что всегда строка
-      };
-    
-      await storeApi.updateUser(user.id, updatedUser);
-    
-      alert("Данные успешно сохранены");
-    
-      // тут нужно обновить локальный контекст/стейт пользователя, если используешь
-      // например: updateUserInContext(updatedUser);
-    
-    } catch (error) {
-      console.error("Ошибка сохранения данных", error);
-      alert("Ошибка при сохранении данных");
-    } finally {
-      setSaving(false);
-    }
-  };
+  const {
+    user,
+    formData,
+    notifications,
+    loading,
+    saving,
+    cities,
+    uploadingAvatar,
+    uploadingBanner,
+    showPasswordModal,
+    showTwoFactorModal,
+    passwordForm,
+    twoFactorForm,
+    changingPassword,
+    settingTwoFactor,
+    handleInputChange,
+    handleNotificationChange,
+    handleSave,
+    onAvatarChange,
+    onBannerChange,
+    setShowPasswordModal,
+    setShowTwoFactorModal,
+    setPasswordForm,
+    setTwoFactorForm,
+    handlePasswordChange,
+    handleTwoFactorSetup,
+    resetTwoFactorModal,
+  } = useProfileSettings();
 
 
-
-  // Загрузка аватарки
-  const onAvatarChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files?.[0]) return;
-
-      const file = e.target.files[0];
-      setUploadingAvatar(true);
-
-      try {
-        const res = await storeApi.uploadPhoto("avatars", file);
-        setFormData((prev) => ({ ...prev, photoUrl: res.url }));
-      } catch (error) {
-        console.error("Ошибка загрузки аватарки", error);
-        alert("Ошибка загрузки аватарки");
-      } finally {
-        setUploadingAvatar(false);
-      }
-    },
-    []
-  );
-
-  // Обработчики для смены пароля
-  const handlePasswordChange = async () => {
-    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
-      alert("Заполните все поля");
-      return;
-    }
-    
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("Новые пароли не совпадают");
-      return;
-    }
-    
-    if (passwordForm.newPassword.length < 6) {
-      alert("Пароль должен содержать минимум 6 символов");
-      return;
-    }
-    
-    setChangingPassword(true);
-    try {
-      // Здесь должен быть вызов API для смены пароля
-      // await storeApi.changePassword(user.id, passwordForm.currentPassword, passwordForm.newPassword);
-      
-      alert("Пароль успешно изменен");
-      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      setShowPasswordModal(false);
-    } catch (error) {
-      console.error("Ошибка смены пароля:", error);
-      alert("Ошибка при смене пароля");
-    } finally {
-      setChangingPassword(false);
-    }
-  };
-  
-  // Обработчики для двухфакторной аутентификации
-  const handleTwoFactorSetup = async () => {
-    if (!twoFactorForm.telegramId.trim()) {
-      alert("Введите Telegram ID");
-      return;
-    }
-    
-    setSettingTwoFactor(true);
-    try {
-      // Здесь должен быть вызов API для настройки 2FA
-      // await storeApi.setupTwoFactor(user.id, twoFactorForm.telegramId);
-      
-      setTwoFactorForm(prev => ({ ...prev, step: "instruction" }));
-    } catch (error) {
-      console.error("Ошибка настройки 2FA:", error);
-      alert("Ошибка при настройке двухфакторной аутентификации");
-    } finally {
-      setSettingTwoFactor(false);
-    }
-  };
-  
-  const resetTwoFactorModal = () => {
-    setTwoFactorForm({ telegramId: "", step: "input" });
-    setShowTwoFactorModal(false);
-  };
 
   if (loading) return <div>Загрузка...</div>;
   if (!user) return <div>Пользователь не авторизован</div>;
@@ -256,6 +46,46 @@ const AvitoProfileSettings = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Настройки профиля</h1>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Баннер профиля</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {formData.bannerUrl ? (
+            <div className="relative">
+              <img
+                src={formData.bannerUrl}
+                alt="Баннер профиля"
+                className="w-full h-48 rounded-lg object-cover border border-gray-300"
+              />
+            </div>
+          ) : (
+            <div className="w-full h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-400">
+              <div className="text-center text-gray-500">
+                <Icon name="Image" size={48} className="mx-auto mb-2" />
+                <p className="text-sm">Рекомендуемый размер: 1200x320 пикселей</p>
+              </div>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onBannerChange}
+            disabled={uploadingBanner}
+            id="banner-upload"
+            className="hidden"
+          />
+          <label
+            htmlFor="banner-upload"
+            className={`cursor-pointer px-4 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 inline-block ${
+              uploadingBanner ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {uploadingBanner ? "Загрузка..." : "Загрузить баннер"}
+          </label>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -348,6 +178,20 @@ const AvitoProfileSettings = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <Label htmlFor="description">О себе</Label>
+            <Textarea
+              id="description"
+              value={formData.description || ""}
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              placeholder="Расскажите о себе, своем опыте и интересах..."
+              className="min-h-[100px] resize-none"
+              maxLength={500}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {(formData.description || "").length}/500 символов
+            </p>
           </div>
           <Button
             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
