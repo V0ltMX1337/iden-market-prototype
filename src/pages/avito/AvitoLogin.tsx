@@ -62,9 +62,10 @@ const AvitoLogin = () => {
 
   useEffect(() => {
     let isMounted = true;
+    let pollTimeout: NodeJS.Timeout | null = null;
 
     const poll = async () => {
-      if (!isMounted) return;
+      if (!isMounted || document.hidden) return;
 
       const userId = localStorage.getItem("loginUserId");
       if (!userId) return;
@@ -75,17 +76,43 @@ const AvitoLogin = () => {
         setWaitingTelegram(false);
         showSuccess("Вход подтвержден через Telegram!", "Добро пожаловать");
         navigate("/");
-      } else {
-        setTimeout(poll, 1000); // Запускаем следующий опрос через 1 секунду
+      } else if (isMounted && !document.hidden) {
+        pollTimeout = setTimeout(poll, 1000); // Запускаем следующий опрос через 1 секунду
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Приложение ушло в фон - останавливаем поллинг
+        if (pollTimeout) {
+          clearTimeout(pollTimeout);
+          pollTimeout = null;
+        }
+      } else if (waitingTelegram && isMounted) {
+        // Приложение вернулось в фокус - возобновляем поллинг
+        poll();
+      }
+    };
+
+    const handleFocus = () => {
+      if (waitingTelegram && isMounted) {
+        poll();
       }
     };
 
     if (waitingTelegram) {
       poll();
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('focus', handleFocus);
     }
 
     return () => {
       isMounted = false;
+      if (pollTimeout) {
+        clearTimeout(pollTimeout);
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
     };
   }, [waitingTelegram, checkPendingLoginStatus, navigate]);
 

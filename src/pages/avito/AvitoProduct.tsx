@@ -272,14 +272,15 @@ const AvitoProduct = () => {
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumbs categoryPath={categoryPath} fullSlug={categoryFullSlug} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+        {/* Десктопная версия */}
+        <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
           <div className="lg:col-span-2 space-y-6">
             <ProductDetails
               title={product.title}
               description={product.description}
               images={product.links}
             />
-            <ProductFeatures filters={product.filters} />   {/* ✅ вот здесь */}
+            <ProductFeatures filters={product.filters} />
             <AskSeller
               messageText={messageText}
               setMessageText={setMessageText}
@@ -320,6 +321,64 @@ const AvitoProduct = () => {
             <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
             <SafetyTips />
           </div>
+        </div>
+
+        {/* Мобильная версия */}
+        <div className="lg:hidden space-y-6 mt-4">
+          {/* Фото и описание */}
+          <ProductDetails
+            title={product.title}
+            description={product.description}
+            images={product.links}
+          />
+          
+          {/* Характеристики */}
+          <ProductFeatures filters={product.filters} />
+          
+          {/* Задать вопрос продавцу */}
+          <AskSeller
+            messageText={messageText}
+            setMessageText={setMessageText}
+            selectedQuestion={selectedQuestion}
+            setSelectedQuestion={setSelectedQuestion}
+            questions={questions}
+            onSendMessage={handleSendMessage}
+          />
+          
+          {/* Похожие объявления */}
+          <SimilarProducts
+            products={staticSimilarProducts}
+            onViewAllClick={() => navigate("/similar")}
+          />
+          
+          {/* Информация о товаре */}
+          <ProductInfo
+            title={product.title}
+            isUsed={product.adSold !== AdSold.NEW}
+            adSold={product.adSold}
+            price={product.price}
+            city={product.city}
+            views={product.views}
+            favorites={product.favoritesCount}
+            publishedAt={product.publishedAt}
+            phone={seller.phone}
+            latitude={product.latitude}
+            longitude={product.longitude}
+            fullAdress={product.fullAdress}
+            onDeliveryClick={() => alert("Функция находится в разработке")}
+            onChatClick={() => navigate("/profile/messages")}
+            onShowPhoneClick={() => navigate("/phone")}
+            isFavorite={isFavorite}
+            inCart={inCart}
+            onToggleFavorite={toggleFavorite}
+            onToggleCart={toggleCart}
+          />
+          
+          {/* Продавец */}
+          <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
+          
+          {/* Безопасная сделка */}
+          <SafetyTips />
         </div>
       </main>
 
