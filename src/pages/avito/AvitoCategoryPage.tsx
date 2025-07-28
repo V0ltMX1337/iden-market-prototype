@@ -1,7 +1,5 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { storeApi } from "@/lib/store";
-import { AdStatus, FilterDefinition, FilterType, type Ad, type Category, type City, type Subcategory } from "@/lib/types";
+import { useNavigate } from "react-router-dom";
+import { FilterType } from "@/lib/types";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import Breadcrumbs from "@/components/customcomponent/Breadcrumbs";
@@ -13,235 +11,47 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useAvitoCategory } from "@/hooks/useAvitoCategory";
-
-const ADS_PER_PAGE = 10;
+import { useCategoryFilters } from "@/hooks/useCategoryFilters";
 
 const AvitoCategoryPage = () => {
-  const { categoryid } = useParams<{ categoryid: string }>();
   const navigate = useNavigate();
-  useAvitoCategory
-  const location = useLocation();
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [ads, setAds] = useState<Ad[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(0);
-  const [selectedCities, setSelectedCities] = useState<string[]>([]);
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [filtersDefs, setFiltersDefs] = useState<FilterDefinition[]>([]);
-
-  type FilterValue = string | string[] | number[];
- const [selectedFilters, setSelectedFilters] = useState<Record<string, FilterValue>>({});
-
-  // Новый стейт для хлебных крошек
-  const [categoryPath, setCategoryPath] = useState<
-    { name: string; slug: string; fullSlug: string }[]
-  >([]);
-  const [categoryFullSlug, setCategoryFullSlug] = useState("");
-
-  // Разбор подкатегорий из пути
-  const subslugs: string[] = (() => {
-    if (!categoryid) return [];
-    const basePath = `/category/${categoryid}`;
-    const path = location.pathname;
-    if (path === basePath) return [];
-    const tail = path.startsWith(basePath) ? path.slice(basePath.length) : "";
-    return tail.split("/").filter(Boolean);
-  })();
-
-  // Асинхронная функция построения пути, адаптирована из твоего примера
-  const buildCategoryPath = async (
-    categorySlug: string,
-    subSlugs: string[]
-  ): Promise<{ name: string; slug: string; fullSlug: string }[]> => {
-    try {
-      const categoriesData: Category[] = await storeApi.getCategories();
-      const category = categoriesData.find((cat) => cat.slug === categorySlug);
-      if (!category) return [];
-
-      // Первый элемент - категория
-      const basePath = [
-        {
-          name: category.name,
-          slug: category.slug,
-          fullSlug: category.slug,
-        },
-      ];
-
-      // Рекурсивный поиск пути подкатегорий
-      const findSubcategoryPath = (
-        subs: Subcategory[],
-        slugs: string[],
-        level = 0,
-        path: { name: string; slug: string; fullSlug: string }[] = [],
-        slugsAcc: string[] = []
-      ): { name: string; slug: string; fullSlug: string }[] | null => {
-        if (level >= slugs.length) return path;
-
-        const currentSlug = slugs[level];
-        const sub = subs.find((s) => s.slug === currentSlug);
-        if (!sub) return null;
-
-        const newSlugsAcc = [...slugsAcc, sub.slug];
-        const newPath = [
-          ...path,
-          { name: sub.name, slug: sub.slug, fullSlug: newSlugsAcc.join("/") },
-        ];
-
-        if (level === slugs.length - 1) return newPath;
-
-        if (sub.children?.length) {
-          return findSubcategoryPath(sub.children, slugs, level + 1, newPath, newSlugsAcc);
-        }
-
-        return newPath;
-      };
-
-      const subPath = findSubcategoryPath(category.subcategories ?? [], subSlugs);
-
-      return subPath ? [...basePath, ...subPath] : basePath;
-    } catch (err) {
-      console.error("Ошибка при построении пути:", err);
-      return [];
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [categoriesData, filters, adsData, citiesData] = await Promise.all([
-          storeApi.getCategories(),
-          storeApi.getFilters(),
-          storeApi.getAds(),
-          storeApi.getCities(),
-        ]);
-        setCategories(categoriesData);
-        setAds(adsData.filter((ad) => ad.adStatus === AdStatus.ACTIVE));
-        setCities(citiesData);
-        setFiltersDefs(filters);
-
-        if (categoryid) {
-          const path = await buildCategoryPath(categoryid, subslugs);
-          setCategoryPath(path);
-          setCategoryFullSlug(path.map((p) => p.slug).join("/"));
-        } else {
-          setCategoryPath([]);
-          setCategoryFullSlug("");
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [categoryid, location.pathname]);
-
-  // Остальная логика (фильтрация объявлений и т.д.) без изменений, только category и currentSub теперь можно брать из categoryPath
-
-  // Чтобы получить category и currentSub для фильтров и навигации
-  const category = categories.find((cat) => cat.slug === categoryid);
-  const currentSub = (() => {
-    if (!categoryPath.length) return undefined;
-    return categoryPath[categoryPath.length - 1];
-  })();
-
-  const allowedCategoryIds = category ? [category.id] : [];
-  // Здесь получаем id подкатегорий из текущей последней подкатегории
-  const findSubBySlug = (subs: Subcategory[] | undefined, slug: string): Subcategory | undefined =>
-    subs?.find((s) => s.slug === slug);
-
-  const findSubcategoryByPath = (
-    subs: Subcategory[] | undefined,
-    slugs: string[]
-  ): Subcategory | undefined => {
-    if (!subs || slugs.length === 0) return undefined;
-    let currentSubs = subs;
-    let foundSub: Subcategory | undefined = undefined;
-    for (const slug of slugs) {
-      foundSub = findSubBySlug(currentSubs, slug);
-      if (!foundSub) return undefined;
-      currentSubs = foundSub.children ?? [];
-    }
-    return foundSub;
-  };
-
-  const lastSubcategory = category
-    ? findSubcategoryByPath(category.subcategories, subslugs)
-    : undefined;
-
-  const collectSubcategoryIds = (subcat: Subcategory | undefined): string[] => {
-    if (!subcat) return [];
-    let ids = [subcat.id];
-    if (subcat.children && subcat.children.length > 0) {
-      subcat.children.forEach((child) => {
-        ids = ids.concat(collectSubcategoryIds(child));
-      });
-    }
-    return ids;
-  };
-
-  const allowedSubcategoryIds = lastSubcategory ? collectSubcategoryIds(lastSubcategory) : [];
-
-      // Фильтрация объявлений
-      const filteredAds = ads.filter((ad) => {
-        if (!allowedCategoryIds.includes(ad.categoryId)) return false;
-        if (allowedSubcategoryIds.length > 0 && !allowedSubcategoryIds.includes(ad.subcategoryId))
-          return false;
-        if (minPrice && ad.price < minPrice) return false;
-        if (maxPrice && ad.price > maxPrice) return false;
-        if (selectedCities.length && !selectedCities.includes(ad.city.id)) return false;
-        if (filtersDefs.length > 0) {
-        for (const filterId in selectedFilters) {
-        const selected = selectedFilters[filterId];
-        const adFilter = ad.filters.find((f) => f.filterId === filterId);
-        if (!adFilter) return false;
-
-        const def = filtersDefs.find((f) => f.id === filterId);
-        if (!def) return false;
-
-        switch (def.type) {
-          case FilterType.SELECT:
-            if (selected && adFilter.value !== selected) return false;
-            break;
-          case FilterType.CHECKBOX:
-            if (Array.isArray(selected)) {
-              const selectedArray = selected as string[];
-              if (!selectedArray.includes(adFilter.value)) return false;
-            }
-            break;
-          case FilterType.RANGE:
-            const [min, max] = selected as number[];
-            const numericValue = Number(adFilter.value);
-            if (numericValue < min || numericValue > max) return false;
-            break;
-        }
-      }
-    }
-    return true;
-  });
-
-  const totalPages = Math.ceil(filteredAds.length / ADS_PER_PAGE);
-  const paginatedAds = filteredAds.slice(
-    (currentPage - 1) * ADS_PER_PAGE,
-    currentPage * ADS_PER_PAGE
-  );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [minPrice, maxPrice, selectedCities, categoryid, location.pathname]);
-
-  const handleCityChange = (cityId: string) => {
-    setSelectedCities((prev) =>
-      prev.includes(cityId) ? prev.filter((c) => c !== cityId) : [...prev, cityId]
-    );
-  };
+  const {
+    // Data
+    cities,
+    filtersDefs,
+    category,
+    lastSubcategory,
+    categoryPath,
+    categoryFullSlug,
+    subslugs,
+    
+    // State
+    loading,
+    currentPage,
+    totalPages,
+    paginatedAds,
+    
+    // Filters
+    minPrice,
+    maxPrice,
+    selectedCities,
+    selectedFilters,
+    isMobileFiltersOpen,
+    
+    // Setters
+    setMinPrice,
+    setMaxPrice,
+    setIsMobileFiltersOpen,
+    setPage,
+    
+    // Handlers
+    handleCityChange,
+    handleFilterChange,
+    clearAllFilters,
+    
+    // Constants
+    ADS_PER_PAGE
+  } = useCategoryFilters();
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -252,14 +62,14 @@ const AvitoCategoryPage = () => {
             type="number"
             placeholder="от"
             value={minPrice || ""}
-            onChange={e => setMinPrice(Number(e.target.value))}
+            onChange={e => setMinPrice(Number(e.target.value) || 0)}
             className="w-1/2 h-8 md:h-10"
           />
           <Input
             type="number"
             placeholder="до"
             value={maxPrice || ""}
-            onChange={e => setMaxPrice(Number(e.target.value))}
+            onChange={e => setMaxPrice(Number(e.target.value) || 0)}
             className="w-1/2 h-8 md:h-10"
           />
         </div>
@@ -291,88 +101,78 @@ const AvitoCategoryPage = () => {
       </div>
 
       {filtersDefs.map((filter) => {
-      const currentVal = selectedFilters[filter.id];
+        const currentVal = selectedFilters[filter.id];
 
-      switch (filter.type) {
-        case FilterType.SELECT:
-          return (
-            <div key={filter.id} className="mb-4">
-              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
-              <select
+        switch (filter.type) {
+          case FilterType.SELECT:
+            return (
+              <div key={filter.id} className="mb-4">
+                <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+                <select
                   value={typeof currentVal === "string" ? currentVal : ""}
-                  onChange={(e) =>
-                    setSelectedFilters((prev) => ({ ...prev, [filter.id]: e.target.value }))
-                  }
+                  onChange={(e) => handleFilterChange(filter.id, e.target.value)}
                   className="w-full border p-2 rounded text-sm"
                 >
-                <option value="">Не выбрано</option>
-                {filter.values.map((val) => (
-                  <option key={val} value={val}>{val}</option>
-                ))}
-              </select>
-            </div>
-          );
+                  <option value="">Не выбрано</option>
+                  {filter.values.map((val) => (
+                    <option key={val} value={val}>{val}</option>
+                  ))}
+                </select>
+              </div>
+            );
 
-        case FilterType.CHECKBOX:
-          return (
-            <div key={filter.id} className="mb-4">
-              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
-              {filter.values.map((val) => (
-                <label key={val} className="flex items-center space-x-2 text-xs mb-1">
-                  <Checkbox
-                    checked={Array.isArray(currentVal) && (currentVal as string[]).includes(val)}
-                    onCheckedChange={() => {
-                      setSelectedFilters((prev) => {
-                        const prevArr = Array.isArray(prev[filter.id]) ? [...prev[filter.id] as string[]] : [];
+          case FilterType.CHECKBOX:
+            return (
+              <div key={filter.id} className="mb-4">
+                <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+                {filter.values.map((val) => (
+                  <label key={val} className="flex items-center space-x-2 text-xs mb-1">
+                    <Checkbox
+                      checked={Array.isArray(currentVal) && (currentVal as string[]).includes(val)}
+                      onCheckedChange={() => {
+                        const prevArr = Array.isArray(currentVal) ? [...currentVal as string[]] : [];
                         const newVal = prevArr.includes(val)
                           ? prevArr.filter((v) => v !== val)
                           : [...prevArr, val];
-                        return { ...prev, [filter.id]: newVal };
-                      });
-                    }}
-                  />
-                  <span>{val}</span>
-                </label>
-              ))}
-            </div>
-          );
-
-        case FilterType.RANGE:
-          const [min, max] = currentVal as number[] || [0, 100];
-          return (
-            <div key={filter.id} className="mb-4">
-              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
-              <Slider
-                value={[min, max]}
-                min={0}
-                max={100}
-                step={1}
-                onValueChange={([newMin, newMax]) => {
-                  setSelectedFilters((prev) => ({ ...prev, [filter.id]: [newMin, newMax] }));
-                }}
-              />
-              <div className="flex justify-between text-xs mt-1">
-                <span>{min}</span>
-                <span>{max}</span>
+                        handleFilterChange(filter.id, newVal);
+                      }}
+                    />
+                    <span>{val}</span>
+                  </label>
+                ))}
               </div>
-            </div>
-          );
+            );
 
-        default:
-          return null;
-      }
-    })}
+          case FilterType.RANGE:
+            const [min, max] = currentVal as number[] || [0, 100];
+            return (
+              <div key={filter.id} className="mb-4">
+                <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+                <Slider
+                  value={[min, max]}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onValueChange={([newMin, newMax]) => {
+                    handleFilterChange(filter.id, [newMin, newMax]);
+                  }}
+                />
+                <div className="flex justify-between text-xs mt-1">
+                  <span>{min}</span>
+                  <span>{max}</span>
+                </div>
+              </div>
+            );
+
+          default:
+            return null;
+        }
+      })}
 
       <Button
         variant="outline"
         className="w-full text-xs md:text-sm h-8 md:h-10"
-        onClick={() => {
-          setMinPrice(0);
-          setMaxPrice(0);
-          setSelectedCities([]);
-          setSelectedFilters({});
-          setIsMobileFiltersOpen(false);
-        }}
+        onClick={clearAllFilters}
       >
         Сбросить фильтры
       </Button>
@@ -439,7 +239,7 @@ const AvitoCategoryPage = () => {
                     size={"sm"}
                     className="whitespace-nowrap text-xs md:text-sm"
                     onClick={() => {
-                      const newPath = `/category/${categoryid}/${[...subslugs, sub.slug].join("/")}`;
+                      const newPath = `/category/${category?.slug}/${[...subslugs, sub.slug].join("/")}`;
                       navigate(newPath);
                     }}
                   >
@@ -452,7 +252,7 @@ const AvitoCategoryPage = () => {
                     variant={sub.slug === subslugs[0] ? "default" : "outline"}
                     size={"sm"}
                     className="whitespace-nowrap text-xs md:text-sm"
-                    onClick={() => navigate(`/category/${categoryid}/${sub.slug}`)}
+                    onClick={() => navigate(`/category/${category.slug}/${sub.slug}`)}
                   >
                     {sub.name}
                   </Button>
@@ -516,7 +316,7 @@ const AvitoCategoryPage = () => {
                     <Button
                       size="sm"
                       disabled={currentPage <= 1}
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      onClick={() => setPage(currentPage - 1)}
                       className="text-xs md:text-sm"
                     >
                       Назад
@@ -527,7 +327,7 @@ const AvitoCategoryPage = () => {
                     <Button
                       size="sm"
                       disabled={currentPage >= totalPages}
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() => setPage(currentPage + 1)}
                       className="text-xs md:text-sm"
                     >
                       Вперед
