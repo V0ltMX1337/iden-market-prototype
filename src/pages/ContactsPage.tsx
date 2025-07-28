@@ -5,12 +5,11 @@ import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import Icon from "@/components/ui/icon";
 import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { useAlert } from "@/contexts/AlertContext";
+import { useAlert } from "@/hooks/useAlert";
 
 const ContactsPage = () => {
   const navigate = useNavigate();
   const { showSuccess, showError } = useAlert();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,9 +17,7 @@ const ContactsPage = () => {
     message: ''
   });
 
-  const pageTitle = systemSettings
-    ? getPageTitle("contactsPageTitle", {})
-    : "Контакты - TRIVO";
+  const pageTitle = "Контакты - TRIVO";
 
   const contacts = [
     {
