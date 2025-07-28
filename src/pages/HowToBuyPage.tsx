@@ -7,11 +7,8 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const HowToBuyPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const pageTitle = systemSettings
-    ? getPageTitle("howToBuyPageTitle", {})
-    : "Как покупать - TRIVO";
+  const pageTitle = "Как покупать - TRIVO";
 
   const steps = [
     {

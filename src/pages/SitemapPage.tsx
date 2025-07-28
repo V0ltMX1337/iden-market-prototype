@@ -7,11 +7,8 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const SitemapPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const pageTitle = systemSettings
-    ? getPageTitle("sitemapPageTitle", {})
-    : "Карта сайта - TRIVO";
+  const pageTitle = "Карта сайта - TRIVO";
 
   const siteMap = [
     {

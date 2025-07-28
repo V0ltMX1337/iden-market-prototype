@@ -7,11 +7,8 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const AdvertisingPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const pageTitle = systemSettings
-    ? getPageTitle("advertisingPageTitle", {})
-    : "Реклама на TRIVO";
+  const pageTitle = "Реклама на TRIVO";
 
   const advantages = [
     {

@@ -18,7 +18,7 @@ interface UseUserProfileReturn {
   setReviewSortOrder: (sortOrder: string) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  filteredAds: Ad[];
+  filteredAds: AdWithStatus[];
   sortedReviews: Review[];
   refreshData: () => void;
 }

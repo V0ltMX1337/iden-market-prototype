@@ -8,13 +8,10 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const HelpPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
-  const pageTitle = systemSettings
-    ? getPageTitle("helpPageTitle", {})
-    : "Помощь - TRIVO";
+  const pageTitle = "Помощь - TRIVO";
 
   const categories = [
     { id: 'all', name: 'Все вопросы', icon: 'HelpCircle' },
@@ -88,14 +85,14 @@ const HelpPage = () => {
       title: 'Телефон',
       description: 'Горячая линия поддержки',
       time: '8:00 - 22:00',
-      action: '+7 (800) 555-00-99'
+      action: 'Скоро...'
     },
     {
       icon: 'Mail',
       title: 'Email',
       description: 'Подробный ответ на почту',
       time: 'до 2 часов',
-      action: 'support@trivo.ru'
+      action: 'support@trivoads.ru'
     },
     {
       icon: 'FileText',

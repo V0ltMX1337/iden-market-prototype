@@ -8,12 +8,9 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const PricingPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
 
-  const pageTitle = systemSettings
-    ? getPageTitle("pricingPageTitle", {})
-    : "Тарифы - TRIVO";
+  const pageTitle = "Тарифы - TRIVO";
 
   const plans = [
     {

@@ -7,11 +7,8 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const pageTitle = systemSettings
-    ? getPageTitle("privacyPageTitle", {})
-    : "Политика конфиденциальности - TRIVO";
+  const pageTitle = "Политика конфиденциальности - TRIVO";
 
   const sections = [
     {

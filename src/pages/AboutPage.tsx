@@ -7,16 +7,13 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const AboutPage = () => {
   const navigate = useNavigate();
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
-  const pageTitle = systemSettings
-    ? getPageTitle("aboutPageTitle", {})
-    : "О нас - TRIVO";
+  const pageTitle = "О нас - TRIVO";
 
   const stats = [
-    { icon: "Users", label: "Активных пользователей", value: "50,000+" },
-    { icon: "Package", label: "Объявлений размещено", value: "200,000+" },
-    { icon: "ShoppingBag", label: "Успешных сделок", value: "75,000+" },
+    { icon: "Users", label: "Активных пользователей", value: "19+" },
+    { icon: "Package", label: "Объявлений размещено", value: "15+" },
+    { icon: "ShoppingBag", label: "Успешных сделок", value: "..." },
     { icon: "Star", label: "Средний рейтинг", value: "4.8/5" },
   ];
 

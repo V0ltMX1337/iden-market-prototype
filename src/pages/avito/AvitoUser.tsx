@@ -120,8 +120,8 @@ const AvitoUser = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
           ) : (
-            <div className="h-64 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300">
-              <div className="text-center text-gray-400">
+            <div className="h-64 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300">
+              <div className="text-center text-white-400">
                 <Icon name="Image" size={64} className="mx-auto mb-3" />
                 <p className="text-lg font-medium">Баннер не установлен</p>
                 <p className="text-sm">Рекомендуемый размер: 1200x320 пикселей</p>
@@ -135,7 +135,7 @@ const AvitoUser = () => {
           <div className="lg:col-span-1">
             <Card className="p-6">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                   {userDisplayData.user.photoUrl ? (
                     <img
                       src={userDisplayData.user.photoUrl}

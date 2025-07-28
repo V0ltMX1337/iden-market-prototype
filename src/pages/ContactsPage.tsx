@@ -23,19 +23,19 @@ const ContactsPage = () => {
     {
       icon: "Phone",
       title: "Телефон поддержки",
-      value: "+7 (800) 555-00-99",
+      value: "Later...",
       description: "Бесплатно по России, 24/7"
     },
     {
       icon: "Mail",
       title: "Email",
-      value: "support@trivo.ru",
+      value: "support@trivoads.ru",
       description: "Ответим в течение 2 часов"
     },
     {
       icon: "MapPin",
       title: "Офис",
-      value: "Москва, ул. Тверская, 1",
+      value: "Later...",
       description: "Пн-Пт с 9:00 до 18:00"
     },
     {
@@ -232,7 +232,7 @@ const ContactsPage = () => {
                   Как связаться с технической поддержкой?
                 </h3>
                 <p className="text-gray-600">
-                  Используйте телефон горячей линии +7 (800) 555-00-99 или напишите на support@trivo.ru для технических вопросов.
+                  Используйте телефон горячей линии ... или напишите на support@trivoads.ru для технических вопросов.
                 </p>
               </div>
             </div>
