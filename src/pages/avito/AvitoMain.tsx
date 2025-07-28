@@ -246,13 +246,6 @@ const AvitoMain = () => {
             </ul>
           </div>
         </section>
-
-        {/* Alert System Demo */}
-        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-8 md:pb-12">
-          <div className="flex justify-center">
-            <AlertTester />
-          </div>
-        </section>
       </main>
 
       <AvitoFooter />
