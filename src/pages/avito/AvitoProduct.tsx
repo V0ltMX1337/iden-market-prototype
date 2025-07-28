@@ -22,6 +22,7 @@ import {
   Review,
 } from "@/lib/types";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import ProductFeatures from "@/components/customcomponent/ProductFeatures";
 
 interface CategoryPathItem {
   name: string;
@@ -278,6 +279,7 @@ const AvitoProduct = () => {
               description={product.description}
               images={product.links}
             />
+            <ProductFeatures filters={product.filters} />   {/* ✅ вот здесь */}
             <AskSeller
               messageText={messageText}
               setMessageText={setMessageText}

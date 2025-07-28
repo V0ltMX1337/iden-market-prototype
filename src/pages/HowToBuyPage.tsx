@@ -154,7 +154,7 @@ const HowToBuyPage = () => {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-4">
               <Button
-                onClick={() => navigate("/catalog")}
+                onClick={() => navigate("/")}
                 className="bg-blue-600 hover:bg-blue-700 h-auto p-4 flex-col space-y-2"
               >
                 <Icon name="Search" className="w-6 h-6" />
@@ -355,7 +355,7 @@ const HowToBuyPage = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
-                  onClick={() => navigate('/catalog')}
+                  onClick={() => navigate('/')}
                   size="lg"
                   className="bg-blue-600 hover:bg-blue-700"
                 >

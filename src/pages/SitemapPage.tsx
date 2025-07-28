@@ -16,7 +16,7 @@ const SitemapPage = () => {
     },
     {
       title: "Каталог",
-      path: "/catalog",
+      path: "/",
       icon: "Grid3X3",
       color: "green",
       description: "Все объявления по категориям"
@@ -118,7 +118,7 @@ const SitemapPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/catalog")}
+                onClick={() => navigate("/")}
                 className="justify-start"
               >
                 <Icon name="Grid3X3" className="w-4 h-4 mr-2" />
@@ -127,7 +127,7 @@ const SitemapPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/sell")}
+                onClick={() => navigate("/profile/sell")}
                 className="justify-start"
               >
                 <Icon name="Plus" className="w-4 h-4 mr-2" />
@@ -263,7 +263,7 @@ const SitemapPage = () => {
                 <div className="text-sm text-purple-800">Функций</div>
               </div>
               <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="text-2xl font-bold text-orange-600 mb-1">100%</div>
+                <div className="text-2xl font-bold text-orange-600 mb-1">50%</div>
                 <div className="text-sm text-orange-800">Мобильная адаптация</div>
               </div>
             </div>

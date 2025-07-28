@@ -50,27 +50,6 @@ const ContactsPage = () => {
             <Card className="border-0 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-3 text-xl">
-                  <Icon name="MapPin" className="w-6 h-6 text-blue-600" />
-                  <span>Наши офисы</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2">Главный офис</h4>
-                  <p className="text-gray-600 mb-1">г. Москва, ул. Тверская, 15</p>
-                  <p className="text-gray-600">БЦ "Центральный", этаж 10</p>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2">Региональный офис</h4>
-                  <p className="text-gray-600 mb-1">г. Санкт-Петербург, Невский пр., 28</p>
-                  <p className="text-gray-600">БЦ "Северная столица", этаж 5</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-3 text-xl">
                   <Icon name="Phone" className="w-6 h-6 text-green-600" />
                   <span>Телефоны</span>
                 </CardTitle>
@@ -80,16 +59,8 @@ const ContactsPage = () => {
                   <Icon name="Headphones" className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="font-medium">Служба поддержки</p>
-                    <p className="text-blue-600 font-mono">8 (800) 123-45-67</p>
+                    <p className="text-blue-600 font-mono">Скоро...</p>
                     <p className="text-sm text-gray-500">Круглосуточно, бесплатно</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Icon name="Briefcase" className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="font-medium">Отдел продаж</p>
-                    <p className="text-blue-600 font-mono">+7 (495) 123-45-67</p>
-                    <p className="text-sm text-gray-500">Пн-Пт: 9:00-18:00</p>
                   </div>
                 </div>
               </CardContent>
@@ -108,7 +79,7 @@ const ContactsPage = () => {
                   <div>
                     <p className="font-medium">Общие вопросы</p>
                     <a href="mailto:info@avito.ru" className="text-blue-600 hover:underline">
-                      info@avito.ru
+                      info@trivoads.ru
                     </a>
                   </div>
                 </div>
@@ -117,7 +88,7 @@ const ContactsPage = () => {
                   <div>
                     <p className="font-medium">Безопасность</p>
                     <a href="mailto:security@avito.ru" className="text-blue-600 hover:underline">
-                      security@avito.ru
+                      security@trivoads.ru
                     </a>
                   </div>
                 </div>
@@ -126,7 +97,7 @@ const ContactsPage = () => {
                   <div>
                     <p className="font-medium">Партнерство</p>
                     <a href="mailto:partners@avito.ru" className="text-blue-600 hover:underline">
-                      partners@avito.ru
+                      partners@trivoads.ru
                     </a>
                   </div>
                 </div>
@@ -145,10 +116,6 @@ const ContactsPage = () => {
                   <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 hover:bg-blue-50">
                     <Icon name="MessageCircle" className="w-4 h-4 mr-2" />
                     Telegram
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 hover:bg-blue-50">
-                    <Icon name="Phone" className="w-4 h-4 mr-2" />
-                    WhatsApp
                   </Button>
                   <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 hover:bg-blue-50">
                     <Icon name="Mail" className="w-4 h-4 mr-2" />
@@ -267,12 +234,6 @@ const ContactsPage = () => {
                 <h4 className="font-semibold text-gray-900 mb-2">Служба поддержки</h4>
                 <p className="text-green-700 font-medium">24/7</p>
                 <p className="text-sm text-gray-600">Круглосуточно</p>
-              </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <Icon name="Briefcase" className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                <h4 className="font-semibold text-gray-900 mb-2">Офисы</h4>
-                <p className="text-blue-700 font-medium">Пн-Пт: 9:00-18:00</p>
-                <p className="text-sm text-gray-600">Выходные: выходной</p>
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <Icon name="Mail" className="w-8 h-8 text-purple-600 mx-auto mb-3" />

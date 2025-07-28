@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,25 +17,31 @@ import { Helmet } from "react-helmet-async";
 
 const AvitoLogin = () => {
   const navigate = useNavigate();
-  const { user, login, logout } = useAuth();
+  const { user, login, logout, checkPendingLoginStatus } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [waitingTelegram, setWaitingTelegram] = useState(false);
 
   const { getPageTitle, settings: systemSettings } = usePageTitle();
+
+  const pollInterval = useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setWaitingTelegram(false);
 
     try {
-      const success = await login(email, password);
-      if (success) {
+      const result = await login(email, password);
+      if (result === "success") {
         navigate("/");
+      } else if (result === "waiting") {
+        setWaitingTelegram(true);
       } else {
         setError("Неверный email или пароль");
       }
-    } catch (error) {
+    } catch {
       setError("Ошибка при входе в систему");
     }
   };
@@ -46,13 +52,40 @@ const AvitoLogin = () => {
 
   const handleLogout = async () => {
     await logout();
+    setWaitingTelegram(false);
+    setError("");
   };
 
-  // Формируем заголовок
+  useEffect(() => {
+    let isMounted = true;
+
+    const poll = async () => {
+      if (!isMounted) return;
+
+      const userId = localStorage.getItem("loginUserId");
+      if (!userId) return;
+
+      const confirmed = await checkPendingLoginStatus(userId);
+
+      if (confirmed) {
+        setWaitingTelegram(false);
+        navigate("/");
+      } else {
+        setTimeout(poll, 1000); // Запускаем следующий опрос через 1 секунду
+      }
+    };
+
+    if (waitingTelegram) {
+      poll();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [waitingTelegram, checkPendingLoginStatus, navigate]);
+
   const pageTitle =
-   systemSettings
-      ? getPageTitle("authTitle", {})
-      : "Страница авторизации";
+    systemSettings ? getPageTitle("authTitle", {}) : "Страница авторизации";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -98,14 +131,27 @@ const AvitoLogin = () => {
               >
                 Войти как {user.firstName} {user.lastName}
               </Button>
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="w-full"
-              >
+              <Button variant="outline" onClick={handleLogout} className="w-full">
                 Войти как другой пользователь
               </Button>
             </CardContent>
+          </Card>
+        ) : waitingTelegram ? (
+          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur text-center p-8">
+            <Icon
+              name="Send"
+              size={48}
+              className="mx-auto mb-4 text-blue-600 animate-pulse"
+            />
+            <h3 className="text-xl font-semibold mb-2">
+              Подтвердите вход через Telegram
+            </h3>
+            <p className="text-gray-700 mb-4">
+              Для продолжения входа подтвердите запрос в вашем Telegram-боте @TrivoAdsBot
+            </p>
+            <Button variant="outline" onClick={handleLogout} className="w-full">
+              Войти как другой пользователь
+            </Button>
           </Card>
         ) : (
           <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
@@ -150,24 +196,22 @@ const AvitoLogin = () => {
                 </div>
 
                 {error && (
-                  <div className="text-red-600 text-sm text-center">
-                    {error}
-                  </div>
+                  <div className="text-red-600 text-sm text-center">{error}</div>
                 )}
 
                 <div className="flex items-center justify-between">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      name="remember"
+                      className="mr-2"
+                      disabled
                     />
-                    <span className="ml-2 text-sm text-gray-600">
-                      Запомнить меня
-                    </span>
+                    Запомнить меня
                   </label>
                   <Link
-                    to="#"
-                    className="text-sm text-blue-600 hover:text-blue-500"
+                    to="/reset-password"
+                    className="text-sm font-semibold text-blue-600 hover:text-blue-800"
                   >
                     Забыли пароль?
                   </Link>
@@ -177,21 +221,9 @@ const AvitoLogin = () => {
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-12"
                 >
-                  Войти в TRIVO ID
+                  Войти
                 </Button>
               </form>
-
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600">
-                  Нет аккаунта?{" "}
-                  <Link
-                    to="/register"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Создать TRIVO ID
-                  </Link>
-                </p>
-              </div>
             </CardContent>
           </Card>
         )}

@@ -279,13 +279,13 @@ const PrivacyPolicyPage = () => {
                 </p>
                 <div className="space-y-2">
                   <p className="text-green-700">
-                    <strong>Email:</strong> privacy@avito.ru
+                    <strong>Email:</strong> privacy@trivoads.ru
                   </p>
                   <p className="text-green-700">
-                    <strong>Телефон:</strong> 8 (800) 123-45-67
+                    <strong>Телефон:</strong> Скоро...
                   </p>
                   <p className="text-green-700">
-                    <strong>Почтовый адрес:</strong> г. Москва, ул. Тверская, 15, БЦ "Центральный"
+                    <strong>Почтовый адрес:</strong> Скоро"
                   </p>
                 </div>
               </div>

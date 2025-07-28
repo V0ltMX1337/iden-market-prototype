@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { storeApi } from "@/lib/store";
-import { AdStatus, type Ad, type Category, type City, type Subcategory } from "@/lib/types";
+import { AdStatus, FilterDefinition, FilterType, type Ad, type Category, type City, type Subcategory } from "@/lib/types";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import Breadcrumbs from "@/components/customcomponent/Breadcrumbs";
@@ -13,12 +13,14 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useAvitoCategory } from "@/hooks/useAvitoCategory";
 
 const ADS_PER_PAGE = 10;
 
 const AvitoCategoryPage = () => {
   const { categoryid } = useParams<{ categoryid: string }>();
   const navigate = useNavigate();
+  useAvitoCategory
   const location = useLocation();
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -31,6 +33,10 @@ const AvitoCategoryPage = () => {
   const [maxPrice, setMaxPrice] = useState(0);
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [filtersDefs, setFiltersDefs] = useState<FilterDefinition[]>([]);
+
+  type FilterValue = string | string[] | number[];
+ const [selectedFilters, setSelectedFilters] = useState<Record<string, FilterValue>>({});
 
   // Новый стейт для хлебных крошек
   const [categoryPath, setCategoryPath] = useState<
@@ -118,6 +124,7 @@ const AvitoCategoryPage = () => {
         setCategories(categoriesData);
         setAds(adsData.filter((ad) => ad.adStatus === AdStatus.ACTIVE));
         setCities(citiesData);
+        setFiltersDefs(filters);
 
         if (categoryid) {
           const path = await buildCategoryPath(categoryid, subslugs);
@@ -182,14 +189,41 @@ const AvitoCategoryPage = () => {
 
   const allowedSubcategoryIds = lastSubcategory ? collectSubcategoryIds(lastSubcategory) : [];
 
-  // Фильтрация объявлений
-  const filteredAds = ads.filter((ad) => {
-    if (!allowedCategoryIds.includes(ad.categoryId)) return false;
-    if (allowedSubcategoryIds.length > 0 && !allowedSubcategoryIds.includes(ad.subcategoryId))
-      return false;
-    if (minPrice && ad.price < minPrice) return false;
-    if (maxPrice && ad.price > maxPrice) return false;
-    if (selectedCities.length && !selectedCities.includes(ad.city.id)) return false;
+      // Фильтрация объявлений
+      const filteredAds = ads.filter((ad) => {
+        if (!allowedCategoryIds.includes(ad.categoryId)) return false;
+        if (allowedSubcategoryIds.length > 0 && !allowedSubcategoryIds.includes(ad.subcategoryId))
+          return false;
+        if (minPrice && ad.price < minPrice) return false;
+        if (maxPrice && ad.price > maxPrice) return false;
+        if (selectedCities.length && !selectedCities.includes(ad.city.id)) return false;
+        if (filtersDefs.length > 0) {
+        for (const filterId in selectedFilters) {
+        const selected = selectedFilters[filterId];
+        const adFilter = ad.filters.find((f) => f.filterId === filterId);
+        if (!adFilter) return false;
+
+        const def = filtersDefs.find((f) => f.id === filterId);
+        if (!def) return false;
+
+        switch (def.type) {
+          case FilterType.SELECT:
+            if (selected && adFilter.value !== selected) return false;
+            break;
+          case FilterType.CHECKBOX:
+            if (Array.isArray(selected)) {
+              const selectedArray = selected as string[];
+              if (!selectedArray.includes(adFilter.value)) return false;
+            }
+            break;
+          case FilterType.RANGE:
+            const [min, max] = selected as number[];
+            const numericValue = Number(adFilter.value);
+            if (numericValue < min || numericValue > max) return false;
+            break;
+        }
+      }
+    }
     return true;
   });
 
@@ -256,6 +290,79 @@ const AvitoCategoryPage = () => {
         </div>
       </div>
 
+      {filtersDefs.map((filter) => {
+      const currentVal = selectedFilters[filter.id];
+
+      switch (filter.type) {
+        case FilterType.SELECT:
+          return (
+            <div key={filter.id} className="mb-4">
+              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+              <select
+                  value={typeof currentVal === "string" ? currentVal : ""}
+                  onChange={(e) =>
+                    setSelectedFilters((prev) => ({ ...prev, [filter.id]: e.target.value }))
+                  }
+                  className="w-full border p-2 rounded text-sm"
+                >
+                <option value="">Не выбрано</option>
+                {filter.values.map((val) => (
+                  <option key={val} value={val}>{val}</option>
+                ))}
+              </select>
+            </div>
+          );
+
+        case FilterType.CHECKBOX:
+          return (
+            <div key={filter.id} className="mb-4">
+              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+              {filter.values.map((val) => (
+                <label key={val} className="flex items-center space-x-2 text-xs mb-1">
+                  <Checkbox
+                    checked={Array.isArray(currentVal) && (currentVal as string[]).includes(val)}
+                    onCheckedChange={() => {
+                      setSelectedFilters((prev) => {
+                        const prevArr = Array.isArray(prev[filter.id]) ? [...prev[filter.id] as string[]] : [];
+                        const newVal = prevArr.includes(val)
+                          ? prevArr.filter((v) => v !== val)
+                          : [...prevArr, val];
+                        return { ...prev, [filter.id]: newVal };
+                      });
+                    }}
+                  />
+                  <span>{val}</span>
+                </label>
+              ))}
+            </div>
+          );
+
+        case FilterType.RANGE:
+          const [min, max] = currentVal as number[] || [0, 100];
+          return (
+            <div key={filter.id} className="mb-4">
+              <h3 className="text-sm font-medium mb-2">{filter.name}</h3>
+              <Slider
+                value={[min, max]}
+                min={0}
+                max={100}
+                step={1}
+                onValueChange={([newMin, newMax]) => {
+                  setSelectedFilters((prev) => ({ ...prev, [filter.id]: [newMin, newMax] }));
+                }}
+              />
+              <div className="flex justify-between text-xs mt-1">
+                <span>{min}</span>
+                <span>{max}</span>
+              </div>
+            </div>
+          );
+
+        default:
+          return null;
+      }
+    })}
+
       <Button
         variant="outline"
         className="w-full text-xs md:text-sm h-8 md:h-10"
@@ -263,6 +370,7 @@ const AvitoCategoryPage = () => {
           setMinPrice(0);
           setMaxPrice(0);
           setSelectedCities([]);
+          setSelectedFilters({});
           setIsMobileFiltersOpen(false);
         }}
       >

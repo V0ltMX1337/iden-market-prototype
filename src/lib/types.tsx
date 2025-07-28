@@ -13,6 +13,8 @@ export interface User {
   photoUrl: string;
   balance: number;           // 💰 Доступный баланс пользователя
   reservedBalance: number;   // 🔒 Зарезервированные средства
+  tgid: number;
+  tgUrl: string;
 }
 
 export enum UserRole {

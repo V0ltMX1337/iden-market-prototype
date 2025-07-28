@@ -12,35 +12,21 @@ const AvitoFooter = () => {
               Крупнейшая площадка объявлений в России
             </p>
             <div className="flex space-x-4">
-              <Link to={"https://t.me/trivo_net"}>
-              <Icon
-                name="Send"
-                size={20}
-                className="text-blue-200 hover:text-white cursor-pointer"
-              />
-              </Link>
-              <Icon
-                name="Twitter"
-                size={20}
-                className="text-blue-200 hover:text-white cursor-pointer"
-              />
-              <Icon
-                name="Instagram"
-                size={20}
-                className="text-blue-200 hover:text-white cursor-pointer"
-              />
+              <a href="https://t.me/trivo_net" target="_blank" rel="noopener noreferrer">
+                <Icon name="Send" size={20} className="text-blue-200 hover:text-white" />
+              </a>
+              <Icon name="Twitter" size={20} className="text-blue-200 hover:text-white cursor-pointer" />
+              <Icon name="Instagram" size={20} className="text-blue-200 hover:text-white cursor-pointer" />
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Покупателям</h3>
             <ul className="space-y-2 text-blue-100">
-              <li className="hover:text-white cursor-pointer">Как покупать</li>
-              <li className="hover:text-white cursor-pointer">Безопасность</li>
-              <li className="hover:text-white cursor-pointer">
-                Правила пользования
-              </li>
-              <li className="hover:text-white cursor-pointer">Карта сайта</li>
+              <li><Link to="/how-to-buy" className="hover:text-white">Как покупать</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white">Безопасность</Link></li>
+              <li><Link to="/terms" className="hover:text-white">Правила пользования</Link></li>
+              <li><Link to="/sitemap" className="hover:text-white">Карта сайта</Link></li>
             </ul>
           </div>
 
@@ -49,7 +35,7 @@ const AvitoFooter = () => {
             <ul className="space-y-2 text-blue-100">
               <li className="hover:text-white cursor-pointer">Как продавать</li>
               <li className="hover:text-white cursor-pointer">Тарифы</li>
-              <li className="hover:text-white cursor-pointer">Реклама на TRIVO </li>
+              <li className="hover:text-white cursor-pointer">Реклама на TRIVO</li>
               <li className="hover:text-white cursor-pointer">Помощь</li>
             </ul>
           </div>
@@ -57,8 +43,8 @@ const AvitoFooter = () => {
           <div>
             <h3 className="font-semibold mb-4">Компания</h3>
             <ul className="space-y-2 text-blue-100">
-              <li className="hover:text-white cursor-pointer">О нас</li>
-              <li className="hover:text-white cursor-pointer">Контакты</li>
+              <li><Link to="/about" className="hover:text-white">О нас</Link></li>
+              <li><Link to="/contacts" className="hover:text-white">Контакты</Link></li>
               <li className="hover:text-white cursor-pointer">Вакансии</li>
               <li className="hover:text-white cursor-pointer">Пресс-центр</li>
             </ul>
@@ -67,14 +53,10 @@ const AvitoFooter = () => {
 
         <div className="border-t border-blue-700 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <p className="text-blue-100">© 2025 Trivo обьявления. Все права защищены.</p>
+            <p className="text-blue-100">© 2025 Trivo объявления. Все права защищены.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-blue-100 hover:text-white">
-                Политика конфиденциальности
-              </a>
-              <a href="#" className="text-blue-100 hover:text-white">
-                Условия использования
-              </a>
+              <Link to="/privacy-policy" className="text-blue-100 hover:text-white">Политика конфиденциальности</Link>
+              <Link to="/terms" className="text-blue-100 hover:text-white">Условия использования</Link>
             </div>
           </div>
         </div>

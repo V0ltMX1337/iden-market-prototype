@@ -111,19 +111,19 @@ const AboutPage = () => {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-blue-600 mb-2">100K+</div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">100+</div>
                   <div className="text-gray-600">Пользователей</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-green-600 mb-2">500K+</div>
+                  <div className="text-3xl font-bold text-green-600 mb-2">5+</div>
                   <div className="text-gray-600">Объявлений</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-purple-600 mb-2">1M+</div>
+                  <div className="text-3xl font-bold text-purple-600 mb-2">0</div>
                   <div className="text-gray-600">Сделок</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-orange-600 mb-2">50+</div>
+                  <div className="text-3xl font-bold text-orange-600 mb-2">1</div>
                   <div className="text-gray-600">Городов</div>
                 </div>
               </div>
@@ -188,7 +188,7 @@ const AboutPage = () => {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => navigate('/catalog')}
+                onClick={() => navigate('/')}
                 size="lg"
               >
                 <Icon name="Search" className="w-5 h-5 mr-2" />
