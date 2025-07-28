@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { storeApi } from "@/lib/store";
-import { type User, type AdWithStatus, type Review, type UserDisplayData, AdStatus } from "@/lib/types.tsx";
+import { type User, type AdWithStatus, type Review, type UserDisplayData, AdStatus, Ad } from "@/lib/types.tsx";
 
 interface UseUserProfileProps {
   userId?: string;
@@ -18,7 +18,7 @@ interface UseUserProfileReturn {
   setReviewSortOrder: (sortOrder: string) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  filteredAds: AdWithStatus[];
+  filteredAds: Ad[];
   sortedReviews: Review[];
   refreshData: () => void;
 }
@@ -44,35 +44,54 @@ export const useUserProfile = ({ userId }: UseUserProfileProps): UseUserProfileR
       setLoading(true);
       setError(null);
 
-      // Загружаем данные пользователя
-      const userData = await storeApi.getUserById(userId);
-      if (!userData) {
-        setError("Пользователь не найден");
-        return;
-      }
+     const [user, userAds] = await Promise.all([
+          storeApi.getUserById(userId),
+          storeApi.getUserAds(userId),
+        ]);
 
-      // Загружаем объявления пользователя
-      const userAds = await storeApi.getAdsByUserId(userId);
+      // Получаем отзывы по каждому объявлению
+        const reviewsArrays = await Promise.all(
+          userAds.map((ad) => storeApi.getReviewsByAdId(ad.id))
+        );
+        const allReviews = reviewsArrays.flat();
       
-      // Загружаем отзывы о пользователе
-      const userReviews = await storeApi.getReviewsByUserId(userId);
-
-      // Формируем UserDisplayData
-      const displayData: UserDisplayData = {
-        user: userData,
-        averageRating: userReviews.length > 0 
-          ? userReviews.reduce((sum, review) => sum + review.rating, 0) / userReviews.length 
-          : 0,
-        reviewCount: userReviews.length,
-        joinDate: userData.registrationDate,
-        responseTime: "обычно отвечает быстро", // можно добавить логику расчета
-        deliveryCount: userAds.filter(ad => ad.isDeliveryAvailable).length,
-        salesCount: userAds.filter(ad => ad.adStatus === AdStatus.SOLD).length,
-      };
+        const averageRating =
+          allReviews.reduce((sum, review) => sum + review.rating, 0) /
+          (allReviews.length || 1); // на случай деления на 0
+      
+        const joinDate = new Date(user.registrationDate).toLocaleDateString(
+          "ru-RU",
+          {
+            year: "numeric",
+            month: "long",
+          }
+        );
+      
+        const displayData: UserDisplayData = {
+          user,
+          averageRating: Math.round(averageRating * 10) / 10,
+          reviewCount: allReviews.length,
+          joinDate,
+          responseTime: "15-30 минут",
+          deliveryCount: Math.floor(Math.random() * 10) + 1,
+          salesCount: userAds.length,
+        };
+      
+        const adsWithStatus: AdWithStatus[] = userAds.map((ad) => ({
+          ...ad,
+          isDeliveryAvailable: false,
+          isFavorite: false,
+          formattedPrice: `${ad.price.toLocaleString()} ₽`,
+          location: `${ad.city.region}, ${ad.city.name}`,
+          date: new Date(ad.publishedAt).toLocaleDateString("ru-RU"),
+          image:
+            ad.links[0] ||
+            "https://cdn.poehali.dev/files/98f4d8d2-6b87-48e8-abce-7aee57e534ab.png",
+        }));
 
       setUserDisplayData(displayData);
-      setAds(userAds);
-      setReviews(userReviews);
+      setAds(adsWithStatus);
+      setReviews(allReviews);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Произошла ошибка при загрузке данных");
     } finally {
