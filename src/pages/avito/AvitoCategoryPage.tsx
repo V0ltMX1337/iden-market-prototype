@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { FilterType } from "@/lib/types";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
@@ -11,10 +10,9 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useCategoryFilters } from "@/hooks/useCategoryFilters";
+import { useAvitoCategoryPage } from "@/hooks/useAvitoCategoryPage";
 
 const AvitoCategoryPage = () => {
-  const navigate = useNavigate();
   const {
     // Data
     cities,
@@ -38,20 +36,23 @@ const AvitoCategoryPage = () => {
     selectedFilters,
     isMobileFiltersOpen,
     
-    // Setters
-    setMinPrice,
-    setMaxPrice,
-    setIsMobileFiltersOpen,
-    setPage,
-    
     // Handlers
     handleCityChange,
-    handleFilterChange,
     clearAllFilters,
+    handleProductClick,
+    handleSubcategoryClick,
+    handleFavoriteClick,
+    handleMobileFiltersToggle,
+    handleMobileFiltersClose,
+    handlePriceChange,
+    handlePriceSliderChange,
+    handleCheckboxFilterChange,
+    handleFilterChange,
+    setPage,
     
     // Constants
     ADS_PER_PAGE
-  } = useCategoryFilters();
+  } = useAvitoCategoryPage();
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -62,14 +63,14 @@ const AvitoCategoryPage = () => {
             type="number"
             placeholder="от"
             value={minPrice || ""}
-            onChange={e => setMinPrice(Number(e.target.value) || 0)}
+            onChange={e => handlePriceChange('min', e.target.value)}
             className="w-1/2 h-8 md:h-10"
           />
           <Input
             type="number"
             placeholder="до"
             value={maxPrice || ""}
-            onChange={e => setMaxPrice(Number(e.target.value) || 0)}
+            onChange={e => handlePriceChange('max', e.target.value)}
             className="w-1/2 h-8 md:h-10"
           />
         </div>
@@ -78,10 +79,7 @@ const AvitoCategoryPage = () => {
           min={0}
           max={1000000}
           step={1000}
-          onValueChange={([min, max]) => {
-            setMinPrice(min);
-            setMaxPrice(max);
-          }}
+          onValueChange={handlePriceSliderChange}
         />
       </div>
 
@@ -129,13 +127,7 @@ const AvitoCategoryPage = () => {
                   <label key={val} className="flex items-center space-x-2 text-xs mb-1">
                     <Checkbox
                       checked={Array.isArray(currentVal) && (currentVal as string[]).includes(val)}
-                      onCheckedChange={() => {
-                        const prevArr = Array.isArray(currentVal) ? [...currentVal as string[]] : [];
-                        const newVal = prevArr.includes(val)
-                          ? prevArr.filter((v) => v !== val)
-                          : [...prevArr, val];
-                        handleFilterChange(filter.id, newVal);
-                      }}
+                      onCheckedChange={() => handleCheckboxFilterChange(filter.id, val)}
                     />
                     <span>{val}</span>
                   </label>
@@ -197,7 +189,7 @@ const AvitoCategoryPage = () => {
           {/* Mobile шапка с фильтрами */}
           <div className="flex items-center justify-between mb-4 md:hidden">
             <h1 className="text-lg font-bold truncate">{category?.name || "Категория"}</h1>
-            <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
+            <Sheet open={isMobileFiltersOpen} onOpenChange={handleMobileFiltersToggle}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
@@ -211,7 +203,7 @@ const AvitoCategoryPage = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setIsMobileFiltersOpen(false)}
+                      onClick={handleMobileFiltersClose}
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -238,10 +230,7 @@ const AvitoCategoryPage = () => {
                     }
                     size={"sm"}
                     className="whitespace-nowrap text-xs md:text-sm"
-                    onClick={() => {
-                      const newPath = `/category/${category?.slug}/${[...subslugs, sub.slug].join("/")}`;
-                      navigate(newPath);
-                    }}
+                    onClick={() => handleSubcategoryClick(sub.slug)}
                   >
                     {sub.name}
                   </Button>
@@ -252,7 +241,7 @@ const AvitoCategoryPage = () => {
                     variant={sub.slug === subslugs[0] ? "default" : "outline"}
                     size={"sm"}
                     className="whitespace-nowrap text-xs md:text-sm"
-                    onClick={() => navigate(`/category/${category.slug}/${sub.slug}`)}
+                    onClick={() => handleSubcategoryClick(sub.slug)}
                   >
                     {sub.name}
                   </Button>
@@ -280,16 +269,13 @@ const AvitoCategoryPage = () => {
                       <Card
                         key={ad.id}
                         className="overflow-hidden cursor-pointer group relative flex flex-col border-0 shadow-md hover:shadow-lg transition-shadow"
-                        onClick={() => navigate(`/product/${ad.id}`)}
+                        onClick={() => handleProductClick(ad.id)}
                       >
                         <Button
                           variant="ghost"
                           size="icon"
                           className="absolute top-1 md:top-2 right-1 md:right-2 z-10 bg-white/80 hover:bg-white h-6 w-6 md:h-8 md:w-8"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log("Добавлено в избранное:", ad.id);
-                          }}
+                          onClick={(e) => handleFavoriteClick(ad.id, e)}
                         >
                           <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
                         </Button>

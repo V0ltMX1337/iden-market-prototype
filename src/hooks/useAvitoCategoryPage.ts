@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { storeApi } from "@/lib/store";
 import { AdStatus, FilterType, type Ad, type Category, type City, type Subcategory, type FilterDefinition } from "@/lib/types";
 
@@ -7,9 +7,10 @@ const ADS_PER_PAGE = 10;
 
 type FilterValue = string | string[] | number[];
 
-export const useCategoryFilters = () => {
+export const useAvitoCategoryPage = () => {
   const { categoryid } = useParams<{ categoryid: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // State
   const [categories, setCategories] = useState<Category[]>([]);
@@ -260,6 +261,58 @@ export const useCategoryFilters = () => {
     setCurrentPage(Math.max(1, Math.min(totalPages, page)));
   };
 
+  // Navigation handlers
+  const handleProductClick = (adId: string) => {
+    navigate(`/product/${adId}`);
+  };
+
+  const handleSubcategoryClick = (subSlug: string) => {
+    if (lastSubcategory) {
+      const newPath = `/category/${categoryid}/${[...subslugs, subSlug].join("/")}`;
+      navigate(newPath);
+    } else {
+      navigate(`/category/${categoryid}/${subSlug}`);
+    }
+  };
+
+  const handleFavoriteClick = (adId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Добавлено в избранное:", adId);
+  };
+
+  // UI handlers
+  const handleMobileFiltersToggle = () => {
+    setIsMobileFiltersOpen(!isMobileFiltersOpen);
+  };
+
+  const handleMobileFiltersClose = () => {
+    setIsMobileFiltersOpen(false);
+  };
+
+  const handlePriceChange = (type: 'min' | 'max', value: string) => {
+    const numValue = Number(value) || 0;
+    if (type === 'min') {
+      setMinPrice(numValue);
+    } else {
+      setMaxPrice(numValue);
+    }
+  };
+
+  const handlePriceSliderChange = (values: number[]) => {
+    const [min, max] = values;
+    setMinPrice(min);
+    setMaxPrice(max);
+  };
+
+  const handleCheckboxFilterChange = (filterId: string, value: string) => {
+    const currentVal = selectedFilters[filterId];
+    const prevArr = Array.isArray(currentVal) ? [...currentVal as string[]] : [];
+    const newVal = prevArr.includes(value)
+      ? prevArr.filter((v) => v !== value)
+      : [...prevArr, value];
+    handleFilterChange(filterId, newVal);
+  };
+
   return {
     // Data
     categories,
@@ -271,6 +324,7 @@ export const useCategoryFilters = () => {
     categoryPath,
     categoryFullSlug,
     subslugs,
+    currentSub,
     
     // State
     loading,
@@ -298,8 +352,19 @@ export const useCategoryFilters = () => {
     handleCityChange,
     handleFilterChange,
     clearAllFilters,
+    handleProductClick,
+    handleSubcategoryClick,
+    handleFavoriteClick,
+    handleMobileFiltersToggle,
+    handleMobileFiltersClose,
+    handlePriceChange,
+    handlePriceSliderChange,
+    handleCheckboxFilterChange,
     
     // Constants
-    ADS_PER_PAGE
+    ADS_PER_PAGE,
+    
+    // Utils
+    navigate
   };
 };
