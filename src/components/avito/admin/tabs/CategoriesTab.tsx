@@ -319,7 +319,15 @@ const CategoriesTab = () => {
         <Card key={cat.id}>
           <CardHeader className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Icon name={cat.icon} size={20} />
+              {cat.icon.startsWith('http') ? (
+                <img 
+                  src={cat.icon} 
+                  alt={cat.name}
+                  className="w-5 h-5 object-cover rounded"
+                />
+              ) : (
+                <span className="text-lg">{cat.icon}</span>
+              )}
               <h2 className="text-lg font-semibold">{cat.name}</h2>
             </div>
             <Button

@@ -271,11 +271,11 @@ const AvitoProfileMessages = () => {
                       isMyMessage 
                         ? "bg-blue-500 text-white" 
                         : isUnread 
-                          ? "bg-yellow-50 text-black shadow-md border-l-4 border-yellow-400" 
+                          ? "bg-blue-50 text-black shadow-md border border-blue-200" 
                           : "bg-white text-black shadow"
                     }`}>
                       {isUnread && (
-                        <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                        <div className="absolute -right-1 -top-1 w-2 h-2 bg-blue-500 rounded-full"></div>
                       )}
                       <p className="text-sm md:text-base break-words">{msg.content}</p>
                       <div className={`text-xs mt-1 text-right flex items-center justify-end gap-1 ${
@@ -287,6 +287,9 @@ const AvitoProfileMessages = () => {
                         )}
                         {isMyMessage && !msg.read && (
                           <Icon name="Check" size={12} className="text-blue-200" />
+                        )}
+                        {!isMyMessage && msg.read && (
+                          <span className="text-xs text-gray-400">✓ прочитано</span>
                         )}
                       </div>
                     </div>

@@ -12,11 +12,26 @@ const AvitoFooter = () => {
               Крупнейшая площадка объявлений в России
             </p>
             <div className="flex space-x-4">
-              <a href="https://t.me/trivo_net" target="_blank" rel="noopener noreferrer">
-                <Icon name="Send" size={20} className="text-blue-200 hover:text-white" />
+              <a href="https://t.me/trivo_net" target="_blank" rel="noopener noreferrer" 
+                 className="text-blue-200 hover:text-white transition-colors">
+                <Icon name="Send" size={20} />
               </a>
-              <Icon name="Twitter" size={20} className="text-blue-200 hover:text-white cursor-pointer" />
-              <Icon name="Instagram" size={20} className="text-blue-200 hover:text-white cursor-pointer" />
+              <a href="https://vk.com/trivoads" target="_blank" rel="noopener noreferrer" 
+                 className="text-blue-200 hover:text-white transition-colors">
+                <Icon name="Globe" size={20} />
+              </a>
+              <a href="https://tiktok.com/@trivoads" target="_blank" rel="noopener noreferrer" 
+                 className="text-blue-200 hover:text-white transition-colors">
+                <Icon name="Music" size={20} />
+              </a>
+              <a href="https://rutube.ru/channel/trivoads" target="_blank" rel="noopener noreferrer" 
+                 className="text-blue-200 hover:text-white transition-colors">
+                <Icon name="Play" size={20} />
+              </a>
+              <a href="https://youtube.com/@trivoads" target="_blank" rel="noopener noreferrer" 
+                 className="text-blue-200 hover:text-white transition-colors">
+                <Icon name="Youtube" size={20} />
+              </a>
             </div>
           </div>
 

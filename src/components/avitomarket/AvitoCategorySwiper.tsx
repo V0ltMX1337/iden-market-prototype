@@ -66,7 +66,7 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="group bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4 md:mb-8">
-            <h2 className="text-lg md:text-2xl font-bold text-gray-900">Категории</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-gray-900">🛍️ Категории</h2>
           </div>
 
           <Swiper
@@ -96,17 +96,23 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
                   onClick={() => handleCategoryClick(category)}
                 >
                   <div className="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                    <img
-                      src={category.icon}
-                      alt={category.name}
-                      className="w-5 h-5 md:w-8 md:h-8 object-cover rounded-full"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                        target.nextElementSibling!.className =
-                          "text-white text-xs md:text-sm";
-                      }}
-                    />
+                    {category.icon.startsWith('http') ? (
+                      <img
+                        src={category.icon}
+                        alt={category.name}
+                        className="w-5 h-5 md:w-8 md:h-8 object-cover rounded-full"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                          target.nextElementSibling!.className =
+                            "text-white text-xs md:text-sm";
+                        }}
+                      />
+                    ) : (
+                      <span className="text-lg md:text-2xl">
+                        {category.icon}
+                      </span>
+                    )}
                     <span className="text-white text-xs md:text-xs font-medium hidden">
                       {category.name.charAt(0)}
                     </span>
