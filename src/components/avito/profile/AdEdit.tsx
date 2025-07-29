@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useAvitoSellLogic } from "@/hooks/useAvitoSellLogic";
+import { useParams } from "react-router-dom";
+import { useEditAdLogic } from "@/hooks/useEditAdLogic";
 import {
   Card,
   CardContent,
@@ -22,6 +23,19 @@ import { FilterType } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 
 const AdEdit = () => {
+  const { adId } = useParams<{ adId: string }>(); 
+
+  if (!adId) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <Icon name="AlertCircle" size={48} className="mx-auto mb-4 text-red-500" />
+          <p className="text-gray-600">Объявление не найдено</p>
+        </div>
+      </div>
+    );
+  }
+
   const {
     formData,
     subcategoryPath,
@@ -35,16 +49,28 @@ const AdEdit = () => {
     handleInputChange,
     handleFilterChange,
     handleSubcategorySelect,
-    handleSubmit,
+    handleUpdate,
     handleRemovePhoto,
     getRootProps,
     getInputProps,
     open,
     isSubmitting,
+    isLoading,
     inputRef,
     isDragActive,
     setAsMain,
-  } = useAvitoSellLogic();
+  } = useEditAdLogic(adId);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Загружаем объявление...</p>
+        </div>
+      </div>
+    );
+  }
 
   const geocodeCity = async (cityName: string, regionName: string) => {
     if (!ymapsRef.current) return;
@@ -174,21 +200,21 @@ const AdEdit = () => {
         <CardContent className="p-4 md:p-6">
           <div className="flex items-center space-x-3 md:space-x-4">
             <div className="p-2 md:p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
-              <Icon name="Plus" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Icon name="Edit" className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold text-gray-900">
-                Подать объявление
+                Редактировать объявление
               </h1>
               <p className="text-sm md:text-base text-gray-600">
-                Заполните информацию о товаре
+                Внесите изменения и сохраните
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+      <form onSubmit={handleUpdate} className="space-y-4 md:space-y-6">
   <Card className="shadow-lg">
     <CardHeader className="pb-3 md:pb-6">
       <CardTitle className="text-base md:text-lg flex items-center space-x-2">
@@ -230,7 +256,6 @@ const AdEdit = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
 
-                {/* Кнопка "Сделать главным" */}
                 <Button
                   size="sm"
                   variant={p.isMain ? "default" : "outline"}
@@ -253,7 +278,6 @@ const AdEdit = () => {
                   </span>
                 </Button>
 
-                {/* Кнопка удаления фото */}
                 <Button
                   type="button"
                   size="icon"
@@ -523,8 +547,8 @@ const AdEdit = () => {
             disabled={isSubmitting}
             className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
           >
-            <Icon name="Send" className="w-5 h-5 mr-2" />
-            {isSubmitting ? "Публикуем..." : "Опубликовать обьявление"}
+            <Icon name="Save" className="w-5 h-5 mr-2" />
+            {isSubmitting ? "Сохраняем..." : "Сохранить изменения"}
           </Button>
         </div>
       </form>

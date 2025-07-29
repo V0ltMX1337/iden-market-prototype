@@ -7,6 +7,7 @@ import Icon from "@/components/ui/icon";
 import { storeApi } from "@/lib/store";
 import type { ChatSummary, Message, User, Ad } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
+import { useAlertContext } from "@/contexts/AlertContext";
 
 interface Chat extends ChatSummary {
   interlocutorName: string;
@@ -16,6 +17,7 @@ interface Chat extends ChatSummary {
 
 const AvitoProfileMessages = () => {
   const { user } = useAuth();
+  const { showError, showSuccess, showInfo } = useAlertContext();
   const navigate = useNavigate();
   const [chats, setChats] = useState<Chat[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -94,6 +96,7 @@ const AvitoProfileMessages = () => {
         await storeApi.markMessageAsRead(msg.id);
       } catch (error) {
         console.error('Ошибка отмечания сообщения как прочитанного:', error);
+        showError("Не удалось отметить сообщение как прочитанное", "Ошибка");
       }
     }
   };

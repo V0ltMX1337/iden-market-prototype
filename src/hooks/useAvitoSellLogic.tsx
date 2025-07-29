@@ -7,10 +7,12 @@ import type { Ad, AdFilter, Category, City, FilterDefinition } from "@/lib/types
 import { AdStatus, AdSold } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
+import { useAlertContext } from "@/contexts/AlertContext";
 
 export const useAvitoSellLogic = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { showSuccess, showError, showInfo } = useAlertContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -211,7 +213,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   setIsSubmitting(true);
 
   if (!user) {
-    alert("Пожалуйста, войдите в систему для публикации объявления.");
+    showError("Пожалуйста, войдите в систему для публикации объявления", "Ошибка авторизации");
     setIsSubmitting(false);
     return;
   }
@@ -230,19 +232,24 @@ const handleSubmit = async (e: React.FormEvent) => {
   if (photos.length === 0) errors.push("Добавьте хотя бы одну фотографию.");
 
   if (errors.length > 0) {
-    alert("Пожалуйста, исправьте следующие ошибки:\n\n" + errors.join("\n"));
+    showError(
+      "Пожалуйста, исправьте следующие ошибки:\n\n" + errors.join("\n"), 
+      "Ошибки валидации"
+    );
     setIsSubmitting(false);
     return;
   }
 
   const city = cities.find((c) => c.id === formData.cityId);
   if (!city) {
-    alert("Пожалуйста, выберите корректный город.");
+    showError("Пожалуйста, выберите корректный город", "Ошибка");
     setIsSubmitting(false);
     return;
   }
 
   try {
+    showInfo("Публикуем объявление...", "Процесс создания");
+    
     let photoLinks: string[] = [];
 
     const uploadResult = await storeApi.uploadPhotos(
@@ -253,7 +260,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     const category = categories.find((c) => c.slug === formData.category);
     if (!category) {
-      alert("Невалидная категория.");
+      showError("Невалидная категория", "Ошибка");
       setIsSubmitting(false);
       return;
     }
@@ -263,7 +270,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       subcategoryPath
     );
     if (!lastSubcategory) {
-      alert("Невалидная подкатегория.");
+      showError("Невалидная подкатегория", "Ошибка");
       setIsSubmitting(false);
       return;
     }
@@ -296,10 +303,11 @@ const handleSubmit = async (e: React.FormEvent) => {
     };
 
     await storeApi.addAd(newAd);
+    showSuccess("Объявление успешно опубликовано!", "Поздравляем");
     navigate("/profile/ads");
   } catch (error) {
     console.error(error);
-    alert("Ошибка при публикации объявления. Попробуйте позже.");
+    showError("Ошибка при публикации объявления. Попробуйте позже.", "Ошибка публикации");
     
   } finally {
     setIsSubmitting(false); // всегда разблокируем
