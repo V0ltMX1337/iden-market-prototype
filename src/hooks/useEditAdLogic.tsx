@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
 import type { Ad, AdFilter, Category, City, FilterDefinition } from "@/lib/types";
@@ -7,14 +7,21 @@ import { AdStatus, AdSold } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
 import { useAlertContext } from "@/contexts/AlertContext";
+import Icon from "@/components/ui/icon";
 
-export const useEditAdLogic = (adId: string) => {
+export const useEditAdLogic = () => {
+  const { adId } = useParams<{ adId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSuccess, showError, showInfo } = useAlertContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentAd, setCurrentAd] = useState<Ad | null>(null);
+
+  // 💥 Добавляем проверку adId сразу
+  if (!adId) {
+      throw new Error("adId is required in URL params.");
+    }
 
   const [formData, setFormData] = useState({
     title: "",

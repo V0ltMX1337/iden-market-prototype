@@ -23,14 +23,14 @@ import { FilterType } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 
 const AdEdit = () => {
-  const { adId } = useParams<{ adId: string }>(); 
+  const logic = useEditAdLogic();
 
-  if (!adId) {
+  if (!logic) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <Icon name="AlertCircle" size={48} className="mx-auto mb-4 text-red-500" />
-          <p className="text-gray-600">Объявление не найдено</p>
+          <p className="text-red-600 text-lg font-medium">Некорректный адрес страницы.</p>
+          <p className="text-gray-500">Отсутствует ID объявления в URL.</p>
         </div>
       </div>
     );
@@ -59,7 +59,7 @@ const AdEdit = () => {
     inputRef,
     isDragActive,
     setAsMain,
-  } = useEditAdLogic(adId);
+  } = logic;
 
   if (isLoading) {
     return (
