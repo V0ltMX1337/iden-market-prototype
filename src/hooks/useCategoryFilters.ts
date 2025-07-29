@@ -260,12 +260,62 @@ export const useCategoryFilters = () => {
     setCurrentPage(Math.max(1, Math.min(totalPages, page)));
   };
 
+  // Фильтруем фильтры по текущей категории/подкатегории
+  const getAvailableFilters = (): FilterDefinition[] => {
+    if (!categoryid) {
+      // Если категория не выбрана, показываем все фильтры
+      return filtersDefs;
+    }
+
+    if (!category) return [];
+
+    // Собираем все доступные фильтры из подкатегорий
+    const collectFiltersFromSubcategories = (subcategories: Subcategory[]): string[] => {
+      let filterIds: string[] = [];
+      
+      for (const sub of subcategories) {
+        // Добавляем фильтры текущей подкатегории
+        filterIds = filterIds.concat(sub.filters.map(f => f.filterId));
+        
+        // Рекурсивно добавляем фильтры из дочерних подкатегорий
+        if (sub.children && sub.children.length > 0) {
+          filterIds = filterIds.concat(collectFiltersFromSubcategories(sub.children));
+        }
+      }
+      
+      return filterIds;
+    };
+
+    let availableFilterIds: string[] = [];
+
+    if (lastSubcategory) {
+      // Если выбрана конкретная подкатегория, берем только её фильтры
+      availableFilterIds = lastSubcategory.filters.map(f => f.filterId);
+      
+      // Добавляем фильтры из дочерних подкатегорий
+      if (lastSubcategory.children) {
+        availableFilterIds = availableFilterIds.concat(
+          collectFiltersFromSubcategories(lastSubcategory.children)
+        );
+      }
+    } else {
+      // Если выбрана только категория, берем все фильтры из всех подкатегорий
+      availableFilterIds = collectFiltersFromSubcategories(category.subcategories);
+    }
+
+    // Убираем дубликаты и возвращаем только нужные фильтры
+    const uniqueFilterIds = [...new Set(availableFilterIds)];
+    return filtersDefs.filter(filter => uniqueFilterIds.includes(filter.id));
+  };
+
+  const availableFilters = getAvailableFilters();
+
   return {
     // Data
     categories,
     ads,
     cities,
-    filtersDefs,
+    filtersDefs: availableFilters,
     category,
     lastSubcategory,
     categoryPath,
