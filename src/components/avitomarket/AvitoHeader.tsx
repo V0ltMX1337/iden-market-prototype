@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,7 +22,7 @@ import FancyText from "@carefully-coded/react-text-gradient";
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Category } from "@/lib/types";
+import type { Category, Ad } from "@/lib/types";
 import AvitoHeaderMobile from "./AvitoHeaderMobile";
 
 const AvitoHeader = () => {
@@ -30,8 +30,13 @@ const AvitoHeader = () => {
   const location = useLocation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [allAds, setAllAds] = useState<Ad[]>([]);
+  const [filteredAds, setFilteredAds] = useState<Ad[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isLoadingAds, setIsLoadingAds] = useState(false);
   const { user, isLoading } = useAuth();
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const authorizedTabs = [
     { title: "Главная", icon: Home, path: "/" },
@@ -53,15 +58,48 @@ const AvitoHeader = () => {
   ];
 
   useEffect(() => {
-    const loadCategories = async () => {
+    const loadData = async () => {
       try {
-        const data = await storeApi.getCategories();
-        setCategories(data);
+        const [categoriesData, adsData] = await Promise.all([
+          storeApi.getCategories(),
+          storeApi.getAds(),
+        ]);
+        setCategories(categoriesData);
+        setAllAds(adsData);
       } catch (error) {
-        console.error("Ошибка загрузки категорий:", error);
+        console.error("Ошибка загрузки данных:", error);
       }
     };
-    loadCategories();
+    loadData();
+  }, []);
+
+  // Поиск по title с первой буквы
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredAds([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = allAds
+      .filter(ad => ad.title.toLowerCase().includes(query))
+      .slice(0, 5); // Показываем максимум 5 результатов
+    
+    setFilteredAds(filtered);
+    setShowSearchResults(true);
+  }, [searchQuery, allAds]);
+
+  // Закрытие результатов поиска при клике вне
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -92,6 +130,27 @@ const AvitoHeader = () => {
       navigate(tab.path);
     }
     setActiveTabIndex(index);
+  };
+
+  const handleAdClick = (ad: Ad) => {
+    setShowSearchResults(false);
+    setSearchQuery("");
+    navigate(`/product/${ad.id}`);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchQuery.trim() && filteredAds.length > 0) {
+      setShowSearchResults(true);
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (!searchQuery.trim()) {
+      // Показываем 5 рекомендованных объявлений
+      const recommended = allAds.slice(0, 5);
+      setFilteredAds(recommended);
+      setShowSearchResults(true);
+    }
   };
 
   if (isLoading) {
@@ -156,12 +215,13 @@ const AvitoHeader = () => {
 
                 {/* Центр: Поиск */}
                 <div className="w-full sm:flex-1 sm:px-8">
-                  <div className="relative w-full max-w-full">
+                  <div className="relative w-full max-w-full" ref={searchRef}>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
                       aria-label="Поиск"
+                      onClick={handleSearchClick}
                     >
                       <Icon name="Search" size={20} />
                     </Button>
@@ -172,7 +232,49 @@ const AvitoHeader = () => {
                       className="w-full pl-4 pr-12 py-3 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 border-0"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onFocus={handleSearchFocus}
                     />
+
+                    {/* Результаты поиска */}
+                    {showSearchResults && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 overflow-y-auto z-50">
+                        {filteredAds.length > 0 ? (
+                          <div className="py-2">
+                            {!searchQuery.trim() && (
+                              <div className="px-4 py-2 text-sm font-medium text-gray-500 border-b">
+                                🔥 Рекомендуемые объявления
+                              </div>
+                            )}
+                            {filteredAds.map((ad) => (
+                              <div
+                                key={ad.id}
+                                className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 border-b border-gray-100 last:border-0"
+                                onClick={() => handleAdClick(ad)}
+                              >
+                                {ad.links?.[0] && (
+                                  <img
+                                    src={ad.links[0]}
+                                    alt={ad.title}
+                                    className="w-12 h-12 object-cover rounded-lg flex-shrink-0"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-sm font-medium text-gray-900 truncate">{ad.title}</h4>
+                                  <p className="text-sm text-gray-500">{ad.city.name}</p>
+                                  <p className="text-sm font-semibold text-blue-600">{ad.price.toLocaleString()} ₽</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="px-4 py-8 text-center text-gray-500">
+                            <Icon name="Search" size={24} className="mx-auto mb-2 text-gray-400" />
+                            <p>Объявления не найдены</p>
+                            <p className="text-sm mt-1">Попробуйте изменить запрос</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
