@@ -151,7 +151,7 @@ export interface Message {
   receiverId: string;
   content: string;
   timestamp: string;
-  isRead?: boolean;
+  read: boolean;
 }
 
 export interface ChatSummary {

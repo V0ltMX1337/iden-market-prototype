@@ -86,7 +86,7 @@ const AvitoProfileMessages = () => {
     
     // Отмечаем непрочитанные сообщения как прочитанные
     const unreadMessages = msgs.filter(msg => 
-      msg.receiverId === user.id && !msg.isRead
+      msg.receiverId === user.id && !msg.read
     );
     
     for (const msg of unreadMessages) {
@@ -135,7 +135,7 @@ const AvitoProfileMessages = () => {
     const lastReadMessage = userMessages
       .slice()
       .reverse()
-      .find(msg => msg.isRead);
+      .find(msg => msg.read);
     
     if (lastReadMessage) {
       const messageElement = messageRefs.current.get(lastReadMessage.id);
@@ -250,7 +250,7 @@ const AvitoProfileMessages = () => {
             >
               {messages.map((msg) => {
                 const isMyMessage = msg.senderId === user?.id;
-                const isUnread = msg.receiverId === user?.id && !msg.isRead;
+                const isUnread = msg.receiverId === user?.id && !msg.read;
                 
                 return (
                   <div 
@@ -279,10 +279,10 @@ const AvitoProfileMessages = () => {
                         isMyMessage ? "text-blue-100" : "text-gray-400"
                       }`}>
                         {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
-                        {isMyMessage && msg.isRead && (
+                        {isMyMessage && msg.read && (
                           <Icon name="CheckCheck" size={12} className="text-blue-200" />
                         )}
-                        {isMyMessage && !msg.isRead && (
+                        {isMyMessage && !msg.read && (
                           <Icon name="Check" size={12} className="text-blue-200" />
                         )}
                       </div>

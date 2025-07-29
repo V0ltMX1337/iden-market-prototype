@@ -130,7 +130,9 @@ export const storeApi = {
   },
 
   async markMessageAsRead(messageId: string): Promise<void> {
-    await axios.put(`${API_BASE}/api/messages/${messageId}/read`, null, { withCredentials: true });
+    await axios.put(`${API_BASE}/api/messages/read`, null, {
+      params: { messageId },
+    });
   },
 
   // --- REVIEWS ---

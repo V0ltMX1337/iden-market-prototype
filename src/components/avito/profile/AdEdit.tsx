@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useEditAdLogic } from "@/hooks/editAdLogic";
+import { useAvitoSellLogic } from "@/hooks/useAvitoSellLogic";
 import {
   Card,
   CardContent,
@@ -22,13 +21,7 @@ import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { FilterType } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 
-const EditAd = () => {
-  const { adId } = useParams<{ adId: string }>(); 
-
-  if (!adId) {
-    return <div>Объявление не найдено</div>;
-  }
-
+const AdEdit = () => {
   const {
     formData,
     subcategoryPath,
@@ -42,7 +35,7 @@ const EditAd = () => {
     handleInputChange,
     handleFilterChange,
     handleSubcategorySelect,
-    handleUpdate,
+    handleSubmit,
     handleRemovePhoto,
     getRootProps,
     getInputProps,
@@ -51,7 +44,7 @@ const EditAd = () => {
     inputRef,
     isDragActive,
     setAsMain,
-  } = useEditAdLogic(adId);
+  } = useAvitoSellLogic();
 
   const geocodeCity = async (cityName: string, regionName: string) => {
     if (!ymapsRef.current) return;
@@ -181,21 +174,21 @@ const EditAd = () => {
         <CardContent className="p-4 md:p-6">
           <div className="flex items-center space-x-3 md:space-x-4">
             <div className="p-2 md:p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
-              <Icon name="Edit" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Icon name="Plus" className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold text-gray-900">
-                Редактировать объявление
+                Подать объявление
               </h1>
               <p className="text-sm md:text-base text-gray-600">
-                Внесите изменения и сохраните
+                Заполните информацию о товаре
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <form onSubmit={handleUpdate} className="space-y-4 md:space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
   <Card className="shadow-lg">
     <CardHeader className="pb-3 md:pb-6">
       <CardTitle className="text-base md:text-lg flex items-center space-x-2">
@@ -237,6 +230,7 @@ const EditAd = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
 
+                {/* Кнопка "Сделать главным" */}
                 <Button
                   size="sm"
                   variant={p.isMain ? "default" : "outline"}
@@ -259,6 +253,7 @@ const EditAd = () => {
                   </span>
                 </Button>
 
+                {/* Кнопка удаления фото */}
                 <Button
                   type="button"
                   size="icon"
@@ -528,8 +523,8 @@ const EditAd = () => {
             disabled={isSubmitting}
             className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
           >
-            <Icon name="Save" className="w-5 h-5 mr-2" />
-            {isSubmitting ? "Сохраняем..." : "Сохранить изменения"}
+            <Icon name="Send" className="w-5 h-5 mr-2" />
+            {isSubmitting ? "Публикуем..." : "Опубликовать обьявление"}
           </Button>
         </div>
       </form>
@@ -537,4 +532,4 @@ const EditAd = () => {
   );
 };
 
-export default EditAd;
+export default AdEdit;
