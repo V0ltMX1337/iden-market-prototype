@@ -129,6 +129,10 @@ export const storeApi = {
     return res.data;
   },
 
+  async markMessageAsRead(messageId: string): Promise<void> {
+    await axios.put(`${API_BASE}/api/messages/${messageId}/read`, null, { withCredentials: true });
+  },
+
   // --- REVIEWS ---
   async getReviews(): Promise<Review[]> {
     const res = await axios.get(`${API_BASE}/reviews`);

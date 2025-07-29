@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,9 @@ const AvitoProfileMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Отслеживание размера экрана
   useEffect(() => {
@@ -80,6 +83,19 @@ const AvitoProfileMessages = () => {
     if (!user || !chat.adId || !chat.otherUserId) return;
     const msgs = await storeApi.getMessages(chat.adId, user.id, chat.otherUserId);
     setMessages(msgs);
+    
+    // Отмечаем непрочитанные сообщения как прочитанные
+    const unreadMessages = msgs.filter(msg => 
+      msg.receiverId === user.id && !msg.isRead
+    );
+    
+    for (const msg of unreadMessages) {
+      try {
+        await storeApi.markMessageAsRead(msg.id);
+      } catch (error) {
+        console.error('Ошибка отмечания сообщения как прочитанного:', error);
+      }
+    }
   };
 
   const handleSelectChat = async (chat: Chat) => {
@@ -109,6 +125,40 @@ const AvitoProfileMessages = () => {
     setMessages(prev => [...prev, sent]);
     setNewMessage("");
   };
+
+  // Прокрутка к последнему прочитанному сообщению
+  const scrollToLastReadMessage = useCallback(() => {
+    if (!user || messages.length === 0) return;
+    
+    // Находим последнее прочитанное сообщение пользователя
+    const userMessages = messages.filter(msg => msg.receiverId === user.id);
+    const lastReadMessage = userMessages
+      .slice()
+      .reverse()
+      .find(msg => msg.isRead);
+    
+    if (lastReadMessage) {
+      const messageElement = messageRefs.current.get(lastReadMessage.id);
+      if (messageElement && messagesContainerRef.current) {
+        messageElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        return;
+      }
+    }
+    
+    // Если нет прочитанных сообщений, прокручиваем вниз
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, user]);
+
+  // Прокрутка при загрузке сообщений
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Небольшая задержка для отрисовки DOM
+      setTimeout(scrollToLastReadMessage, 100);
+    }
+  }, [messages, scrollToLastReadMessage]);
 
   return (
     <div className="flex h-[700px] md:h-[700px] h-[calc(100vh-120px)] bg-white rounded-lg overflow-hidden border shadow-sm">
@@ -194,17 +244,53 @@ const AvitoProfileMessages = () => {
                 </Button>
               )}
             </div>
-            <div className="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 md:space-y-3 bg-gray-50">
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.senderId === user?.id ? "justify-end" : "justify-start"}`}>
-                  <div className={`px-3 md:px-4 py-2 rounded-lg max-w-xs md:max-w-sm ${msg.senderId === user?.id ? "bg-blue-500 text-white" : "bg-white text-black shadow"}`}>
-                    <p className="text-sm md:text-base break-words">{msg.content}</p>
-                    <div className={`text-xs mt-1 text-right ${msg.senderId === user?.id ? "text-blue-100" : "text-gray-400"}`}>
-                      {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+            <div 
+              ref={messagesContainerRef}
+              className="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 md:space-y-3 bg-gray-50"
+            >
+              {messages.map((msg) => {
+                const isMyMessage = msg.senderId === user?.id;
+                const isUnread = msg.receiverId === user?.id && !msg.isRead;
+                
+                return (
+                  <div 
+                    key={msg.id} 
+                    ref={el => {
+                      if (el) {
+                        messageRefs.current.set(msg.id, el);
+                      } else {
+                        messageRefs.current.delete(msg.id);
+                      }
+                    }}
+                    className={`flex ${isMyMessage ? "justify-end" : "justify-start"} relative`}
+                  >
+                    <div className={`px-3 md:px-4 py-2 rounded-lg max-w-xs md:max-w-sm relative ${
+                      isMyMessage 
+                        ? "bg-blue-500 text-white" 
+                        : isUnread 
+                          ? "bg-yellow-50 text-black shadow-md border-l-4 border-yellow-400" 
+                          : "bg-white text-black shadow"
+                    }`}>
+                      {isUnread && (
+                        <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      )}
+                      <p className="text-sm md:text-base break-words">{msg.content}</p>
+                      <div className={`text-xs mt-1 text-right flex items-center justify-end gap-1 ${
+                        isMyMessage ? "text-blue-100" : "text-gray-400"
+                      }`}>
+                        {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+                        {isMyMessage && msg.isRead && (
+                          <Icon name="CheckCheck" size={12} className="text-blue-200" />
+                        )}
+                        {isMyMessage && !msg.isRead && (
+                          <Icon name="Check" size={12} className="text-blue-200" />
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+              <div ref={messagesEndRef} />
               {messages.length === 0 && (
                 <div className="flex items-center justify-center h-full text-gray-500 text-sm">
                   Сообщений пока нет
