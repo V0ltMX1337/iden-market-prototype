@@ -200,9 +200,7 @@ const AvitoHeader = () => {
                       gradient={{ from: "#ffffff", to: "#f0f9ff", type: "linear" }}
                       animateTo={{ from: "#dbeafe", to: "#ffffff" }}
                       animateDuration={2000}
-                    >
-                      TRIVO
-                    </FancyText>
+                    >TRIVOADS</FancyText>
                   </h1>
 
                   <Badge
