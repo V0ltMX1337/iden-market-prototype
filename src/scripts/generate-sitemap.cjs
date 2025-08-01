@@ -12,6 +12,22 @@ const staticRoutes = [
   '/register',
   '/profile',
   '/ads',
+  '/catalog',
+  '/category/transport',
+  '/category/elektronika',
+  '/category/elektronnye-sigatery',
+  '/category/kal-yannaya-produktsiya',
+  '/category/lichnye-veschi',
+  '/about',
+  '/contacts',
+  '/privacy-policy',
+  '/terms',
+  '/sitemap',
+  '/how-to-buy',
+  '/how-to-sell',
+  '/pricing',
+  '/advertising',
+  '/help',
   // Можно добавить больше…
 ];
 

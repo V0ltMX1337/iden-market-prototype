@@ -95,7 +95,7 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
                   className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group/card h-24 md:h-32 flex flex-col items-center justify-center"
                   onClick={() => handleCategoryClick(category)}
                 >
-                  <div className="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <div className="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
                     {category.icon.startsWith('http') ? (
                       <img
                         src={category.icon}

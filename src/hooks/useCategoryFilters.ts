@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { storeApi } from "@/lib/store";
 import { AdStatus, FilterType, type Ad, type Category, type City, type Subcategory, type FilterDefinition } from "@/lib/types";
+import { useAuth } from "./useAuth";
 
 const ADS_PER_PAGE = 10;
 
@@ -10,6 +11,7 @@ type FilterValue = string | string[] | number[];
 export const useCategoryFilters = () => {
   const { categoryid } = useParams<{ categoryid: string }>();
   const location = useLocation();
+  const { user } = useAuth();
 
   // State
   const [categories, setCategories] = useState<Category[]>([]);
@@ -24,6 +26,7 @@ export const useCategoryFilters = () => {
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, FilterValue>>({});
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   // Category path for breadcrumbs
   const [categoryPath, setCategoryPath] = useState<
@@ -111,7 +114,7 @@ export const useCategoryFilters = () => {
         setAds(adsData.filter((ad) => ad.adStatus === AdStatus.ACTIVE));
         setCities(citiesData);
         setFiltersDefs(filters);
-
+        
         if (categoryid) {
           const path = await buildCategoryPath(categoryid, subslugs);
           setCategoryPath(path);
@@ -348,6 +351,10 @@ export const useCategoryFilters = () => {
     handleCityChange,
     handleFilterChange,
     clearAllFilters,
+
+    user,
+    isFavorite,
+    setIsFavorite,
     
     // Constants
     ADS_PER_PAGE

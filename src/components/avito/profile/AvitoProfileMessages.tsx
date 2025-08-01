@@ -11,6 +11,7 @@ import { useAlertContext } from "@/contexts/AlertContext";
 
 interface Chat extends ChatSummary {
   interlocutorName: string;
+  interlocutorFamily: string;
   interlocutorPhotoUrl?: string;
   adTitle: string;
 }
@@ -70,6 +71,7 @@ const AvitoProfileMessages = () => {
         return {
           ...chat,
           interlocutorName: interlocutor?.firstName || interlocutor?.email || "Неизвестный",
+          interlocutorFamily: interlocutor?.lastName || interlocutor?.email || "Неизвестный",
           interlocutorPhotoUrl: interlocutor?.photoUrl,
           adTitle: ad?.title || "Объявление",
           lastMessage: lastMessage || "Сообщений пока нет",
@@ -235,7 +237,7 @@ const AvitoProfileMessages = () => {
                   <AvatarFallback className="text-sm">{selectedChat.interlocutorName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm md:text-base truncate">{selectedChat.interlocutorName}</div>
+                  <div className="font-semibold text-sm md:text-base truncate">{selectedChat.interlocutorName} {selectedChat.interlocutorFamily}</div>
                   <div className="text-xs text-gray-500 cursor-pointer hover:underline truncate" onClick={() => navigate(`/product/${selectedChat.adId}`)}>
                     {selectedChat.adTitle}
                   </div>

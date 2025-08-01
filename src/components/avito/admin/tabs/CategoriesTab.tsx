@@ -18,7 +18,6 @@ import {
 import { storeApi } from "@/lib/store";
 import * as LucideIcons from "lucide-react";
 import { slugify } from "@/lib/slug";
-import IconPicker from "@/components/customcomponent/IconPicker";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const CategoriesTab = () => {
@@ -301,10 +300,10 @@ const CategoriesTab = () => {
             }
             disabled={loadingIds.has("new")}
           />
-          <IconPicker
+          <Input
             value={newCategory.icon}
-            onChange={(icon) =>
-              setNewCategory((prev) => ({ ...prev, icon }))
+            onChange={(e) =>
+              setNewCategory((prev) => ({ ...prev, icon: e.target.value }))
             }
             disabled={loadingIds.has("new")}
           />
@@ -343,9 +342,9 @@ const CategoriesTab = () => {
             {/* Иконка категории редактируемая */}
             <div className="mb-4 flex items-center gap-2">
               <span>Иконка категории:</span>
-              <IconPicker
+              <Input
                 value={cat.icon}
-                onChange={(icon) => updateCategoryIcon(cat.id, icon)}
+                onChange={(e) => updateCategoryIcon(cat.id, e.target.value)}
                 disabled={loadingIds.has(cat.id)}
               />
             </div>

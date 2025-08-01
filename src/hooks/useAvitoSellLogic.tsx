@@ -275,6 +275,18 @@ const handleSubmit = async (e: React.FormEvent) => {
       return;
     }
 
+      // Проверка обязательных фильтров
+    const requiredFilters = (lastSubcategory?.filters || []).filter(fa => fa.required);
+    for (const rf of requiredFilters) {
+      const val = selectedFilters[rf.filterId];
+      if (val === undefined || val === null || val === "") {
+        const def = allFilters.find(f => f.id === rf.filterId);
+        showError(`Укажите значение для фильтра "${def?.name || rf.filterId}".`, "Ошибка");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     const filtersArray: AdFilter[] = Object.entries(selectedFilters).map(
       ([filterId, value]) => ({
         filterId,

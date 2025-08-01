@@ -14,14 +14,10 @@ export const useEditAdLogic = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSuccess, showError, showInfo } = useAlertContext();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentAd, setCurrentAd] = useState<Ad | null>(null);
-
-  // 💥 Добавляем проверку adId сразу
-  if (!adId) {
-      throw new Error("adId is required in URL params.");
-    }
 
   const [formData, setFormData] = useState({
     title: "",
@@ -52,6 +48,7 @@ export const useEditAdLogic = () => {
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string | number | boolean>
   >({});
+  const [addressInput, setAddressInput] = useState<string>("");
 
   const conditions = [
     "Новое",
@@ -96,6 +93,13 @@ export const useEditAdLogic = () => {
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
+
+      if (!adId) {
+        console.error("Missing adId from route params");
+        setIsLoading(false); // просто остановим загрузку
+        return;
+      }
+      
       try {
         const [categoriesData, citiesData, filtersData, adData] = await Promise.all([
           storeApi.getCategories(),
@@ -131,6 +135,7 @@ export const useEditAdLogic = () => {
           url: url,
         }));
         setPhotos(photoData);
+        setAddressInput(formData.fullAdress || "")
 
         // Устанавливаем фильтры
         const filtersMap: Record<string, string | number | boolean> = {};
@@ -398,6 +403,18 @@ export const useEditAdLogic = () => {
         return;
       }
 
+        // Проверка обязательных фильтров
+    const requiredFilters = (lastSubcategory?.filters || []).filter(fa => fa.required);
+    for (const rf of requiredFilters) {
+      const val = selectedFilters[rf.filterId];
+      if (val === undefined || val === null || val === "") {
+        const def = allFilters.find(f => f.id === rf.filterId);
+        showError(`Укажите значение для фильтра "${def?.name || rf.filterId}".`, "Ошибка");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
       const filtersArray: AdFilter[] = Object.entries(selectedFilters).map(
         ([filterId, value]) => ({
           filterId,
@@ -461,5 +478,7 @@ export const useEditAdLogic = () => {
     isSubmitting,
     isLoading,
     currentAd,
+    setAddressInput,
+    addressInput,
   };
 };

@@ -23,19 +23,6 @@ import { FilterType } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 
 const AdEdit = () => {
-  const logic = useEditAdLogic();
-
-  if (!logic) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <p className="text-red-600 text-lg font-medium">Некорректный адрес страницы.</p>
-          <p className="text-gray-500">Отсутствует ID объявления в URL.</p>
-        </div>
-      </div>
-    );
-  }
-
   const {
     formData,
     subcategoryPath,
@@ -59,7 +46,43 @@ const AdEdit = () => {
     inputRef,
     isDragActive,
     setAsMain,
-  } = logic;
+    setAddressInput,
+    addressInput,
+  } = useEditAdLogic();
+
+  const mapRef = useRef<any>(null);
+  const ymapsRef = useRef<any>(null);
+  const suggestViewRef = useRef<any>(null);
+  const addressInputRef = useRef<HTMLInputElement>(null);
+
+  if (!formData) {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-600 text-lg font-medium">Ошибка: отсутствует ID объявления</p>
+        <p className="text-gray-500">Проверьте ссылку или попробуйте позже.</p>
+      </div>
+    </div>
+  );
+}
+
+  useEffect(() => {
+      if (!formData || !formData.cityId) return;
+      const city = cities.find(c => c.id === formData.cityId);
+      if (city) {
+        const addressStr = `${city.region}, ${city.name}`;
+        setAddressInput(addressStr);
+        handleInputChange("fullAdress", addressStr);
+        if (ymapsRef.current) {
+          geocodeCity(city.name, city.region);
+        }
+      }
+    }, [formData.cityId]);
+
+  useEffect(() => {
+    if (!formData || !formData.cityId) return;
+    setAddressInput(formData.fullAdress || "");
+  }, [formData.fullAdress]);
 
   if (isLoading) {
     return (
@@ -90,29 +113,6 @@ const AdEdit = () => {
       console.error("Geocode city error", e);
     }
   };
-
-  const [addressInput, setAddressInput] = useState(formData.fullAdress || "");
-
-  const mapRef = useRef<any>(null);
-  const ymapsRef = useRef<any>(null);
-  const suggestViewRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (formData.cityId) {
-      const city = cities.find(c => c.id === formData.cityId);
-      if (city) {
-        const addressStr = `${city.region}, ${city.name}`;
-        setAddressInput(addressStr);
-        handleInputChange("fullAdress", addressStr);
-
-        if (ymapsRef.current) {
-          geocodeCity(city.name, city.region);
-        }
-      }
-    }
-  }, [formData.cityId]);
-
-  const addressInputRef = useRef<HTMLInputElement>(null);
 
   const onMapLoad = (ymapsInstance: any) => {
     ymapsRef.current = ymapsInstance;
@@ -189,10 +189,6 @@ const AdEdit = () => {
     setAddressInput(val);
     handleInputChange("fullAdress", val);
   };
-
-  useEffect(() => {
-    setAddressInput(formData.fullAdress || "");
-  }, [formData.fullAdress]);
 
   return (
     <div className="space-y-4 md:space-y-6 max-w-4xl mx-auto">

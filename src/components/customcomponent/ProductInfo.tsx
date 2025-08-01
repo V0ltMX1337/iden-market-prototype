@@ -66,6 +66,16 @@ const ProductInfo = ({
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const navigate = useNavigate();
 
+const formatPublishedAt = (publishAt: string): string => {
+  return new Date(publishAt).toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
   const mapConditionToAdSold = (condition: AdSold): string => {
     switch (condition) {
       case AdSold.NEW:
@@ -114,7 +124,7 @@ const ProductInfo = ({
                 {price.toLocaleString()} ₽
               </p>
               <p className="text-lg text-gray-500 line-through">
-                {(price + 15000)?.toLocaleString()} ₽
+                {(price + 2000)?.toLocaleString()} ₽
               </p>
             </div>
           </div>
@@ -189,7 +199,7 @@ const ProductInfo = ({
             </Button>
           </div>
 
-          <p className="text-sm text-gray-500 mt-4">Размещено {publishedAt}</p>
+          <p className="text-sm text-gray-500 mt-4">Размещено {formatPublishedAt(publishedAt)}</p>
         </CardContent>
       </Card>
 

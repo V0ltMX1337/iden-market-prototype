@@ -12,12 +12,11 @@ import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
-import type { User, Ad, Review } from "@/lib/types";
+import { type User, type Ad, type Review, AdStatus } from "@/lib/types";
 
 type UserProfile = User;
 
 type AdWithStatus = Ad & {
-  status: string;
   isDeliveryAvailable: boolean;
   isFavorite: boolean;
   formattedPrice: string;
@@ -89,7 +88,6 @@ const AvitoAddReview = () => {
 
         const adsWithStatus: AdWithStatus[] = userAds.map((ad) => ({
           ...ad,
-          status: ad.active ? "active" : "sold",
           isDeliveryAvailable: Math.random() > 0.5,
           isFavorite: false,
           formattedPrice: `${ad.price.toLocaleString()} ₽`,
@@ -205,7 +203,7 @@ const AvitoAddReview = () => {
                         <h3 className="font-semibold">{ad.title}</h3>
                         <p className="text-sm text-muted-foreground">{ad.formattedPrice}</p>
                       </div>
-                      <Badge>{ad.status === "sold" ? "Продано" : "В наличии"}</Badge>
+                      <Badge>{ad.adStatus === AdStatus.SOLD ? "Продано" : "В наличии"}</Badge>
                     </div>
                   </Card>
                 ))}

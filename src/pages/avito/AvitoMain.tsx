@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
@@ -28,25 +28,32 @@ const AvitoMain = () => {
   const stories = [
     {
       id: 1,
+      title: "2FA и Приложение",
+      image: "https://api.trivoads.ru/uploads/files/art_5.png",
+      description: "Мы добавили 2FA и релизим приложение в бета. Скачать можете в посте по кнопке подробнее.",
+      url: "https://t.me/trivo_net/33"
+    },
+    {
+      id: 2,
       title: "Глобальное обновление",
       image: "https://api.trivoads.ru/uploads/files/art_4.png",
       description: "Мы провели обновление и добавили: новую категорию «Личные вещи», удобные фильтры в объявлениях и категориях, баннер и описание профиля — оформите профиль красиво и расскажите о себе, новые страницы: помощь, о нас и др. (ещё в доработке), поиск по сайту — находите объявления быстрее! Также исправили ошибки: баг с дублированием объявлений, подсчёт рейтинга и статистики, отображение профиля на мобильных, валидация форм — теперь без пропущенных полей. Пользоваться сайтом стало ещё удобнее!",
     },
     {
-      id: 2,
+      id: 3,
       title: "Новый дизайн сайта",
       image: "https://api.trivoads.ru/uploads/files/art_1.png",
       description: "Теперь сайт стал ещё удобнее и приятнее для пользования!",
     },
     {
-      id: 3,
+      id: 4,
       title: "Привет, Вейперы!",
       image: "https://api.trivoads.ru/uploads/files/art_2.png",
       description:
         "Теперь больше прозрачности, честности и безопасности в сделках на нашей платформе.",
     },
     {
-      id: 4,
+      id: 5,
       title: "Cherry Tiggo Pro",
       image: "https://api.trivoads.ru/uploads/files/art_3.png",
       description:
@@ -104,6 +111,8 @@ const AvitoMain = () => {
     <div className="min-h-screen flex flex-col bg-gray-50 relative overflow-hidden">
       <Helmet>
         <title>{pageTitle}</title>
+        <meta name="description" content="Trivo — платформа бесплатных объявлений. Быстро и удобно размещайте объявления по всей России!" />
+        <link rel="canonical" href="https://trivoads.ru/" />
       </Helmet>
 
       {/* Background particles */}
@@ -155,6 +164,8 @@ const AvitoMain = () => {
       </section>
 
       <main className="flex-grow">
+        <h1 className="sr-only">Trivo — платформа объявлений, купи или продай быстро и удобно</h1>
+        
         <section className="pt-8">
           <AvitoCategorySwiper products={categories} />
         </section>
@@ -240,6 +251,12 @@ const AvitoMain = () => {
           </div>
         </section>
 
+        <section id="banners" className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
+          <div id='b_script_4856930'>
+            <script async src='//cache.betweendigital.com/sections/2/4856930.js'></script>
+          </div>
+        </section>
+
         {/* Security Tips */}
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8 pb-4 md:pb-8">
           <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
@@ -301,11 +318,15 @@ const AvitoMain = () => {
               className="w-full h-40 md:h-48 object-cover rounded-md border border-white mb-3 md:mb-4"
             />
             <p className="text-xs md:text-sm text-center mb-4 leading-relaxed">{stories[storyModalIndex].description}</p>
-            <div className="text-center">
+            {stories[storyModalIndex].url && (
+              <div className="text-center">
+              <Link to={`${stories[storyModalIndex].url}`}>
               <button className="bg-white text-blue-600 font-semibold px-4 py-2 rounded-full shadow hover:bg-blue-50 transition text-sm">
                 Подробнее
               </button>
+              </Link>
             </div>
+            )}
           </div>
         </div>
       )}

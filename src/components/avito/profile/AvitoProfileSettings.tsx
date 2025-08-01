@@ -387,7 +387,7 @@ const AvitoProfileSettings = () => {
                         <h3 className="font-medium text-blue-800 mb-2">Шаг 2: Найдите бота</h3>
                         <p className="text-sm text-blue-700">
                           Найдите нашего бота в Telegram по имени: 
-                          <strong>@avitobot</strong> и отправьте команду выше.
+                          <strong>@TrivoAdsBot</strong> и отправьте команду выше.
                         </p>
                       </div>
                       

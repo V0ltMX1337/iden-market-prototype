@@ -70,7 +70,7 @@ const AvitoProfileMain = () => {
     {
       label: "Баланс",
       value: `${user?.balance ?? 0} ₽`,
-      icon: "Money",
+      icon: "Banknote",
       color: "text-green-600",
     },
     {

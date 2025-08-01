@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FilterType } from "@/lib/types";
+import { Ad, FilterType, User } from "@/lib/types";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import Breadcrumbs from "@/components/customcomponent/Breadcrumbs";
@@ -12,6 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useCategoryFilters } from "@/hooks/useCategoryFilters";
+import { usePageTitle } from "@/hooks/usePageTitle";
+import { Helmet } from "react-helmet-async";
+import { storeApi } from "@/lib/store";
+import Icon from "@/components/ui/icon";
 
 const AvitoCategoryPage = () => {
   const navigate = useNavigate();
@@ -48,10 +52,44 @@ const AvitoCategoryPage = () => {
     handleCityChange,
     handleFilterChange,
     clearAllFilters,
+
+    user,
+    isFavorite,
+    setIsFavorite,
     
     // Constants
     ADS_PER_PAGE
   } = useCategoryFilters();
+
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
+
+  // Формируем заголовок
+  const pageTitle =
+    category && systemSettings && categoryPath.length
+      ? getPageTitle("categoryTitle", {
+          categorytitle: category?.name || "Категория не найдена",
+        })
+      : "";
+
+  const toggleFavorite = async (user: User, product: Ad, isFavorite: boolean) => {
+      if (!user || !product) return alert("Войдите в аккаунт");
+      try {
+        const [favorites] = await Promise.all([
+            storeApi.getFavorites(user.id),
+          ]);
+          setIsFavorite(favorites.includes(product.id));
+          
+        if (isFavorite) {
+          await storeApi.removeFavorite(user.id, product.id);
+          setIsFavorite(false);
+        } else {
+          await storeApi.addFavorite(user.id, product.id);
+          setIsFavorite(true);
+        }
+      } catch {
+        alert("Ошибка при обновлении избранного");
+      }
+    };
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -181,6 +219,17 @@ const AvitoCategoryPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta
+          name="description"
+          content={`12 100 объявлений, о ${category?.name || "Категория не найдена"}. в Дзержинске и Нижнем Новгороде. Подробнее на Trivo.`}
+        />
+        <meta
+          name="og:title"
+          content={`{pageTitle}`}
+        />
+      </Helmet>
       <AvitoHeader />
       <main className="flex flex-col md:flex-row bg-gray-50 min-h-screen pt-16 md:pt-20">
         {/* Desktop фильтры */}
@@ -282,17 +331,21 @@ const AvitoCategoryPage = () => {
                         className="overflow-hidden cursor-pointer group relative flex flex-col border-0 shadow-md hover:shadow-lg transition-shadow"
                         onClick={() => navigate(`/product/${ad.id}`)}
                       >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-1 md:top-2 right-1 md:right-2 z-10 bg-white/80 hover:bg-white h-6 w-6 md:h-8 md:w-8"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log("Добавлено в избранное:", ad.id);
-                          }}
-                        >
-                          <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
-                        </Button>
+                        {user && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`absolute top-1 md:top-2 right-1 md:right-2 z-10 h-6 w-6 md:h-8 md:w-8 transition-colors ${
+                              isFavorite
+                                ? "text-red-500 hover:text-red-700"
+                                : "text-gray-500 hover:text-gray-700"
+                            }`}
+                            onClick={() => toggleFavorite(user, ad, isFavorite)}
+                            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+                          >
+                            <Icon name="Heart" size={20} />
+                          </Button>
+                        )}
 
                         <div className="relative w-full h-24 md:h-40 bg-gray-200 overflow-hidden">
                           <img
