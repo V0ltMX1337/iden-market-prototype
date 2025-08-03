@@ -13,6 +13,8 @@ import { loadFull } from "tsparticles";
 import { Engine } from "tsparticles-engine";
 import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { NotificationTitle } from "@/components/ui/notification-title";
+import { MainPageSkeleton } from "@/components/ui/skeleton-loader";
 
 const AvitoMain = () => {
   const navigate = useNavigate();
@@ -62,23 +64,28 @@ const AvitoMain = () => {
   ];
 
   useEffect(() => {
-    (async () => {
-      try {
-        const [cats, ads, users] = await Promise.all([
-          storeApi.getCategories(),
-          storeApi.getAds(),
-          storeApi.getUsers(),
-        ]);
-        setCategories(cats);
-        setAds(ads);
-        setUsers(users);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, []);
+  setIsLoading(true); // Показать скелетон сразу
+
+  // Загрузка в фоне
+  const fetchData = async () => {
+    try {
+      const [cats, ads, users] = await Promise.all([
+        storeApi.getCategories(),
+        storeApi.getAds(),
+        storeApi.getUsers(),
+      ]);
+      setCategories(cats);
+      setAds(ads);
+      setUsers(users);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false); // Скрыть скелетон
+    }
+  };
+
+  fetchData();
+}, []);
 
   const today = new Date().toISOString().split("T")[0];
   const newTodayAds = ads.filter(
@@ -100,20 +107,12 @@ const AvitoMain = () => {
       : "Главная страница Trivo";
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <MainPageSkeleton />; // вызываем как JSX-компонент
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 relative overflow-hidden">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content="Trivo — платформа бесплатных объявлений. Быстро и удобно размещайте объявления по всей России!" />
-        <link rel="canonical" href="https://trivoads.ru/" />
-      </Helmet>
+    <NotificationTitle originalTitle={pageTitle} />
 
       {/* Background particles */}
       <Particles

@@ -1,5 +1,5 @@
 // --- logic/avitoSellLogic.ts ---
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
@@ -13,7 +13,9 @@ export const useAvitoSellLogic = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSuccess, showError, showInfo } = useAlertContext();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingInit, setIsLoadingInit] = useState(true);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,36 +24,36 @@ export const useAvitoSellLogic = () => {
     category: "",
     condition: "",
     cityId: "",
-    address: "",        // прежнее поле для адреса
-    fullAdress: "",     // новое поле: полный адрес из карты/геокодера
-    latitude: 0,        // новое поле: широта
-    longitude: 0,       // новое поле: долгота
+    address: "",
+    fullAdress: "",
+    latitude: 0,
+    longitude: 0,
   });
 
   const [subcategoryPath, setSubcategoryPath] = useState<string[]>([]);
-  const [subcategoryLevels, setSubcategoryLevels] = useState<
-    Array<{ name: string; slug: string }[]>
-  >([]);
-
+  const [subcategoryLevels, setSubcategoryLevels] = useState<Array<Category["subcategories"]>>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
-  const [photos, setPhotos] = useState<
-    Array<{ file: File; preview: string; isMain: boolean }>
-  >([]);
-
+  const [photos, setPhotos] = useState<Array<{ file: File; preview: string; isMain: boolean }>>([]);
   const [allFilters, setAllFilters] = useState<FilterDefinition[]>([]);
   const [filters, setFilters] = useState<FilterDefinition[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<
-    Record<string, string | number | boolean>
-  >({});
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string | number | boolean>>({});
 
-  const conditions = [
+  const addressInputRef = useRef<HTMLInputElement>(null);
+  const mapRef = useRef<any>(null);
+  const ymapsRef = useRef<any>(null);
+  const suggestViewRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [addressInput, setAddressInput] = useState("");
+
+  const conditions = useMemo(() => [
     "Новое",
     "Отличное",
     "Очень хорошее",
     "Хорошее",
     "Удовлетворительное",
-  ];
+  ], []);
+
 
   const mapConditionToAdSold = (condition: string): AdSold => {
     switch (condition) {
@@ -70,34 +72,67 @@ export const useAvitoSellLogic = () => {
   };
 
   useEffect(() => {
-    storeApi.getCategories().then(setCategories);
-    storeApi.getCities().then(setCities);
-    storeApi.getFilters().then(setAllFilters);
+  const loadInitialData = async () => {
+    try {
+      const [fetchedCategories, fetchedCities, fetchedFilters] = await Promise.all([
+        storeApi.getCategories(),
+        storeApi.getCities(),
+        storeApi.getFilters(),
+      ]);
 
-    return () => {
-      photos.forEach((p) => URL.revokeObjectURL(p.preview));
-    };
-  }, []);
-
-  useEffect(() => {
-    if (formData.category) {
-      const cat = categories.find((c) => c.slug === formData.category);
-      if (cat) {
-        setSubcategoryPath([]);
-        setSubcategoryLevels([cat.subcategories]);
-      } else {
-        setSubcategoryLevels([]);
-        setSubcategoryPath([]);
-      }
-      setFilters([]);
-      setSelectedFilters({});
-    } else {
-      setSubcategoryLevels([]);
-      setSubcategoryPath([]);
-      setFilters([]);
-      setSelectedFilters({});
+      setCategories(fetchedCategories);
+      setCities(fetchedCities);
+      setAllFilters(fetchedFilters);
+    } catch (error) {
+      showError("Ошибка при загрузке данных. Попробуйте позже.", "Ошибка");
+    } finally {
+      setIsLoadingInit(false);
     }
-  }, [formData.category, categories]);
+  };
+
+  loadInitialData();
+
+  return () => {
+    photos.forEach((p) => URL.revokeObjectURL(p.preview));
+  };
+}, []);
+
+// Объединённый useEffect: при смене города
+useEffect(() => {
+  if (!formData.cityId || cities.length === 0) return;
+
+  const city = cities.find(c => c.id === formData.cityId);
+  if (city) {
+    const addressStr = `${city.region}, ${city.name}`;
+    setAddressInput(addressStr);
+    handleInputChange("fullAdress", addressStr);
+
+    if (ymapsRef.current) {
+      geocodeCity(city.name, city.region);
+    }
+  }
+}, [formData.cityId, cities]);
+
+// Обработка смены категории
+useEffect(() => {
+  const cat = categories.find((c) => c.slug === formData.category);
+
+  if (formData.category && cat) {
+    setSubcategoryPath([]);
+    setSubcategoryLevels([cat.subcategories]);
+  } else {
+    setSubcategoryLevels([]);
+    setSubcategoryPath([]);
+  }
+
+  setFilters([]);
+  setSelectedFilters({});
+}, [formData.category, categories]);
+
+// Синхронизация текстового инпута адреса
+useEffect(() => {
+  setAddressInput(formData.fullAdress || "");
+}, [formData.fullAdress]);
 
   const findSubcategoryByPath = (
     subcategories: Category["subcategories"],
@@ -165,8 +200,6 @@ export const useAvitoSellLogic = () => {
     }));
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const mapped = acceptedFiles.map((file, idx) => ({
@@ -205,6 +238,101 @@ export const useAvitoSellLogic = () => {
     return newPhotos;
   });
 };
+
+const geocodeCity = async (cityName: string, regionName: string) => {
+    if (!ymapsRef.current) return;
+
+    try {
+      const res = await ymapsRef.current.geocode(`${cityName}, ${regionName}`);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const coords = firstGeoObject.geometry.getCoordinates();
+        handleInputChange("latitude", coords[0]);
+        handleInputChange("longitude", coords[1]);
+        if (mapRef.current) {
+          mapRef.current.setCenter(coords, 10, { duration: 300 });
+        }
+      }
+    } catch (e) {
+      console.error("Geocode city error", e);
+    }
+  };
+
+  const onMapLoad = (ymapsInstance: any) => {
+    ymapsRef.current = ymapsInstance;
+
+    if (!suggestViewRef.current && addressInputRef.current) {
+      const suggest = new ymapsInstance.SuggestView(addressInputRef.current);
+      suggest.events.add("select", async (event: any) => {
+        const address = event.get("item").value;
+        setAddressInput(address);
+        handleInputChange("fullAdress", address);
+
+        try {
+          const res = await ymapsInstance.geocode(address);
+          const firstGeoObject = res.geoObjects.get(0);
+          if (firstGeoObject) {
+            const coords = firstGeoObject.geometry.getCoordinates();
+            handleInputChange("latitude", coords[0]);
+            handleInputChange("longitude", coords[1]);
+            if (mapRef.current) {
+              mapRef.current.setCenter(coords, 10, { duration: 300 });
+            }
+          }
+        } catch (error) {
+          console.error("Geocode error:", error);
+        }
+      });
+      suggestViewRef.current = suggest;
+    }
+  };
+
+  const onAddressBlur = async () => {
+    if (!ymapsRef.current) return;
+    try {
+      const res = await ymapsRef.current.geocode(addressInput);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const coords = firstGeoObject.geometry.getCoordinates();
+        handleInputChange("latitude", coords[0]);
+        handleInputChange("longitude", coords[1]);
+        if (mapRef.current) {
+          mapRef.current.setCenter(coords, 10, { duration: 300 });
+        }
+        const newAddress = firstGeoObject.getAddressLine();
+        setAddressInput(newAddress);
+        handleInputChange("fullAdress", newAddress);
+      }
+    } catch (error) {
+      console.error("Geocode error:", error);
+    }
+  };
+
+  const onPlacemarkDragEnd = async (e: any) => {
+    if (!ymapsRef.current) return;
+
+    const coords = e.get("target").geometry.getCoordinates();
+    handleInputChange("latitude", coords[0]);
+    handleInputChange("longitude", coords[1]);
+
+    try {
+      const res = await ymapsRef.current.geocode(coords);
+      const firstGeoObject = res.geoObjects.get(0);
+      if (firstGeoObject) {
+        const newAddress = firstGeoObject.getAddressLine();
+        setAddressInput(newAddress);
+        handleInputChange("fullAdress", newAddress);
+      }
+    } catch (error) {
+      console.error("Reverse geocode error:", error);
+    }
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setAddressInput(val);
+    handleInputChange("fullAdress", val);
+  };
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -328,6 +456,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
   return {
+    isLoadingInit,
     formData,
     setFormData,
     categories,
@@ -351,5 +480,13 @@ const handleSubmit = async (e: React.FormEvent) => {
     handleSubcategorySelect,
     handleRemovePhoto,
     isSubmitting,
+
+    addressInputRef,
+    addressInput,
+    handleAddressChange,
+    onAddressBlur,
+    onMapLoad,
+    onPlacemarkDragEnd,
+    mapRef,
   };
 };

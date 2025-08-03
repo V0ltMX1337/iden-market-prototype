@@ -22,6 +22,7 @@ const AvitoRegister = () => {
   const navigate = useNavigate();
   const { getPageTitle, settings: systemSettings } = usePageTitle();
   const { showError, showSuccess, showWarning } = useAlertContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [cities, setCities] = useState<City[]>([]);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
@@ -48,49 +49,61 @@ const AvitoRegister = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (isSubmitting) return; // блокируем повторные клики
+    setIsSubmitting(true);
+
     // Валидация полей
     if (!formData.login) {
       showError("Пожалуйста, введите логин", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (!formData.firstName) {
       showError("Пожалуйста, введите ваше имя", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (!formData.lastName) {
       showError("Пожалуйста, введите вашу фамилию", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (!formData.email) {
       showError("Пожалуйста, введите адрес электронной почты", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (!formData.phone) {
       showError("Пожалуйста, введите номер телефона", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (!formData.city) {
       showError("Пожалуйста, выберите город", "Обязательное поле");
+      setIsSubmitting(false);
       return;
     }
 
     if (formData.password.length < 6) {
       showWarning("Пароль должен содержать минимум 6 символов", "Слабый пароль");
+      setIsSubmitting(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       showError("Введенные пароли не совпадают", "Ошибка пароля");
+      setIsSubmitting(false);
       return;
     }
 
     if (!agreeToTerms) {
       showWarning("Для продолжения нужно согласиться с условиями", "Согласие обязательно");
+      setIsSubmitting(false);
       return;
     }
 
@@ -135,7 +148,7 @@ const AvitoRegister = () => {
         );
       }
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -319,10 +332,10 @@ const AvitoRegister = () => {
 
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 h-12"
               >
-                {isLoading ? "Создание аккаунта..." : "Создать TRIVO ID"}
+                {isSubmitting ? "Создание аккаунта..." : "Создать TRIVO ID"}
               </Button>
             </form>
 

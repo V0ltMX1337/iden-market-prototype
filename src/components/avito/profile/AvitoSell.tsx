@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef } from "react";
 import { useAvitoSellLogic } from "@/hooks/useAvitoSellLogic";
 import {
   Card,
@@ -20,9 +19,11 @@ import { Button } from "@/components/ui/button";
 import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { FilterType } from "@/lib/types";
 import Icon from "@/components/ui/icon";
+import { ProfilePageSkeleton } from "@/components/ui/skeleton-loader";
 
 const AvitoSell = () => {
   const {
+    isLoadingInit,
     formData,
     subcategoryPath,
     subcategoryLevels,
@@ -39,134 +40,22 @@ const AvitoSell = () => {
     handleRemovePhoto,
     getRootProps,
     getInputProps,
-    open,
     isSubmitting,
-    inputRef,
     isDragActive,
     setAsMain,
+
+    addressInputRef,
+    addressInput,
+    handleAddressChange,
+    onAddressBlur,
+    onMapLoad,
+    onPlacemarkDragEnd,
+    mapRef,
   } = useAvitoSellLogic();
 
-  const geocodeCity = async (cityName: string, regionName: string) => {
-    if (!ymapsRef.current) return;
-
-    try {
-      const res = await ymapsRef.current.geocode(`${cityName}, ${regionName}`);
-      const firstGeoObject = res.geoObjects.get(0);
-      if (firstGeoObject) {
-        const coords = firstGeoObject.geometry.getCoordinates();
-        handleInputChange("latitude", coords[0]);
-        handleInputChange("longitude", coords[1]);
-        if (mapRef.current) {
-          mapRef.current.setCenter(coords, 10, { duration: 300 });
-        }
-      }
-    } catch (e) {
-      console.error("Geocode city error", e);
+    if (isLoadingInit) {
+      return <ProfilePageSkeleton />; // вызываем как JSX-компонент
     }
-  };
-
-  const [addressInput, setAddressInput] = useState(formData.fullAdress || "");
-
-  const mapRef = useRef<any>(null);
-  const ymapsRef = useRef<any>(null);
-  const suggestViewRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (formData.cityId) {
-      const city = cities.find(c => c.id === formData.cityId);
-      if (city) {
-        const addressStr = `${city.region}, ${city.name}`;
-        setAddressInput(addressStr);
-        handleInputChange("fullAdress", addressStr);
-
-        if (ymapsRef.current) {
-          geocodeCity(city.name, city.region);
-        }
-      }
-    }
-  }, [formData.cityId]);
-
-  const addressInputRef = useRef<HTMLInputElement>(null);
-
-  const onMapLoad = (ymapsInstance: any) => {
-    ymapsRef.current = ymapsInstance;
-
-    if (!suggestViewRef.current && addressInputRef.current) {
-      const suggest = new ymapsInstance.SuggestView(addressInputRef.current);
-      suggest.events.add("select", async (event: any) => {
-        const address = event.get("item").value;
-        setAddressInput(address);
-        handleInputChange("fullAdress", address);
-
-        try {
-          const res = await ymapsInstance.geocode(address);
-          const firstGeoObject = res.geoObjects.get(0);
-          if (firstGeoObject) {
-            const coords = firstGeoObject.geometry.getCoordinates();
-            handleInputChange("latitude", coords[0]);
-            handleInputChange("longitude", coords[1]);
-            if (mapRef.current) {
-              mapRef.current.setCenter(coords, 10, { duration: 300 });
-            }
-          }
-        } catch (error) {
-          console.error("Geocode error:", error);
-        }
-      });
-      suggestViewRef.current = suggest;
-    }
-  };
-
-  const onAddressBlur = async () => {
-    if (!ymapsRef.current) return;
-    try {
-      const res = await ymapsRef.current.geocode(addressInput);
-      const firstGeoObject = res.geoObjects.get(0);
-      if (firstGeoObject) {
-        const coords = firstGeoObject.geometry.getCoordinates();
-        handleInputChange("latitude", coords[0]);
-        handleInputChange("longitude", coords[1]);
-        if (mapRef.current) {
-          mapRef.current.setCenter(coords, 10, { duration: 300 });
-        }
-        const newAddress = firstGeoObject.getAddressLine();
-        setAddressInput(newAddress);
-        handleInputChange("fullAdress", newAddress);
-      }
-    } catch (error) {
-      console.error("Geocode error:", error);
-    }
-  };
-
-  const onPlacemarkDragEnd = async (e: any) => {
-    if (!ymapsRef.current) return;
-
-    const coords = e.get("target").geometry.getCoordinates();
-    handleInputChange("latitude", coords[0]);
-    handleInputChange("longitude", coords[1]);
-
-    try {
-      const res = await ymapsRef.current.geocode(coords);
-      const firstGeoObject = res.geoObjects.get(0);
-      if (firstGeoObject) {
-        const newAddress = firstGeoObject.getAddressLine();
-        setAddressInput(newAddress);
-        handleInputChange("fullAdress", newAddress);
-      }
-    } catch (error) {
-      console.error("Reverse geocode error:", error);
-    }
-  };
-
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setAddressInput(val);
-    handleInputChange("fullAdress", val);
-  };
-
-  useEffect(() => {
-    setAddressInput(formData.fullAdress || "");
-  }, [formData.fullAdress]);
 
   return (
     <div className="space-y-4 md:space-y-6 max-w-4xl mx-auto">
@@ -338,28 +227,30 @@ const AvitoSell = () => {
                 </SelectContent>
               </Select>
             </div>
-
-            {subcategoryLevels.map((levelSubcats, idx) => (
-              <div key={idx} className="space-y-2">
-                <Label className="text-sm md:text-base font-medium">Подкатегория (уровень {idx + 1})</Label>
-                <Select
-                  value={subcategoryPath[idx] || ""}
-                  onValueChange={(value) => handleSubcategorySelect(idx, value)}
-                >
-                  <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
-                    <SelectValue placeholder="Выберите подкатегорию" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {levelSubcats.map((subcat) => (
-                      <SelectItem key={subcat.slug} value={subcat.slug}>
-                        {subcat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-
+            {formData.category && subcategoryLevels.length > 0 &&
+              subcategoryLevels.map((levelSubcats, idx) => (
+                <div key={idx} className="space-y-2">
+                  <Label className="text-sm md:text-base font-medium">
+                    Подкатегория (уровень {idx + 1})
+                  </Label>
+                  <Select
+                    value={subcategoryPath[idx] || ""}
+                    onValueChange={(value) => handleSubcategorySelect(idx, value)}
+                  >
+                    <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
+                      <SelectValue placeholder="Выберите подкатегорию" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {levelSubcats.map((subcat) => (
+                        <SelectItem key={subcat.slug} value={subcat.slug}>
+                          {subcat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))
+            }
             <div className="space-y-2">
               <Label htmlFor="condition" className="text-sm md:text-base font-medium">Состояние *</Label>
               <Select

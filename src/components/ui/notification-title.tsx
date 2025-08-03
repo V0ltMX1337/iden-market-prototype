@@ -1,40 +1,36 @@
-import { useEffect, useState } from 'react';
-import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
 interface NotificationTitleProps {
   originalTitle: string;
 }
 
 export const NotificationTitle = ({ originalTitle }: NotificationTitleProps) => {
-  const { hasUnread } = useUnreadMessages();
+  const { hasUnread, count } = useUnreadMessages();
   const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
     if (hasUnread) {
-      setIsBlinking(true);
-      
-      // Возвращаем к оригинальному заголовку через 3 секунды
-      const timer = setTimeout(() => {
-        setIsBlinking(false);
-      }, 3000);
+      const interval = setInterval(() => {
+        setIsBlinking((prev) => !prev);
+      }, 1000);
 
-      return () => clearTimeout(timer);
+      return () => clearInterval(interval);
+    } else {
+      setIsBlinking(false);
     }
   }, [hasUnread]);
 
-  // Устанавливаем заголовок документа
-  useEffect(() => {
-    if (hasUnread && isBlinking) {
-      document.title = "❗ 1 НЕПРОЧИТАННОЕ СООБЩЕНИЕ";
-    } else {
-      document.title = originalTitle;
-    }
+  const title = hasUnread && isBlinking
+    ? `❗ ${count} непрочитанное сообщение`
+    : originalTitle;
 
-    return () => {
-      // При размонтировании восстанавливаем оригинальный заголовок
-      document.title = originalTitle;
-    };
-  }, [hasUnread, isBlinking, originalTitle]);
-
-  return null; // Компонент ничего не рендерит
+  return (
+    <Helmet>
+      <title>{title}</title>
+      <meta name="description" content="Trivo — платформа бесплатных объявлений. Быстро и удобно размещайте объявления по всей России!" />
+      <link rel="canonical" href="https://trivoads.ru/" />
+    </Helmet>
+  );
 };

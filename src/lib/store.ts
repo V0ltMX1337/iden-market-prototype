@@ -121,6 +121,13 @@ export const storeApi = {
     return res.data;
   },
 
+  async getMessagesByUserId(userId: string): Promise<{ unreadCount: number }> {
+    const res = await axios.get(`${API_BASE}/api/messages/unread-count`, {
+      params: { userId },
+    });
+    return res.data; // { unreadCount: number }
+  },
+
   async getUserChats(userId: string): Promise<ChatSummary[]> {
     const res = await axios.get(`${API_BASE}/api/user-chats`, {
       params: { userId },
