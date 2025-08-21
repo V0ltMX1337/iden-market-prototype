@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import AvitoCategorySwiper from "@/components/avitomarket/AvitoCategorySwiper";
@@ -27,7 +27,6 @@ const AvitoMain = () => {
   const { isOpen: isAppModalOpen, closeModal: closeAppModal } = useAppDownloadModal();
 
   const { getPageTitle, settings: systemSettings } = usePageTitle();
-
 
   const stories = [
     {
@@ -66,28 +65,27 @@ const AvitoMain = () => {
   ];
 
   useEffect(() => {
-  setIsLoading(true); // Показать скелетон сразу
+    setIsLoading(true);
 
-  // Загрузка в фоне
-  const fetchData = async () => {
-    try {
-      const [cats, ads, users] = await Promise.all([
-        storeApi.getCategories(),
-        storeApi.getAds(),
-        storeApi.getUsers(),
-      ]);
-      setCategories(cats);
-      setAds(ads);
-      setUsers(users);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false); // Скрыть скелетон
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const [cats, ads, users] = await Promise.all([
+          storeApi.getCategories(),
+          storeApi.getAds(),
+          storeApi.getUsers(),
+        ]);
+        setCategories(cats);
+        setAds(ads);
+        setUsers(users);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
 
   const today = new Date().toISOString().split("T")[0];
   const newTodayAds = ads.filter(
@@ -102,36 +100,31 @@ const AvitoMain = () => {
     .sort((a, b) => b.adCount - a.adCount)
     .slice(0, 5);
 
-    // внутри компонента
-    useEffect(() => {
-      if (ads.length === 0) return; // Ждем, пока ads загрузятся
-      if (!(window as any).yaContextCb) return; // Проверка наличия объекта
+  useEffect(() => {
+    if (ads.length === 0) return;
+    if (!(window as any).yaContextCb) return;
 
-      (window as any).yaContextCb.push(() => {
-        (window as any).Ya.Context.AdvManager.render({
-          blockId: "R-A-16429782-3",
-          renderTo: "yandex_rtb_R-A-16429782-3",
-        });
+    (window as any).yaContextCb.push(() => {
+      (window as any).Ya.Context.AdvManager.render({
+        blockId: "R-A-16429782-3",
+        renderTo: "yandex_rtb_R-A-16429782-3",
       });
-    }, [ads.length]); // Зависит только от длины массива
+    });
+  }, [ads.length]);
 
-
-
-  // Формируем заголовок
   const pageTitle =
-   systemSettings
+    systemSettings
       ? getPageTitle("mainPageTitle", {})
       : "Главная страница Trivo";
 
   if (isLoading) {
-    return <MainPageSkeleton />; // вызываем как JSX-компонент
+    return <MainPageSkeleton />;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 relative overflow-hidden">
-    <NotificationTitle originalTitle={pageTitle} />
+      <NotificationTitle originalTitle={pageTitle} />
 
-      {/* Background particles */}
       <Particles
         id="tsparticles"
         init={async (engine: Engine) => await loadFull(engine)}
@@ -156,7 +149,6 @@ const AvitoMain = () => {
 
       <AvitoHeader />
 
-      {/* Stories */}
       <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
         <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
           <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">📢 Истории</h2>
@@ -188,7 +180,6 @@ const AvitoMain = () => {
 
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Блок рекомендаций и новых объявлений с вкладками */}
             <div className="flex-1 bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
               <Tabs defaultValue="recommendations" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -236,7 +227,6 @@ const AvitoMain = () => {
               </Tabs>
             </div>
 
-            {/* Блок рекламы (фиксированная ширина или 1/5) */}
             <div
               className="w-full md:w-60 lg:w-72 bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-lg border border-gray-100 animate-fadeIn"
               style={{ minHeight: "100%" }}
@@ -249,7 +239,6 @@ const AvitoMain = () => {
           </div>
         </section>
 
-        {/* Top Users */}
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
           <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
             <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">🏆 Топ продавцов</h2>
@@ -290,7 +279,6 @@ const AvitoMain = () => {
           </div>
         </section>
 
-        {/* Security Tips */}
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8 pb-4 md:pb-8">
           <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
             <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">🛡 Советы по безопасности</h2>
@@ -302,15 +290,12 @@ const AvitoMain = () => {
             </ul>
           </div>
         </section>
-        
       </main>
 
       <AvitoFooter />
 
-      {/* App Download Modal */}
       <AppDownloadModal isOpen={isAppModalOpen} onClose={closeAppModal} />
 
-      {/* Story Modal */
       {storyModalIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
           <div
@@ -324,7 +309,6 @@ const AvitoMain = () => {
               <Icon name="X" size={20} />
             </button>
 
-            {/* Arrows */}
             <div className="flex justify-between absolute top-1/2 left-2 right-2 md:left-4 md:right-4 -translate-y-1/2 z-10">
               {storyModalIndex > 0 && (
                 <button
@@ -356,18 +340,17 @@ const AvitoMain = () => {
             <p className="text-xs md:text-sm text-center mb-4 leading-relaxed">{stories[storyModalIndex].description}</p>
             {stories[storyModalIndex].url && (
               <div className="text-center">
-              <Link to={`${stories[storyModalIndex].url}`}>
-              <button className="bg-white text-blue-600 font-semibold px-4 py-2 rounded-full shadow hover:bg-blue-50 transition text-sm">
-                Подробнее
-              </button>
-              </Link>
-            </div>
+                <Link to={stories[storyModalIndex].url}>
+                  <button className="bg-white text-blue-600 font-semibold px-4 py-2 rounded-full shadow hover:bg-blue-50 transition text-sm">
+                    Подробнее
+                  </button>
+                </Link>
+              </div>
             )}
           </div>
         </div>
       )}
 
-      {/* Custom animation */}
       <style>{`
         @keyframes fadeIn {
           from {
