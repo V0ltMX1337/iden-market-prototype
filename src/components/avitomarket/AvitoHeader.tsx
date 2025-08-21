@@ -135,7 +135,7 @@ const AvitoHeader = () => {
   const handleAdClick = (ad: Ad) => {
     setShowSearchResults(false);
     setSearchQuery("");
-    navigate(`/product/${ad.id}`);
+    navigate(`/product/${ad.slug}/${ad.id}`);
   };
 
   const handleSearchFocus = () => {

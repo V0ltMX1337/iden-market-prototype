@@ -7,19 +7,22 @@ import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import AvitoProfileMain from "@/components/avito/profile/AvitoProfileMain";
-import AvitoProfileAds from "@/components/avito/profile/AvitoProfileAds";
-import AvitoProfileMessages from "@/components/avito/profile/AvitoProfileMessages";
-import AvitoProfileFavorites from "@/components/avito/profile/AvitoProfileFavorites";
-import AvitoProfileReviews from "@/components/avito/profile/AvitoProfileReviews";
-import AvitoProfileSettings from "@/components/avito/profile/AvitoProfileSettings";
-import AvitoSell from "@/components/avito/profile/AvitoSell";
-import AvitoProfileGamePage from "@/components/avito/profile/AvitoProfileGamePage";
-import AdStatistics from "@/components/avito/profile/AdStatistics";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/hooks/useAuth";
 import { TemplateKeys, usePageTitle } from "@/hooks/usePageTitle";
-import AdEdit from "@/components/avito/profile/AdEdit";
+
+import { lazy, Suspense } from "react";
+
+const AvitoProfileMain = lazy(() => import("@/components/avito/profile/AvitoProfileMain"));
+const AvitoProfileAds = lazy(() => import("@/components/avito/profile/AvitoProfileAds"));
+const AvitoProfileMessages = lazy(() => import("@/components/avito/profile/AvitoProfileMessages"));
+const AvitoProfileFavorites = lazy(() => import("@/components/avito/profile/AvitoProfileFavorites"));
+const AvitoProfileReviews = lazy(() => import("@/components/avito/profile/AvitoProfileReviews"));
+const AvitoProfileSettings = lazy(() => import("@/components/avito/profile/AvitoProfileSettings"));
+const AvitoSell = lazy(() => import("@/components/avito/profile/AvitoSell"));
+const AvitoProfileGamePage = lazy(() => import("@/components/avito/profile/AvitoProfileGamePage"));
+const AdStatistics = lazy(() => import("@/components/avito/profile/AdStatistics"));
+const AdEdit = lazy(() => import("@/components/avito/profile/AdEdit"));
 
 const AvitoProfile = () => {
   const navigate = useNavigate();
@@ -29,15 +32,15 @@ const AvitoProfile = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+useEffect(() => {
+  const checkMobile = () => {
+    const isNowMobile = window.innerWidth < 1024;
+    setIsMobile((prev) => (prev !== isNowMobile ? isNowMobile : prev));
+  };
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+}, []);
 
   const menuItems = [
     { id: "", label: "Профиль", icon: "User", path: "/profile" },
@@ -52,18 +55,21 @@ const AvitoProfile = () => {
       ? location.pathname === "/profile"
       : location.pathname.startsWith(path);
 
-  const getTitleTemplateKey = (): TemplateKeys | null => {
-    const path = location.pathname;
-  
-    if (path === "/profile") return "profileMain";
-    if (path.startsWith("/profile/ads")) return "profileAds";
-    if (path.startsWith("/profile/messages")) return "profileMessages";
-    if (path.startsWith("/profile/favorites")) return "profileFavorites";
-    if (path.startsWith("/profile/game")) return "profileGame";
-    if (path.startsWith("/profile/settings")) return "profileSettings";
-    if (path.startsWith("/profile/sell")) return "profileNewAd";
-    return null;
-  };
+const titleMap: Record<string, TemplateKeys> = {
+  "/profile": "profileMain",
+  "/profile/ads": "profileAds",
+  "/profile/messages": "profileMessages",
+  "/profile/favorites": "profileFavorites",
+  "/profile/game": "profileGame",
+  "/profile/settings": "profileSettings",
+  "/profile/sell": "profileNewAd",
+};
+
+const getTitleTemplateKey = (): TemplateKeys | null => {
+  const path = location.pathname;
+  const key = Object.keys(titleMap).find((k) => path.startsWith(k));
+  return key ? titleMap[key] : null;
+};
 
   const titleKey = getTitleTemplateKey();
   const title =
@@ -185,18 +191,20 @@ const AvitoProfile = () => {
 
             {/* Main Content */}
             <section className="flex-1">
-              <Routes>
-                <Route index element={<AvitoProfileMain />} />
-                <Route path="sell" element={<AvitoSell />} />
-                <Route path="ads" element={<AvitoProfileAds />} />
-                <Route path="game" element={<AvitoProfileGamePage />} />
-                <Route path="messages" element={<AvitoProfileMessages />} />
-                <Route path="favorites" element={<AvitoProfileFavorites />} />
-                <Route path="reviews" element={<AvitoProfileReviews />} />
-                <Route path="settings" element={<AvitoProfileSettings />} />
-                <Route path=":adId/statistic" element={<AdStatistics />} />
-                <Route path=":adId/edit" element={<AdEdit />} />
-              </Routes>
+              <Suspense fallback={<div className="p-6">Загрузка...</div>}>
+                <Routes>
+                  <Route index element={<AvitoProfileMain />} />
+                  <Route path="sell" element={<AvitoSell />} />
+                  <Route path="ads" element={<AvitoProfileAds />} />
+                  <Route path="game" element={<AvitoProfileGamePage />} />
+                  <Route path="messages" element={<AvitoProfileMessages />} />
+                  <Route path="favorites" element={<AvitoProfileFavorites />} />
+                  <Route path="reviews" element={<AvitoProfileReviews />} />
+                  <Route path="settings" element={<AvitoProfileSettings />} />
+                  <Route path=":adId/statistic" element={<AdStatistics />} />
+                  <Route path=":adId/edit" element={<AdEdit />} />
+                </Routes>
+              </Suspense>
             </section>
           </div>
         </div>

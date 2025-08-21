@@ -329,7 +329,7 @@ const AvitoCategoryPage = () => {
                       <Card
                         key={ad.id}
                         className="overflow-hidden cursor-pointer group relative flex flex-col border-0 shadow-md hover:shadow-lg transition-shadow"
-                        onClick={() => navigate(`/product/${ad.id}`)}
+                        onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
                       >
                         {user && (
                           <Button

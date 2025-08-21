@@ -36,6 +36,15 @@ export const storeApi = {
     return true;
   },
 
+  async changeUserPassword(id: string, currentPassword: string, newPassword: string): Promise<void> {
+    await axios.put(
+      `${API_BASE}/users/${id}/changepassword`,
+      { currentPassword, newPassword },
+      { withCredentials: true }
+    );
+  },
+
+
   // --- ADS BY USER ---
   async getUserAds(userId: string): Promise<Ad[]> {
     const res = await axios.get(`${API_BASE}/users/${userId}/ads`);

@@ -103,6 +103,7 @@ export interface Ad {
   id: string;
   title: string;
   description: string;
+  slug: string;
   price: number;
   city: City;
   fullAdress: string;

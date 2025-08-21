@@ -201,7 +201,7 @@ const AvitoProfileMessages = () => {
                   <div className="text-xs md:text-sm text-gray-500 truncate mb-1">{chat.lastMessage}</div>
                   <div className="text-xs text-blue-600 hover:underline cursor-pointer truncate" onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/product/${chat.adId}`);
+                    navigate(`/product/later/${chat.adId}`);
                   }}>
                     {chat.adTitle}
                   </div>
@@ -238,7 +238,7 @@ const AvitoProfileMessages = () => {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-sm md:text-base truncate">{selectedChat.interlocutorName} {selectedChat.interlocutorFamily}</div>
-                  <div className="text-xs text-gray-500 cursor-pointer hover:underline truncate" onClick={() => navigate(`/product/${selectedChat.adId}`)}>
+                  <div className="text-xs text-gray-500 cursor-pointer hover:underline truncate" onClick={() => navigate(`/product/later/${selectedChat.adId}`)}>
                     {selectedChat.adTitle}
                   </div>
                 </div>

@@ -68,7 +68,7 @@ const AvitoHeaderMobile = () => {
     setShowSearchResults(false);
     setSearchQuery("");
     setSearchVisible(false);
-    navigate(`/product/${ad.id}`);
+    navigate(`/product/${ad.slug}/${ad.id}`);
   };
 
   const handleSearchFocus = () => {

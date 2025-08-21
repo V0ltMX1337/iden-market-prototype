@@ -284,7 +284,7 @@ const AvitoUser = () => {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredAds.map((ad) => (
-                      <Link to={`/product/${ad.id}`}>
+                      <Link to={`/product/${ad.slug}/${ad.id}`}>
                       <Card
                         key={ad.id}
                         className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
@@ -356,7 +356,7 @@ const AvitoUser = () => {
                           />
                           <div className="absolute top-2 left-2">
                             <Badge className="bg-green-600">
-                              Цена ниже рыночной
+                              Новый пользователь
                             </Badge>
                           </div>
                         </div>
@@ -521,7 +521,7 @@ const AvitoUser = () => {
                       </Link>
                       {review.ad && (
                         <Link
-                          to={`/product/${review.ad.id}`}
+                          to={`/product/${review.ad.slug}/${review.ad.id}`}
                           className="flex items-center gap-3 mb-3 group"
                         >
                           <img

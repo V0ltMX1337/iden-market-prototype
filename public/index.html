@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -50,14 +50,35 @@
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103490697', 'ym');
+  (function(w,d,t,r,u){
+    w[u]=w[u]||function(){
+      (w[u].a=w[u].a||[]).push(arguments)
+    };
+    w[u].l=1*new Date();
 
-    ym(103490697, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    function loadMetrika(){
+      var s = d.createElement(t),
+          f = d.getElementsByTagName(t)[0];
+      s.async = true;
+      s.src = r;
+      f.parentNode.insertBefore(s,f);
+
+      w[u](103490697, 'init', {
+        ssr: true,
+        webvisor: true,
+        clickmap: true,
+        ecommerce: "dataLayer",
+        accurateTrackBounce: true,
+        trackLinks: true
+      });
+    }
+
+    if (w.attachEvent) {
+      w.attachEvent('onload', loadMetrika);
+    } else {
+      w.addEventListener('load', loadMetrika, false);
+    }
+  })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/103490697" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->

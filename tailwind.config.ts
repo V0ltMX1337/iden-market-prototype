@@ -97,5 +97,21 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		// Добавляем плагин для scrollbar-none
+		function ({ addUtilities }) {
+			addUtilities({
+				'.scrollbar-none': {
+					/* Firefox */
+					'scrollbar-width': 'none',
+					/* IE 10+ */
+					'-ms-overflow-style': 'none',
+				},
+				'.scrollbar-none::-webkit-scrollbar': {
+					display: 'none',
+				}
+			});
+		}
+	],
 } satisfies Config;

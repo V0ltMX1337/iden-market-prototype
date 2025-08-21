@@ -1,11 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import ProductDetails from "@/components/customcomponent/ProductDetails";
 import ProductInfo from "@/components/customcomponent/ProductInfo";
-import SellerInfo from "@/components/customcomponent/SellerInfo";
-import SafetyTips from "@/components/customcomponent/SafetyTips";
-import AskSeller from "@/components/customcomponent/AskSeller";
-import SimilarProducts from "@/components/customcomponent/SimilarProducts";
 import Breadcrumbs from "@/components/customcomponent/Breadcrumbs";
 import { storeApi } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,12 +13,15 @@ import {
   User,
   Category,
   Subcategory,
-  SystemSettings,
-  AdSold,
   Review,
 } from "@/lib/types";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import ProductFeatures from "@/components/customcomponent/ProductFeatures";
+
+const SimilarProductsLazy = lazy(() => import("@/components/customcomponent/SimilarProducts"));
+const AskSellerLazy = lazy(() => import("@/components/customcomponent/AskSeller"));
+const SellerInfoLazy = lazy(() => import("@/components/customcomponent/SellerInfo"));
+const SafetyTipsLazy = lazy(() => import("@/components/customcomponent/SafetyTips"));
 
 interface CategoryPathItem {
   name: string;
@@ -30,160 +29,112 @@ interface CategoryPathItem {
   fullSlug: string;
 }
 
+// Вынес статичные данные из компонента
+const staticSimilarProducts = [
+  { id: "101", title: "iPhone 14 Pro Max", price: 95000, location: "Москва", image: "/images/iphone14promax.jpg" },
+  { id: "102", title: "iPhone 14 Pro", price: 90000, location: "Москва", image: "/images/iphone14pro.jpg" },
+  { id: "103", title: "iPhone 14", price: 75000, location: "Москва", image: "/images/iphone14.jpg" },
+];
+
+const questions = [
+  "Где и когда можно посмотреть?",
+  "Ещё продаёте?",
+  "Торг уместен?",
+  "Отправите Trivo Доставкой?",
+];
+
+// Функция поиска пути по подкатегории
+const findSubcategoryPath = (
+  subs: Subcategory[],
+  targetId: string,
+  path: CategoryPathItem[] = [],
+  slugs: string[] = []
+): CategoryPathItem[] | null => {
+  for (const sub of subs) {
+    const currentSlugs = [...slugs, sub.slug];
+    const currentPath = [...path, { name: sub.name, slug: sub.slug, fullSlug: currentSlugs.join("/") }];
+    if (sub.id === targetId) return currentPath;
+    if (sub.children?.length) {
+      const result = findSubcategoryPath(sub.children, targetId, currentPath, currentSlugs);
+      if (result) return result;
+    }
+  }
+  return null;
+};
+
+const buildCategoryPath = async (categoryId: string, subcategoryId: string): Promise<CategoryPathItem[]> => {
+  try {
+    const categories: Category[] = await storeApi.getCategories();
+    const category = categories.find(cat => cat.id === categoryId);
+    if (!category) return [];
+
+    const basePath = [{ name: category.name, slug: category.slug, fullSlug: category.slug }];
+    const subPath = findSubcategoryPath(category.subcategories, subcategoryId);
+
+    return subPath ? [...basePath, ...subPath] : basePath;
+  } catch (err) {
+    console.error("Ошибка при построении пути:", err);
+    return [];
+  }
+};
+
 const AvitoProduct = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug, id } = useParams<{ slug: string; id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { getPageTitle, settings: systemSettings } = usePageTitle();
 
+  const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Ad | null>(null);
   const [seller, setSeller] = useState<User | null>(null);
   const [categoryPath, setCategoryPath] = useState<CategoryPathItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const [messageText, setMessageText] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [inCart, setInCart] = useState(false);
-  const [categoryFullSlug, setCategoryFullSlug] = useState("");
 
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const categoryFullSlug = useMemo(() => categoryPath.map(p => p.slug).join("/"), [categoryPath]);
 
-  const { getPageTitle, settings: systemSettings } = usePageTitle();
-
-  const staticSimilarProducts = [
-    {
-      id: "101",
-      title: "iPhone 14 Pro Max",
-      price: 95000,
-      location: "Москва",
-      image: "/images/iphone14promax.jpg",
-    },
-    {
-      id: "102",
-      title: "iPhone 14 Pro",
-      price: 90000,
-      location: "Москва",
-      image: "/images/iphone14pro.jpg",
-    },
-    {
-      id: "103",
-      title: "iPhone 14",
-      price: 75000,
-      location: "Москва",
-      image: "/images/iphone14.jpg",
-    },
-  ];
-
-  const questions = [
-    "Где и когда можно посмотреть?",
-    "Ещё продаёте?",
-    "Торг уместен?",
-    "Отправите Авито Доставкой?",
-  ];
-
-  const buildCategoryPath = async (
-    categoryId: string,
-    subcategoryId: string
-  ): Promise<CategoryPathItem[]> => {
-    try {
-      const categories: Category[] = await storeApi.getCategories();
-      const category = categories.find((cat) => cat.id === categoryId);
-      if (!category) return [];
-
-      const basePath: CategoryPathItem[] = [
-        {
-          name: category.name,
-          slug: category.slug,
-          fullSlug: category.slug,
-        },
-      ];
-
-      const findSubcategoryPath = (
-        subs: Subcategory[],
-        targetId: string,
-        path: CategoryPathItem[] = [],
-        slugs: string[] = []
-      ): CategoryPathItem[] | null => {
-        for (const sub of subs) {
-          const currentSlugs = [...slugs, sub.slug];
-          const currentPath = [
-            ...path,
-            {
-              name: sub.name,
-              slug: sub.slug,
-              fullSlug: currentSlugs.join("/"),
-            },
-          ];
-
-          if (sub.id === targetId) return currentPath;
-
-          if (sub.children?.length) {
-            const result = findSubcategoryPath(
-              sub.children,
-              targetId,
-              currentPath,
-              currentSlugs
-            );
-            if (result) return result;
-          }
-        }
-        return null;
-      };
-
-      const subPath = findSubcategoryPath(category.subcategories, subcategoryId);
-
-      return subPath ? [...basePath, ...subPath] : basePath;
-    } catch (err) {
-      console.error("Ошибка при построении пути:", err);
-      return [];
-    }
-  };
-
-  useEffect(() => {
+useEffect(() => {
     if (!id) return;
+
     setLoading(true);
 
-    storeApi
-      .getAdById(id)
-      .then(async (adData: Ad) => {
-        const updatedAd = { ...adData, views: (adData.views || 0) + 1 };
-        storeApi.updateAd(id, updatedAd).catch(console.error);
-        setProduct(updatedAd);
+    const loadData = async () => {
+      try {
+        const adData = await storeApi.getAdById(id);
+        // Увеличиваем просмотры в фоне
+        storeApi.updateAd(id, { ...adData, views: (adData.views || 0) + 1 }).catch(console.error);
+        setProduct(adData);
 
         const [userData, pathData, userAds] = await Promise.all([
-          storeApi.getUserById(updatedAd.userId),
-          buildCategoryPath(updatedAd.categoryId, updatedAd.subcategoryId),
-          storeApi.getUserAds(updatedAd.userId),
+          storeApi.getUserById(adData.userId),
+          buildCategoryPath(adData.categoryId, adData.subcategoryId),
+          storeApi.getUserAds(adData.userId),
         ]);
-
-        // Получаем отзывы по каждому объявлению
-        const reviewsArrays = await Promise.all(
-          userAds.map((ad) => storeApi.getReviewsByAdId(ad.id))
-        );
-        const allReviews = reviewsArrays.flat();
-      
-        
         setSeller(userData);
         setCategoryPath(pathData);
 
-        const fullSlugPath = pathData.map((p) => p.slug).join("/");
-        setCategoryFullSlug(fullSlugPath);
+        // Получаем отзывы
+        const reviewsArrays = await Promise.all(userAds.map(ad => storeApi.getReviewsByAdId(ad.id)));
+        setReviews(reviewsArrays.flat());
 
         if (user) {
-          const [favorites, cart] = await Promise.all([
-            storeApi.getFavorites(user.id),
-            storeApi.getCart(user.id),
-          ]);
+          const [favorites, cart] = await Promise.all([storeApi.getFavorites(user.id), storeApi.getCart(user.id)]);
           setIsFavorite(favorites.includes(id));
           setInCart(cart.includes(id));
-          setReviews(allReviews); // ✅ правильные отзывы
         }
-      })
-      .catch((err) => console.error("Ошибка загрузки:", err))
-      .finally(() => setLoading(false));
+      } catch (error) {
+        console.error("Ошибка загрузки:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [id, user]);
 
-  // Формируем заголовок
   const pageTitle =
     product && systemSettings && categoryPath.length
       ? getPageTitle("adTitle", {
@@ -193,7 +144,7 @@ const AvitoProduct = () => {
         })
       : "";
 
-  const toggleFavorite = async () => {
+  const toggleFavorite = useCallback(async () => {
     if (!user || !product) return alert("Войдите в аккаунт");
     try {
       if (isFavorite) {
@@ -206,9 +157,9 @@ const AvitoProduct = () => {
     } catch {
       alert("Ошибка при обновлении избранного");
     }
-  };
+  }, [user, product, isFavorite]);
 
-  const toggleCart = async () => {
+  const toggleCart = useCallback(async () => {
     if (!user || !product) return alert("Войдите в аккаунт");
     try {
       if (inCart) {
@@ -221,25 +172,28 @@ const AvitoProduct = () => {
     } catch {
       alert("Ошибка при обновлении корзины");
     }
-  };
+  }, [user, product, inCart]);
 
-  const handleSendMessage = async (message: string) => {
-    if (!message.trim() || !user || !product) return;
-    try {
-      await storeApi.sendMessage({
-        adId: product.id,
-        senderId: user.id,
-        receiverId: product.userId,
-        content: message.trim(),
-      });
-      alert("Сообщение отправлено");
-      setMessageText("");
-      setSelectedQuestion(null);
-      navigate("/profile/chat");
-    } catch {
-      alert("Ошибка при отправке сообщения");
-    }
-  };
+  const handleSendMessage = useCallback(
+    async (message: string) => {
+      if (!message.trim() || !user || !product) return;
+      try {
+        await storeApi.sendMessage({
+          adId: product.id,
+          senderId: user.id,
+          receiverId: product.userId,
+          content: message.trim(),
+        });
+        alert("Сообщение отправлено");
+        setMessageText("");
+        setSelectedQuestion(null);
+        navigate("/profile/messages");
+      } catch {
+        alert("Ошибка при отправке сообщения");
+      }
+    },
+    [user, product, navigate]
+  );
 
   if (loading) {
     return (
@@ -258,13 +212,29 @@ const AvitoProduct = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 flex flex-col">
+<div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 flex flex-col">
       <Helmet>
         <title>{pageTitle}</title>
         <meta
           name="description"
-          content={`${product.title} в ${product.city.name}. Подробнее на Trivo.`}
+          content={`${product.title} на Trivo в категории ${categoryPath[categoryPath.length - 1].name} в ${product.city.name}, ${product.city.region}. Цена: ${product.price.toLocaleString()}₽.`}
         />
+        <link rel="canonical" href={`https://trivoads.ru/product/${product.slug}/${product.id}`} />
+        {/* OpenGraph */}
+        <meta property="og:title" content={`${product.title} - ${categoryPath[categoryPath.length - 1].name}`} />
+        <meta
+          property="og:description"
+          content={`${product.title} продаётся в ${product.city.name}, ${product.city.region}. Цена ${product.price}₽. Подробнее на Trivo.`}
+        />
+        <meta property="og:url" content={`https://trivoads.ru/product/${product.slug}/${product.id}`} />
+        {product.links?.[0] && <meta property="og:image" content={product.links[0]} />}
+        <meta property="og:type" content="product" />
+        <meta property="og:site_name" content="Trivo" />
+        {/* Twitter card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${product.title} - ${categoryPath[categoryPath.length - 1].name}`} />
+        <meta name="twitter:description" content={`Продажа: ${product.title} в ${product.city.name}. ${product.price}₽`} />
+        {product.links?.[0] && <meta name="twitter:image" content={product.links[0]} />}
       </Helmet>
 
       <AvitoHeader />
@@ -281,24 +251,26 @@ const AvitoProduct = () => {
               images={product.links}
             />
             <ProductFeatures filters={product.filters} />
-            <AskSeller
-              messageText={messageText}
-              setMessageText={setMessageText}
-              selectedQuestion={selectedQuestion}
-              setSelectedQuestion={setSelectedQuestion}
-              questions={questions}
-              onSendMessage={handleSendMessage}
-            />
-            <SimilarProducts
-              products={staticSimilarProducts}
-              onViewAllClick={() => navigate("/similar")}
-            />
+
+            <Suspense fallback={<div>Загрузка вопросов продавцу...</div>}>
+              <AskSellerLazy
+               messageText={messageText}
+               setMessageText={setMessageText}
+               selectedQuestion={selectedQuestion}
+               setSelectedQuestion={setSelectedQuestion}
+               questions={questions}
+               onSendMessage={handleSendMessage}
+               />
+            </Suspense>
+
+            <Suspense fallback={<div>Загрузка похожих товаров...</div>}>
+              <SimilarProductsLazy products={staticSimilarProducts} onViewAllClick={() => navigate("/similar")} />
+            </Suspense>
           </div>
 
           <div className="space-y-6">
             <ProductInfo
               title={product.title}
-              isUsed={product.adSold !== AdSold.NEW}
               adSold={product.adSold}
               price={product.price}
               city={product.city}
@@ -311,15 +283,19 @@ const AvitoProduct = () => {
               fullAdress={product.fullAdress}
               onDeliveryClick={() => alert("Функция находится в разработке")}
               onChatClick={() => navigate("/profile/messages")}
-              onShowPhoneClick={() => navigate("/phone")}
               isFavorite={isFavorite}
               inCart={inCart}
               onToggleFavorite={toggleFavorite}
               onToggleCart={toggleCart}
             />
 
-            <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
-            <SafetyTips />
+            <Suspense fallback={<div>Загрузка информации о продавце...</div>}>
+              <SellerInfoLazy seller={seller} reviews={reviews} reviewCount={reviews.length} />
+            </Suspense>
+            
+            <Suspense fallback={<div>Советы по безопасности...</div>}>
+              <SafetyTipsLazy />
+            </Suspense>
           </div>
         </div>
 
@@ -338,7 +314,6 @@ const AvitoProduct = () => {
           {/* Информация о товаре */}
           <ProductInfo
             title={product.title}
-            isUsed={product.adSold !== AdSold.NEW}
             adSold={product.adSold}
             price={product.price}
             city={product.city}
@@ -351,7 +326,6 @@ const AvitoProduct = () => {
             fullAdress={product.fullAdress}
             onDeliveryClick={() => alert("Функция находится в разработке")}
             onChatClick={() => navigate("/profile/messages")}
-            onShowPhoneClick={() => navigate("/phone")}
             isFavorite={isFavorite}
             inCart={inCart}
             onToggleFavorite={toggleFavorite}
@@ -359,26 +333,31 @@ const AvitoProduct = () => {
           />
           
           {/* Продавец */}
-          <SellerInfo seller={seller} reviews={reviews} reviewCount={reviews.length} />
+          <Suspense fallback={<div>Загрузка информации о продавце...</div>}>
+              <SellerInfoLazy seller={seller} reviews={reviews} reviewCount={reviews.length} />
+            </Suspense>
           
           {/* Задать вопрос продавцу */}
-          <AskSeller
-            messageText={messageText}
-            setMessageText={setMessageText}
-            selectedQuestion={selectedQuestion}
-            setSelectedQuestion={setSelectedQuestion}
-            questions={questions}
-            onSendMessage={handleSendMessage}
-          />
+          <Suspense fallback={<div>Загрузка вопросов продавцу...</div>}>
+              <AskSellerLazy
+               messageText={messageText}
+               setMessageText={setMessageText}
+               selectedQuestion={selectedQuestion}
+               setSelectedQuestion={setSelectedQuestion}
+               questions={questions}
+               onSendMessage={handleSendMessage}
+               />
+            </Suspense>
           
           {/* Безопасная сделка */}
-          <SafetyTips />
+          <Suspense fallback={<div>Советы по безопасности...</div>}>
+              <SafetyTipsLazy />
+          </Suspense>
           
           {/* Похожие объявления */}
-          <SimilarProducts
-            products={staticSimilarProducts}
-            onViewAllClick={() => navigate("/similar")}
-          />
+          <Suspense fallback={<div>Загрузка похожих товаров...</div>}>
+              <SimilarProductsLazy products={staticSimilarProducts} onViewAllClick={() => navigate("/similar")} />
+          </Suspense>
         </div>
       </main>
 

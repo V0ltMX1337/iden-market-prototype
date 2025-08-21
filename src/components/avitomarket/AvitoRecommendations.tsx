@@ -46,7 +46,7 @@ const AvitoRecommendations = () => {
             <Card
               key={ad.id}
               className="overflow-hidden cursor-pointer group relative border-0 shadow-md hover:shadow-lg transition-shadow"
-              onClick={() => navigate(`/product/${ad.id}`)}
+              onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
             >
               <Button
                 variant="ghost"

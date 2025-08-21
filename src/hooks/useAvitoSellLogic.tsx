@@ -8,6 +8,7 @@ import { AdStatus, AdSold } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
 import { useAlertContext } from "@/contexts/AlertContext";
+import { slugify } from "@/lib/slug";
 
 export const useAvitoSellLogic = () => {
   const navigate = useNavigate();
@@ -425,6 +426,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     const newAd: Omit<Ad, "id"> = {
       title: formData.title,
       description: formData.description,
+      slug: slugify(formData.title),
       price: Number(formData.price),
       city,
       links: photoLinks,

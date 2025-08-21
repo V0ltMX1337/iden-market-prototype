@@ -2,17 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface Subcategory {
-  name: string;
-  slug: string;
-}
+import { Category, Subcategory } from "@/lib/types";
 
 interface CategoryStepProps {
   categories: Category[];

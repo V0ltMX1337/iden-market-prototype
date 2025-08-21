@@ -20,7 +20,7 @@ interface LocationStepProps {
   onAddressBlur: () => void;
   latitude: number;
   longitude: number;
-  onMapLoad: () => void;
+  onMapLoad: (e: any) => void;
   onPlacemarkDragEnd: (e: any) => void;
   mapRef: React.MutableRefObject<any>;
 }

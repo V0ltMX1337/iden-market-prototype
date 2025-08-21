@@ -146,7 +146,7 @@ const AvitoSell = () => {
             conditions={conditions}
             filters={filters}
             selectedFilters={selectedFilters}
-            onInputChange={handleInputChange}
+            onInputChange={(field, value) => handleInputChange(field as keyof typeof formData, value)}
             onFilterChange={handleFilterChange}
           />
         );

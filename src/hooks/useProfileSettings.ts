@@ -225,33 +225,51 @@ export const useProfileSettings = () => {
   );
 
   const handlePasswordChange = async () => {
-    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
-      alert("Заполните все поля");
-      return;
+  if (!passwordForm.currentPassword || !passwordForm.newPassword) {
+    alert("Заполните все поля");
+    return;
+  }
+
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    alert("Новые пароли не совпадают");
+    return;
+  }
+
+  if (passwordForm.newPassword.length < 6) {
+    alert("Пароль должен содержать минимум 6 символов");
+    return;
+  }
+
+  if (!user?.id) {
+    alert("Ошибка: пользователь не авторизован");
+    return;
+  }
+
+  setChangingPassword(true);
+  try {
+    await storeApi.changeUserPassword(
+      user.id,
+      passwordForm.currentPassword,
+      passwordForm.newPassword
+    );
+
+    alert("Пароль успешно изменен");
+    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setShowPasswordModal(false);
+  } catch (error: any) {
+    console.error("Ошибка смены пароля:", error);
+
+    if (error.response?.status === 403) {
+      alert("Неверный текущий пароль");
+    } else if (error.response?.status === 404) {
+      alert("Пользователь не найден");
+    } else {
+      alert("Не удалось изменить пароль, попробуйте позже");
     }
-    
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("Новые пароли не совпадают");
-      return;
-    }
-    
-    if (passwordForm.newPassword.length < 6) {
-      alert("Пароль должен содержать минимум 6 символов");
-      return;
-    }
-    
-    setChangingPassword(true);
-    try {
-      alert("Пароль успешно изменен");
-      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      setShowPasswordModal(false);
-    } catch (error) {
-      console.error("Ошибка смены пароля:", error);
-      alert("Ошибка при смене пароля");
-    } finally {
-      setChangingPassword(false);
-    }
-  };
+  } finally {
+    setChangingPassword(false);
+  }
+};
   
   const handleTwoFactorSetup = async () => {
     if (!twoFactorForm.telegramId.trim()) {

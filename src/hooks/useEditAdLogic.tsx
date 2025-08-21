@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { storeApi } from "@/lib/store";
 import { useAlertContext } from "@/contexts/AlertContext";
 import Icon from "@/components/ui/icon";
+import { slugify } from "@/lib/slug";
 
 export const useEditAdLogic = () => {
   const { adId } = useParams<{ adId: string }>();
@@ -425,6 +426,7 @@ export const useEditAdLogic = () => {
       const updatedAd: Omit<Ad, "id"> = {
         title: formData.title,
         description: formData.description,
+        slug: slugify(formData.title),
         price: Number(formData.price),
         city,
         links: photoLinks,

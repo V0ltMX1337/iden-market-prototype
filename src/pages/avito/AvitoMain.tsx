@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AvitoHeader from "@/components/avitomarket/AvitoHeader";
 import AvitoFooter from "@/components/avitomarket/AvitoFooter";
 import AvitoCategorySwiper from "@/components/avitomarket/AvitoCategorySwiper";
@@ -7,11 +7,9 @@ import { storeApi } from "@/lib/store";
 import type { Ad, Category, User } from "@/lib/types";
 import Icon from "@/components/ui/icon";
 import AvitoRecommendations from "@/components/avitomarket/AvitoRecommendations";
-import AlertTester from "@/components/AlertTester";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { Engine } from "tsparticles-engine";
-import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { NotificationTitle } from "@/components/ui/notification-title";
 import { MainPageSkeleton } from "@/components/ui/skeleton-loader";
@@ -100,6 +98,21 @@ const AvitoMain = () => {
     .sort((a, b) => b.adCount - a.adCount)
     .slice(0, 5);
 
+    // внутри компонента
+    useEffect(() => {
+      if (ads.length === 0) return; // Ждем, пока ads загрузятся
+      if (!(window as any).yaContextCb) return; // Проверка наличия объекта
+
+      (window as any).yaContextCb.push(() => {
+        (window as any).Ya.Context.AdvManager.render({
+          blockId: "R-A-16429782-3",
+          renderTo: "yandex_rtb_R-A-16429782-3",
+        });
+      });
+    }, [ads.length]); // Зависит только от длины массива
+
+
+
   // Формируем заголовок
   const pageTitle =
    systemSettings
@@ -169,11 +182,26 @@ const AvitoMain = () => {
           <AvitoCategorySwiper products={categories} />
         </section>
 
-        {/* Recommendations */}
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
-          <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
-            <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">🏆 Рекомендации для вас</h2>
-            <AvitoRecommendations />
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Блок рекомендаций (занимает 4/5 ширины) */}
+            <div className="flex-1 bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
+              <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
+                🏆 Рекомендации для вас
+              </h2>
+              <AvitoRecommendations />
+            </div>
+
+            {/* Блок рекламы (фиксированная ширина или 1/5) */}
+            <div
+              className="w-full md:w-60 lg:w-72 bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-lg border border-gray-100 animate-fadeIn"
+              style={{ minHeight: "100%" }}
+            >
+              <div
+                id="yandex_rtb_R-A-16429782-3"
+                style={{ minHeight: "250px" }}
+              ></div>
+            </div>
           </div>
         </section>
 
@@ -187,7 +215,7 @@ const AvitoMain = () => {
                   <div
                     key={ad.id}
                     className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-md cursor-pointer transition"
-                    onClick={() => navigate(`/product/${ad.id}`)}
+                    onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
                   >
                     <img
                       src={ad.links?.[0] || "/placeholder.png"}
@@ -247,12 +275,6 @@ const AvitoMain = () => {
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
-
-        <section id="banners" className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
-          <div id='b_script_4856930'>
-            <script async src='//cache.betweendigital.com/sections/2/4856930.js'></script>
           </div>
         </section>
 
