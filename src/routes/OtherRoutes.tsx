@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 const AboutPage = lazy(() => import("../pages/AboutPage"));
+const AppDownloadPage = lazy(() => import("../pages/AppDownloadPage"));
 const ContactsPage = lazy(() => import("../pages/ContactsPage"));
 const PrivacyPolicyPage = lazy(() => import("../pages/PrivacyPolicyPage"));
 const TermsPage = lazy(() => import("../pages/TermsPage"));
@@ -18,6 +19,7 @@ const HomeRoutes = () => (
     <Routes>
      {/* Информационные страницы */}
       <Route path="about" element={<AboutPage />} />
+      <Route path="app-download" element={<AppDownloadPage />} />
       <Route path="contacts" element={<ContactsPage />} />
       <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
       <Route path="terms" element={<TermsPage />} />

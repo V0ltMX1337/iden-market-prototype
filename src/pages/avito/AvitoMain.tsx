@@ -13,6 +13,9 @@ import { Engine } from "tsparticles-engine";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { NotificationTitle } from "@/components/ui/notification-title";
 import { MainPageSkeleton } from "@/components/ui/skeleton-loader";
+import { AppDownloadModal } from "@/components/modals/AppDownloadModal";
+import { useAppDownloadModal } from "@/hooks/useAppDownloadModal";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AvitoMain = () => {
   const navigate = useNavigate();
@@ -21,6 +24,7 @@ const AvitoMain = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [storyModalIndex, setStoryModalIndex] = useState<number | null>(null);
+  const { isOpen: isAppModalOpen, closeModal: closeAppModal } = useAppDownloadModal();
 
   const { getPageTitle, settings: systemSettings } = usePageTitle();
 
@@ -184,12 +188,52 @@ const AvitoMain = () => {
 
         <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Блок рекомендаций (занимает 4/5 ширины) */}
+            {/* Блок рекомендаций и новых объявлений с вкладками */}
             <div className="flex-1 bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
-              <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
-                🏆 Рекомендации для вас
-              </h2>
-              <AvitoRecommendations />
+              <Tabs defaultValue="recommendations" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="recommendations" className="flex items-center space-x-2">
+                    <Icon name="Trophy" className="w-4 h-4" />
+                    <span>Рекомендации</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="today" className="flex items-center space-x-2">
+                    <Icon name="Clock" className="w-4 h-4" />
+                    <span>За сегодня</span>
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="recommendations">
+                  <AvitoRecommendations />
+                </TabsContent>
+                
+                <TabsContent value="today">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                    {newTodayAds.length > 0 ? (
+                      newTodayAds.map((ad) => (
+                        <div
+                          key={ad.id}
+                          className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-md cursor-pointer transition"
+                          onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
+                        >
+                          <img
+                            src={ad.links?.[0] || "/placeholder.png"}
+                            alt={ad.title}
+                            className="w-full h-32 md:h-40 object-cover rounded-md"
+                          />
+                          <div className="text-xs md:text-sm font-semibold truncate mt-2">{ad.title}</div>
+                          <div className="text-gray-600 text-xs md:text-sm font-medium">
+                            {ad.price.toLocaleString()} ₽
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 col-span-full text-center py-8">
+                        Нет новых активных объявлений на сегодня.
+                      </p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
 
             {/* Блок рекламы (фиксированная ширина или 1/5) */}
@@ -201,38 +245,6 @@ const AvitoMain = () => {
                 id="yandex_rtb_R-A-16429782-3"
                 style={{ minHeight: "250px" }}
               ></div>
-            </div>
-          </div>
-        </section>
-
-        {/* New Ads Today */}
-        <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-4 md:pt-8">
-          <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg border border-gray-100 animate-fadeIn">
-            <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">🆕 Новые объявления за сегодня</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-              {newTodayAds.length > 0 ? (
-                newTodayAds.map((ad) => (
-                  <div
-                    key={ad.id}
-                    className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-md cursor-pointer transition"
-                    onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
-                  >
-                    <img
-                      src={ad.links?.[0] || "/placeholder.png"}
-                      alt={ad.title}
-                      className="w-full h-32 md:h-40 object-cover rounded-md"
-                    />
-                    <div className="text-xs md:text-sm font-semibold truncate mt-2">{ad.title}</div>
-                    <div className="text-gray-600 text-xs md:text-sm font-medium">
-                      {ad.price.toLocaleString()} ₽
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500 col-span-full text-center py-8">
-                  Нет новых активных объявлений на сегодня.
-                </p>
-              )}
             </div>
           </div>
         </section>
@@ -295,7 +307,10 @@ const AvitoMain = () => {
 
       <AvitoFooter />
 
-      {/* Story Modal */}
+      {/* App Download Modal */}
+      <AppDownloadModal isOpen={isAppModalOpen} onClose={closeAppModal} />
+
+      {/* Story Modal */
       {storyModalIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
           <div
