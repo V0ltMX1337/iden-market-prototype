@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import CookieBanner from "@/components/ui/CookieBanner";
+import ReferralTracker from "@/components/ReferralTracker";
 import { Suspense, lazy } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 
@@ -26,6 +27,7 @@ const App = () => {
           <Sonner />
           <Router>
             <CookieBanner />
+            <ReferralTracker />
             <AuthProvider>
               <Suspense fallback={<div>Загрузка...</div>}>
                 <HomeRoutes />

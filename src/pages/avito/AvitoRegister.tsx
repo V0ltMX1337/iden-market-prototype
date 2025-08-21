@@ -17,11 +17,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Helmet } from "react-helmet-async";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useAlertContext } from "@/contexts/AlertContext";
+import { useReferral } from "@/hooks/useReferral";
 
 const AvitoRegister = () => {
   const navigate = useNavigate();
   const { getPageTitle, settings: systemSettings } = usePageTitle();
   const { showError, showSuccess, showWarning } = useAlertContext();
+  const { sendReferralConversion } = useReferral();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [cities, setCities] = useState<City[]>([]);
@@ -122,7 +124,13 @@ const AvitoRegister = () => {
         registrationDate: new Date().toISOString(),
       };
 
-      await storeApi.addUser(userData);
+      const newUser = await storeApi.addUser(userData);
+      
+      // Send referral conversion if user registered via referral link
+      if (newUser && newUser.id) {
+        await sendReferralConversion(newUser.id.toString());
+      }
+      
       showSuccess(
         `Аккаунт ${formData.firstName} ${formData.lastName} успешно создан! Сейчас вы будете перенаправлены на страницу входа.`,
         "Регистрация завершена",
