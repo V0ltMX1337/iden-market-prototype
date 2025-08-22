@@ -37,11 +37,11 @@ const AvitoProfileReferral = () => {
       
       // Mock stats - replace with real API call
       setStats({
-        totalReferrals: 12,
-        activeReferrals: 8,
-        totalEarnings: 2450,
-        pendingEarnings: 320,
-        availableForWithdraw: 2130
+        totalReferrals: 2,
+        activeReferrals: 1,
+        totalEarnings: 245,
+        pendingEarnings: 32,
+        availableForWithdraw: 213
       });
     }
   }, [user]);
@@ -69,13 +69,8 @@ const AvitoProfileReferral = () => {
   const benefits = [
     {
       icon: "DollarSign",
-      title: "500₽ за регистрацию",
-      description: "Получайте деньги за каждого нового пользователя"
-    },
-    {
-      icon: "TrendingUp",
-      title: "5% с продаж",
-      description: "Процент с каждой успешной продажи рефералов"
+      title: "10₽ за регистрацию",
+      description: "Получайте деньги за каждого нового пользователя который разместит объявление"
     },
     {
       icon: "Gift",
@@ -103,13 +98,8 @@ const AvitoProfileReferral = () => {
     {
       step: 3,
       title: "Получите бонус",
-      description: "Вы сразу получаете 500₽ на баланс"
+      description: "Вы получаете 10₽ на баланс за каждого нового пользователя, который разместит объявление"
     },
-    {
-      step: 4,
-      title: "Зарабатывайте с продаж",
-      description: "Получайте 5% с каждой продажи ваших рефералов"
-    }
   ];
 
   return (
@@ -124,8 +114,7 @@ const AvitoProfileReferral = () => {
             Реферальная программа
           </CardTitle>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Приглашайте друзей и зарабатывайте на их активности! 
-            Получайте до 5% с каждой их продажи.
+            Приглашайте друзей и зарабатывайте на их активности!
           </p>
         </CardHeader>
       </Card>
@@ -291,7 +280,7 @@ const AvitoProfileReferral = () => {
                 <Badge className="mb-3 bg-yellow-500">Специальное предложение</Badge>
                 <h3 className="font-bold text-gray-900 mb-2">Первые 10 рефералов</h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  Получайте 1000₽ вместо 500₽ за первых 10 приглашенных пользователей!
+                  Получайте 20₽ вместо 10₽ за первых 10 приглашенных пользователей!
                 </p>
                 <div className="text-lg font-bold text-yellow-600">
                   До конца акции: 12 дней

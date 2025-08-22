@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { User, Category, City, SystemSettings, Subcategory, Ad, Review, Message, ChatSummary, Track, Video, FilterDefinition } from "../lib/types";
 
-const API_BASE = "https://api.trivoads.ru";
+const API_BASE = "http://178.215.236.168:7001";
 
 export const storeApi = {
   // USERS

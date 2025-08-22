@@ -15,10 +15,10 @@ interface AuthContextType {
   checkPendingLoginStatus: (userId?: string) => Promise<boolean>;
 }
 
-axios.defaults.baseURL = "https://api.trivoads.ru";
+axios.defaults.baseURL = "http://178.215.236.168:7001";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const API_BASE = "https://api.trivoads.ru";
+const API_BASE = "http://178.215.236.168:7001";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
