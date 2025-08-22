@@ -56,8 +56,8 @@ const AvitoCategorySwiper: React.FC<AvitoCategorySwiperProps> = ({
   `;
 
   const handleCategoryClick = (category: Category) => {
-    // Навигация по slug
-    navigate(`/category/${category.slug}`);
+    // Навигация по slug с выбором города
+    navigate(`/category/all/${category.slug}`);
   };
 
   return (
