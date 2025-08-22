@@ -117,8 +117,37 @@ const TrivoMessengerChannel = () => {
 
   return (
     <div className="h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-4 z-50">
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" onClick={() => navigate("/messenger/main")}>
+            <Icon name="ArrowLeft" className="w-5 h-5" />
+          </Button>
+          
+          <div className="flex items-center space-x-3">
+            {channelInfo?.avatar ? (
+              <img src={channelInfo.avatar} alt={channelInfo.name} className="w-8 h-8 rounded-full object-cover" />
+            ) : (
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center">
+                <Icon name="Radio" className="w-4 h-4 text-white" />
+              </div>
+            )}
+            <div className="text-center">
+              <h2 className="font-semibold text-sm">{channelInfo?.name}</h2>
+              <p className="text-xs text-gray-500">
+                {channelInfo?.members.toLocaleString()} участников
+              </p>
+            </div>
+          </div>
+          
+          <Button variant="ghost" size="sm">
+            <Icon name="MoreVertical" className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Sidebar (Desktop only) */}
+      <div className="hidden md:flex w-80 bg-white border-r border-gray-200 flex-col">
         <div className="p-4 border-b border-gray-200">
           <Button variant="ghost" onClick={() => navigate("/messenger/main")} className="mb-4">
             <Icon name="ArrowLeft" className="w-4 h-4 mr-2" />
@@ -194,9 +223,9 @@ const TrivoMessengerChannel = () => {
       </div>
 
       {/* Channel Posts */}
-      <div className="flex-1 flex flex-col">
-        {/* Channel Header */}
-        <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+      <div className="flex-1 flex flex-col pt-16 md:pt-0">
+        {/* Channel Header (Desktop only) */}
+        <div className="hidden md:flex bg-white border-b border-gray-200 p-4 items-center justify-between">
           <div className="flex items-center space-x-3">
             {channelInfo?.avatar ? (
               <img src={channelInfo.avatar} alt={channelInfo.name} className="w-10 h-10 rounded-full object-cover" />

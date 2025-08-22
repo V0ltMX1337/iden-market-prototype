@@ -26,6 +26,25 @@ interface Channel {
   unread?: number;
 }
 
+interface AudioTrack {
+  id: number;
+  title: string;
+  artist: string;
+  duration: string;
+  cover?: string;
+  url: string;
+}
+
+interface VideoContent {
+  id: number;
+  title: string;
+  channel: string;
+  duration: string;
+  thumbnail?: string;
+  views: number;
+  url: string;
+}
+
 const TrivoMessengerMain = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -103,6 +122,62 @@ const TrivoMessengerMain = () => {
     }
   ];
 
+  const audioTracks: AudioTrack[] = [
+    {
+      id: 1,
+      title: "Кометы",
+      artist: "Мот",
+      duration: "3:42",
+      cover: "https://api.trivoads.ru/uploads/files/art_1.png",
+      url: "/audio/komety.mp3"
+    },
+    {
+      id: 2,
+      title: "Малиновый закат",
+      artist: "Грибы",
+      duration: "4:15",
+      cover: "https://api.trivoads.ru/uploads/files/art_2.png",
+      url: "/audio/malinoviy.mp3"
+    },
+    {
+      id: 3,
+      title: "Девочки как звёзды",
+      artist: "Jony",
+      duration: "3:28",
+      url: "/audio/stars.mp3"
+    }
+  ];
+
+  const videoContent: VideoContent[] = [
+    {
+      id: 1,
+      title: "Как стать программистом за 3 месяца",
+      channel: "Tech Education",
+      duration: "15:42",
+      thumbnail: "https://api.trivoads.ru/uploads/files/art_3.png",
+      views: 125000,
+      url: "/video/programming.mp4"
+    },
+    {
+      id: 2,
+      title: "Обзор новинок в мире технологий",
+      channel: "TechReview",
+      duration: "8:30",
+      thumbnail: "https://api.trivoads.ru/uploads/files/art_4.png",
+      views: 89000,
+      url: "/video/tech-review.mp4"
+    },
+    {
+      id: 3,
+      title: "Лучшие практики UX дизайна",
+      channel: "Design Pro",
+      duration: "12:15",
+      thumbnail: "https://api.trivoads.ru/uploads/files/art_5.png",
+      views: 67000,
+      url: "/video/ux-design.mp4"
+    }
+  ];
+
   const filteredMessages = messages.filter(msg =>
     msg.sender.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -117,8 +192,34 @@ const TrivoMessengerMain = () => {
 
   return (
     <div className="h-screen flex bg-gray-50">
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-4 z-50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Icon name="MessageCircle" className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              TrivoMessenger
+            </h1>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button size="sm" variant="ghost" onClick={() => navigate("/")}>
+              <Icon name="Home" className="w-5 h-5" />
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => navigate("/messenger/profile")}>
+              <Icon name="Settings" className="w-5 h-5" />
+            </Button>
+            <Button size="sm" variant="ghost" onClick={logout}>
+              <Icon name="LogOut" className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col pt-16 md:pt-0">
         {/* Header */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -134,6 +235,9 @@ const TrivoMessengerMain = () => {
             <div className="flex items-center space-x-2">
               <Button size="sm" variant="ghost" onClick={() => navigate("/")}>
                 <Icon name="Home" className="w-4 h-4" />
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => navigate("/messenger/profile")}>
+                <Icon name="Settings" className="w-4 h-4" />
               </Button>
               <Button size="sm" variant="ghost" onClick={logout}>
                 <Icon name="LogOut" className="w-4 h-4" />
@@ -174,18 +278,26 @@ const TrivoMessengerMain = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 mx-4">
-            <TabsTrigger value="chats" className="text-xs">
-              <Icon name="MessageCircle" className="w-4 h-4 mr-1" />
-              Чаты
+          <TabsList className="grid w-full grid-cols-5 mx-4 text-xs">
+            <TabsTrigger value="chats" className="p-2">
+              <Icon name="MessageCircle" className="w-3 h-3 md:w-4 md:h-4 md:mr-1" />
+              <span className="hidden md:inline">Чаты</span>
             </TabsTrigger>
-            <TabsTrigger value="channels" className="text-xs">
-              <Icon name="Radio" className="w-4 h-4 mr-1" />
-              Каналы
+            <TabsTrigger value="channels" className="p-2">
+              <Icon name="Radio" className="w-3 h-3 md:w-4 md:h-4 md:mr-1" />
+              <span className="hidden md:inline">Каналы</span>
             </TabsTrigger>
-            <TabsTrigger value="calls" className="text-xs">
-              <Icon name="Phone" className="w-4 h-4 mr-1" />
-              Звонки
+            <TabsTrigger value="audio" className="p-2">
+              <Icon name="Music" className="w-3 h-3 md:w-4 md:h-4 md:mr-1" />
+              <span className="hidden md:inline">Аудио</span>
+            </TabsTrigger>
+            <TabsTrigger value="video" className="p-2">
+              <Icon name="Video" className="w-3 h-3 md:w-4 md:h-4 md:mr-1" />
+              <span className="hidden md:inline">Видео</span>
+            </TabsTrigger>
+            <TabsTrigger value="calls" className="p-2">
+              <Icon name="Phone" className="w-3 h-3 md:w-4 md:h-4 md:mr-1" />
+              <span className="hidden md:inline">Звонки</span>
             </TabsTrigger>
           </TabsList>
 
@@ -265,6 +377,118 @@ const TrivoMessengerMain = () => {
                     <p className="text-xs text-gray-500">{channel.members.toLocaleString()} участников</p>
                     <p className="text-sm text-gray-600 truncate">{channel.description}</p>
                   </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Audio List */}
+          <TabsContent value="audio" className="flex-1 overflow-hidden">
+            <div className="h-full overflow-y-auto px-4">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-sm">Моя музыка</h3>
+                  <Button size="sm" variant="ghost" className="text-blue-600">
+                    <Icon name="Plus" className="w-4 h-4 mr-1" />
+                    Добавить
+                  </Button>
+                </div>
+                
+                <div className="relative mb-4">
+                  <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Поиск музыки..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+              
+              {audioTracks.map((track) => (
+                <div
+                  key={track.id}
+                  className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors"
+                >
+                  <div className="relative">
+                    {track.cover ? (
+                      <img src={track.cover} alt={track.title} className="w-12 h-12 rounded-lg object-cover" />
+                    ) : (
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-lg flex items-center justify-center">
+                        <Icon name="Music" className="w-6 h-6 text-white" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                      <Icon name="Play" className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm truncate">{track.title}</p>
+                    <p className="text-xs text-gray-500 truncate">{track.artist}</p>
+                  </div>
+                  
+                  <div className="text-xs text-gray-400">{track.duration}</div>
+                  
+                  <Button variant="ghost" size="sm">
+                    <Icon name="MoreVertical" className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Video List */}
+          <TabsContent value="video" className="flex-1 overflow-hidden">
+            <div className="h-full overflow-y-auto px-4">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-sm">Видео</h3>
+                  <Button size="sm" variant="ghost" className="text-blue-600">
+                    <Icon name="Plus" className="w-4 h-4 mr-1" />
+                    Добавить
+                  </Button>
+                </div>
+                
+                <div className="relative mb-4">
+                  <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Поиск видео..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+              
+              {videoContent.map((video) => (
+                <div
+                  key={video.id}
+                  className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors"
+                >
+                  <div className="relative">
+                    {video.thumbnail ? (
+                      <img src={video.thumbnail} alt={video.title} className="w-16 h-12 rounded-lg object-cover" />
+                    ) : (
+                      <div className="w-16 h-12 bg-gradient-to-br from-red-400 to-pink-600 rounded-lg flex items-center justify-center">
+                        <Icon name="Video" className="w-6 h-6 text-white" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                      <Icon name="Play" className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1 rounded">
+                      {video.duration}
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm truncate">{video.title}</p>
+                    <p className="text-xs text-gray-500 truncate">{video.channel}</p>
+                    <p className="text-xs text-gray-400">{video.views.toLocaleString()} просмотров</p>
+                  </div>
+                  
+                  <Button variant="ghost" size="sm">
+                    <Icon name="MoreVertical" className="w-4 h-4" />
+                  </Button>
                 </div>
               ))}
             </div>
