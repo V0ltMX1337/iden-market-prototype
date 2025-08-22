@@ -16,7 +16,6 @@ import { MainPageSkeleton } from "@/components/ui/skeleton-loader";
 import { AppDownloadModal } from "@/components/modals/AppDownloadModal";
 import { useAppDownloadModal } from "@/hooks/useAppDownloadModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdBanner from "@/components/ui/AdBanner";
 
 const AvitoMain = () => {
   const navigate = useNavigate();
@@ -201,30 +200,22 @@ const AvitoMain = () => {
                 <TabsContent value="today">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                     {newTodayAds.length > 0 ? (
-                      newTodayAds.map((ad, index) => (
-                        <>
-                          <div
-                            key={ad.id}
-                            className="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 hover-lift cursor-pointer transition-all duration-200 border border-gray-100 shadow-soft animate-scale-in"
-                            onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
-                          >
-                            <img
-                              src={ad.links?.[0] || "/placeholder.png"}
-                              alt={ad.title}
-                              className="w-full h-32 md:h-40 object-cover rounded-lg"
-                            />
-                            <div className="text-xs md:text-sm font-semibold truncate mt-2 text-shadow">{ad.title}</div>
-                            <div className="text-primary text-xs md:text-sm font-bold">
-                              {ad.price.toLocaleString()} ₽
-                            </div>
+                      newTodayAds.map((ad) => (
+                        <div
+                          key={ad.id}
+                          className="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 hover:shadow-md cursor-pointer transition"
+                          onClick={() => navigate(`/product/${ad.slug}/${ad.id}`)}
+                        >
+                          <img
+                            src={ad.links?.[0] || "/placeholder.png"}
+                            alt={ad.title}
+                            className="w-full h-32 md:h-40 object-cover rounded-md"
+                          />
+                          <div className="text-xs md:text-sm font-semibold truncate mt-2">{ad.title}</div>
+                          <div className="text-gray-600 text-xs md:text-sm font-medium">
+                            {ad.price.toLocaleString()} ₽
                           </div>
-                          
-                          {(index + 1) % 6 === 0 && (
-                            <div className="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5">
-                              <AdBanner type="horizontal" size="medium" className="my-2" />
-                            </div>
-                          )}
-                        </>
+                        </div>
                       ))
                     ) : (
                       <p className="text-gray-500 col-span-full text-center py-8">

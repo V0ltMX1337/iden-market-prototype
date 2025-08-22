@@ -58,14 +58,14 @@ const AvitoCategoryWithCity = () => {
     handleCityToggle,
     clearFilters,
     toggleFavorite,
-  } = useCategoryFilters(slug || '');
+  } = useCategoryFilters();
 
   const { getPageTitle } = usePageTitle();
 
   // Load selected city on mount
   useEffect(() => {
     if (citySlug && cities.length > 0) {
-      const city = cities.find(c => c.slug === citySlug);
+      const city = cities.find(c => c.name === citySlug);
       if (city) {
         setSelectedCity(city);
         setIsSelectingCity(false);
@@ -81,7 +81,7 @@ const AvitoCategoryWithCity = () => {
     setSelectedCity(city);
     setIsSelectingCity(false);
     // Navigate to the new URL with city
-    navigate(`/category/${city.slug}/${slug}`);
+    navigate(`/category/${city.name}/${slug}`);
   };
 
   const handleChangeCity = () => {
