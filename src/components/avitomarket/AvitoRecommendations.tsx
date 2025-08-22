@@ -5,7 +5,7 @@ import { AdStatus, type Ad } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import AdBanner from "@/components/avitomarket/AdBanner";
+import AdBanner from "../ui/AdBanner";
 
 const AvitoRecommendations = () => {
   const [allAds, setAllAds] = useState<Ad[]>([]);
@@ -82,13 +82,6 @@ const AvitoRecommendations = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {displayedAds.map((ad, index) => (
               <div key={`${ad.id}-${index}`}>
-                {(index + 1) % 6 === 0 && (
-                  <AdBanner
-                    type="square"
-                    size="medium"
-                    className="mb-3 md:mb-4"
-                  />
-                )}
                 <Card
                   className="overflow-hidden cursor-pointer group relative border-0 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 animate-slideUp"
                   style={{ animationDelay: `${(index % 20) * 50}ms` }}
