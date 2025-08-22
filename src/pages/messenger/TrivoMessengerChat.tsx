@@ -1,0 +1,292 @@
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/ui/icon";
+import { useAuth } from "@/hooks/useAuth";
+
+interface ChatMessage {
+  id: number;
+  sender: string;
+  avatar?: string;
+  content: string;
+  time: string;
+  isOwn: boolean;
+  type: 'text' | 'image' | 'audio' | 'video' | 'file';
+  fileUrl?: string;
+}
+
+interface ChatUser {
+  id: number;
+  name: string;
+  avatar?: string;
+  online: boolean;
+  lastSeen?: string;
+}
+
+const TrivoMessengerChat = () => {
+  const { chatId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [chatUser, setChatUser] = useState<ChatUser | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    const mockMessages: ChatMessage[] = [
+      {
+        id: 1,
+        sender: "Алексей Иванов",
+        avatar: "https://api.trivoads.ru/uploads/files/art_1.png",
+        content: "Привет! Как дела с проектом?",
+        time: "14:20",
+        isOwn: false,
+        type: 'text'
+      },
+      {
+        id: 2,
+        sender: user?.firstName || "Вы",
+        content: "Привет! Всё идёт по плану, завтра будет готово",
+        time: "14:21",
+        isOwn: true,
+        type: 'text'
+      },
+      {
+        id: 3,
+        sender: "Алексей Иванов",
+        avatar: "https://api.trivoads.ru/uploads/files/art_1.png",
+        content: "Отлично! А можешь скинуть промежуточные результаты?",
+        time: "14:22",
+        isOwn: false,
+        type: 'text'
+      },
+      {
+        id: 4,
+        sender: user?.firstName || "Вы",
+        content: "Конечно, сейчас отправлю файлы",
+        time: "14:23",
+        isOwn: true,
+        type: 'text'
+      }
+    ];
+
+    const mockUser: ChatUser = {
+      id: 1,
+      name: "Алексей Иванов",
+      avatar: "https://api.trivoads.ru/uploads/files/art_1.png",
+      online: true
+    };
+
+    setMessages(mockMessages);
+    setChatUser(mockUser);
+  }, [chatId, user]);
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+
+    const newMessage: ChatMessage = {
+      id: messages.length + 1,
+      sender: user?.firstName || "Вы",
+      content: message,
+      time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+      isOwn: true,
+      type: 'text'
+    };
+
+    setMessages([...messages, newMessage]);
+    setMessage("");
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  if (!user) {
+    navigate("/messenger");
+    return null;
+  }
+
+  return (
+    <div className="h-screen flex bg-gray-50">
+      {/* Sidebar */}
+      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <Button variant="ghost" onClick={() => navigate("/messenger/main")} className="mb-4">
+            <Icon name="ArrowLeft" className="w-4 h-4 mr-2" />
+            Назад к чатам
+          </Button>
+          
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <Icon name="MessageCircle" className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              TrivoMessenger
+            </h1>
+          </div>
+        </div>
+        
+        <div className="flex-1 p-4">
+          <h3 className="font-semibold text-gray-900 mb-4">Информация о чате</h3>
+          
+          {chatUser && (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                {chatUser.avatar ? (
+                  <img src={chatUser.avatar} alt={chatUser.name} className="w-12 h-12 rounded-full object-cover" />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                    <Icon name="User" className="w-6 h-6 text-white" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold">{chatUser.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {chatUser.online ? "В сети" : `Был в сети ${chatUser.lastSeen}`}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start">
+                  <Icon name="Phone" className="w-4 h-4 mr-2" />
+                  Позвонить
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <Icon name="Video" className="w-4 h-4 mr-2" />
+                  Видеозвонок
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <Icon name="Search" className="w-4 h-4 mr-2" />
+                  Поиск в чате
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Chat Header */}
+        <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            {chatUser?.avatar ? (
+              <img src={chatUser.avatar} alt={chatUser.name} className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                <Icon name="User" className="w-5 h-5 text-white" />
+              </div>
+            )}
+            <div>
+              <h2 className="font-semibold">{chatUser?.name}</h2>
+              <p className="text-sm text-gray-500">
+                {chatUser?.online ? "В сети" : `Был в сети ${chatUser?.lastSeen}`}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="sm">
+              <Icon name="Phone" className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Icon name="Video" className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Icon name="MoreVertical" className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`flex space-x-2 max-w-xs lg:max-w-md ${msg.isOwn ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                {!msg.isOwn && (
+                  <div className="flex-shrink-0">
+                    {msg.avatar ? (
+                      <img src={msg.avatar} alt={msg.sender} className="w-8 h-8 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                        <Icon name="User" className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                <div className={`px-4 py-2 rounded-2xl ${
+                  msg.isOwn 
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' 
+                    : 'bg-gray-100 text-gray-900'
+                }`}>
+                  <p className="text-sm">{msg.content}</p>
+                  <p className={`text-xs mt-1 ${msg.isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
+                    {msg.time}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Message Input */}
+        <div className="bg-white border-t border-gray-200 p-4">
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="sm">
+              <Icon name="Paperclip" className="w-4 h-4" />
+            </Button>
+            
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Напишите сообщение..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              >
+                <Icon name="Smile" className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <Button variant="ghost" size="sm">
+              <Icon name="Mic" className="w-4 h-4" />
+            </Button>
+            
+            <Button 
+              onClick={sendMessage}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              size="sm"
+            >
+              <Icon name="Send" className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TrivoMessengerChat;

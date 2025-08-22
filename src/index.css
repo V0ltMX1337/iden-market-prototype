@@ -45,6 +45,17 @@
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @keyframes scale-in {
   from {
     transform: scale(0.9);
@@ -236,8 +247,13 @@
       "Segoe UI",
       "Roboto",
       sans-serif;
-    font-feature-settings: "cv11", "ss01";
-    font-variation-settings: "opsz" 32;
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .animate-slideUp {
+    animation: slideUp 0.6s ease-out;
   }
 }
 
