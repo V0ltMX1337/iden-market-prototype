@@ -25,7 +25,7 @@ export const AppDownloadModal = ({ isOpen, onClose }: AppDownloadModalProps) => 
   };
 
   const handleDownload = () => {
-    window.open("/about", "_blank");
+    window.open("/app-download", "_blank");
     handleClose();
   };
 

@@ -211,6 +211,7 @@ const TrivoMessengerProfile = () => {
                       <label className="block text-sm font-medium mb-2">Телефон</label>
                       <input
                         type="tel"
+                        defaultValue={user.phone}
                         placeholder="+7 (999) 123-45-67"
                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />

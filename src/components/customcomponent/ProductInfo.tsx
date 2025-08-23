@@ -112,7 +112,6 @@ const MapModal = memo(
 
 const ProductInfo = ({
   title,
-  isUsed,
   price,
   city,
   views,
