@@ -33,7 +33,7 @@ const TrivoMessengerChat = () => {
   const [chatUser, setChatUser] = useState<ChatUser | null>(null);
   const [showAttachmentModal, setShowAttachmentModal] = useState(false);
   const [showUserInfo, setShowUserInfo] = useState(false);
-  const [attachmentType, setAttachmentType] = useState<'file' | 'image' | 'video' | 'audio' | null>(null);
+  const [attachmentType, setAttachmentType] = useState<'file' | 'image' | 'video' | 'audio' | 'ads' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -372,6 +372,42 @@ const TrivoMessengerChat = () => {
                   <Icon name="File" className="w-6 h-6 mb-1 text-blue-600" />
                   <span className="text-sm">Файл</span>
                 </Button>
+
+                <Button 
+                  variant="outline" 
+                  className="h-16 flex-col"
+                  onClick={() => setAttachmentType('ads')}
+                >
+                  <Icon name="Globe" className="w-6 h-6 mb-1 text-blue-600" />
+                  <span className="text-sm">Объявление</span>
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  className="h-16 flex-col"
+                  onClick={() => setAttachmentType('ads')}
+                >
+                  <Icon name="Calendar" className="w-6 h-6 mb-1 text-blue-600" />
+                  <span className="text-sm">Список задач</span>
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  className="h-16 flex-col"
+                  onClick={() => setAttachmentType('ads')}
+                >
+                  <Icon name="Contact" className="w-6 h-6 mb-1 text-blue-600" />
+                  <span className="text-sm">Контакт</span>
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  className="h-16 flex-col"
+                  onClick={() => setAttachmentType('ads')}
+                >
+                  <Icon name="Wifi" className="w-6 h-6 mb-1 text-blue-600" />
+                  <span className="text-sm">WIFI-точка</span>
+                </Button>
               </div>
               
               {attachmentType && (
@@ -471,8 +507,6 @@ const TrivoMessengerChat = () => {
           </Card>
         </div>
       )}
-    </div>
-      </div>
     </div>
   );
 };
