@@ -7,11 +7,11 @@ import { Helmet } from "react-helmet-async";
 
 const AppDownloadPage = () => {
   const handleDownloadRustore = () => {
-    window.open("https://rustore.ru/catalog/app/com.example.avitoapp", "_blank");
+    window.open("https://www.rustore.ru/catalog/app/ru.trivoads.app", "_blank");
   };
 
   const handleDownloadDirect = () => {
-    window.open("https://example.com/avito-app.apk", "_blank");
+    window.open("https://trivoads.ru/trivoads.apk", "_blank");
   };
 
   return (

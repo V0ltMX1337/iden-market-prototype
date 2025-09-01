@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { storeApi } from "@/lib/store";
 import { AdStatus, type Ad } from "@/lib/types";
@@ -13,6 +13,7 @@ const AvitoRecommendations = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const ITEMS_PER_PAGE = 20;
@@ -36,33 +37,42 @@ const AvitoRecommendations = () => {
 
   const loadMoreAds = useCallback(() => {
     if (isLoadingMore) return;
-    
+
     const nextPage = currentPage + 1;
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = nextPage * ITEMS_PER_PAGE;
     const newAds = allAds.slice(startIndex, endIndex);
-    
+
     if (newAds.length === 0) return;
 
     setIsLoadingMore(true);
-    
+
     setTimeout(() => {
-      setDisplayedAds(prev => [...prev, ...newAds]);
+      setDisplayedAds((prev) => [...prev, ...newAds]);
       setCurrentPage(nextPage);
       setIsLoadingMore(false);
     }, 500);
   }, [allAds, currentPage, isLoadingMore]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) {
-        return;
-      }
-      loadMoreAds();
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreAds();
+        }
+      },
+      { threshold: 1 }
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => {
+      if (sentinelRef.current) {
+        observer.unobserve(sentinelRef.current);
+      }
+    };
   }, [loadMoreAds]);
 
   if (isLoading) {
@@ -106,8 +116,20 @@ const AvitoRecommendations = () => {
                   />
 
                   <CardContent className="p-3 md:p-4">
-                    <h3 className="font-semibold text-sm md:text-base mb-1 leading-tight" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ad.title}</h3>
-                    <p className="text-gray-600 text-xs md:text-sm truncate">{ad.city?.name}</p>
+                    <h3
+                      className="font-semibold text-sm md:text-base mb-1 leading-tight"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {ad.title}
+                    </h3>
+                    <p className="text-gray-600 text-xs md:text-sm truncate">
+                      {ad.city?.name}
+                    </p>
                     <p className="text-blue-600 font-bold mt-1 md:mt-2 text-sm md:text-base">
                       {ad.price.toLocaleString()} ₽
                     </p>
@@ -116,16 +138,21 @@ const AvitoRecommendations = () => {
               </div>
             ))}
           </div>
-          
+
           {isLoadingMore && (
             <div className="flex justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
           )}
-          
+
           {displayedAds.length >= allAds.length && allAds.length > 0 && (
-            <p className="text-center text-gray-500 py-8">Все объявления загружены</p>
+            <p className="text-center text-gray-500 py-8">
+              Все объявления загружены
+            </p>
           )}
+
+          {/* Сентинел для IntersectionObserver */}
+          <div ref={sentinelRef} className="h-10" />
         </>
       )}
     </section>

@@ -20,8 +20,8 @@ const AvitoProfileFavorites = lazy(() => import("@/components/avito/profile/Avit
 const AvitoProfileReviews = lazy(() => import("@/components/avito/profile/AvitoProfileReviews"));
 const AvitoProfileSettings = lazy(() => import("@/components/avito/profile/AvitoProfileSettings"));
 const AvitoSell = lazy(() => import("@/components/avito/profile/AvitoSell"));
-const AvitoProfileGamePage = lazy(() => import("@/components/avito/profile/AvitoProfileGamePage"));
-const AvitoProfileReferral = lazy(() => import("@/components/avito/profile/AvitoProfileReferral"));
+// const AvitoProfileGamePage = lazy(() => import("@/components/avito/profile/AvitoProfileGamePage"));
+// const AvitoProfileReferral = lazy(() => import("@/components/avito/profile/AvitoProfileReferral"));
 const AdStatistics = lazy(() => import("@/components/avito/profile/AdStatistics"));
 const AdEdit = lazy(() => import("@/components/avito/profile/AdEdit"));
 
@@ -198,10 +198,10 @@ const getTitleTemplateKey = (): TemplateKeys | null => {
                   <Route index element={<AvitoProfileMain />} />
                   <Route path="sell" element={<AvitoSell />} />
                   <Route path="ads" element={<AvitoProfileAds />} />
-                  <Route path="game" element={<AvitoProfileGamePage />} />
+                  {/* <Route path="game" element={<AvitoProfileGamePage />} /> */}
                   <Route path="messages" element={<AvitoProfileMessages />} />
                   <Route path="favorites" element={<AvitoProfileFavorites />} />
-                  <Route path="referral" element={<AvitoProfileReferral />} />
+                  {/* <Route path="referral" element={<AvitoProfileReferral />} /> */}
                   <Route path="reviews" element={<AvitoProfileReviews />} />
                   <Route path="settings" element={<AvitoProfileSettings />} />
                   <Route path=":adId/statistic" element={<AdStatistics />} />

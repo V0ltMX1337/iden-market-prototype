@@ -12,7 +12,6 @@ const ServiceRoutes = () => (
     <Routes>
       <Route path="product/:slug/:id" element={<AvitoProduct />} />
       <Route path="user/:userId" element={<AvitoUser />} />
-      <Route path="category/:city/:slug/*" element={<AvitoCategoryWithCity />} />
       <Route path="category/:categoryid/*" element={<AvitoCategoryPage />} />
       <Route path="catalog" element={<AvitoCategoryPage />} />
       <Route path="user/:userId/addReview" element={<AvitoAddReview />} />

@@ -15,7 +15,7 @@ const ServiceRoutes = lazy(() => import("./routes/ServiceRoutes"));
 const OtherRoutes = lazy(() => import("./routes/OtherRoutes"));
 const ProfileRoutes = lazy(() => import("./routes/ProfileRoutes"));
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
-const MessengerRoutes = lazy(() => import("./routes/MessengerRoutes"));
+// const MessengerRoutes = lazy(() => import("./routes/MessengerRoutes"));
 
 const queryClient = new QueryClient();
 
@@ -37,7 +37,7 @@ const App = () => {
                 <OtherRoutes />
                 <ProfileRoutes />
                 <AdminRoutes />
-                <MessengerRoutes />
+                {/* <MessengerRoutes /> */}
                 
               </Suspense>
             </AuthProvider>
