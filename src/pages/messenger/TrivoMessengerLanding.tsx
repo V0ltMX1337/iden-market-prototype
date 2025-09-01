@@ -4,11 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { useSEO } from "@/hooks/useSEO";
 
 const TrivoMessengerLanding = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  // SEO метатеги для лендинга мессенджера
+  useSEO({
+    title: "TrivoMessenger - Современный мессенджер для всех",
+    description: "TrivoMessenger - безопасный и быстрый мессенджер с каналами, групповыми чатами и медиафайлами. Присоединяйтесь к миллионам пользователей!",
+    keywords: "мессенджер, чат, безопасность, каналы, группы, медиа, скачать",
+    ogTitle: "TrivoMessenger - Мессенджер нового поколения",
+    ogDescription: "Общайтесь безопасно и удобно с TrivoMessenger. Быстрые сообщения, каналы, группы и многое другое!"
+  });
 
   const features = [
     {

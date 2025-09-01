@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { useSEO } from "@/hooks/useSEO";
 
 const TrivoMessengerProfile = () => {
   const navigate = useNavigate();
@@ -12,6 +13,15 @@ const TrivoMessengerProfile = () => {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bio, setBio] = useState("Разработчик в Trivo. Люблю создавать классные проекты!");
   const [tempBio, setTempBio] = useState(bio);
+
+  // SEO метатеги для страницы профиля
+  useSEO({
+    title: "Профиль - TrivoMessenger",
+    description: "Настройки профиля TrivoMessenger. Редактирование личной информации, настройки приватности, уведомления и внешний вид.",
+    keywords: "профиль, настройки, приватность, уведомления, персонализация, trivo",
+    ogTitle: "Настройки профиля - TrivoMessenger",
+    ogDescription: "Управляйте своим профилем в TrivoMessenger: редактируйте информацию, настраивайте приватность и уведомления"
+  });
 
   const handleSaveBio = () => {
     setBio(tempBio);

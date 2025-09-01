@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { useSEO } from "@/hooks/useSEO";
 
 interface ChannelPost {
   id: number;
@@ -39,6 +40,15 @@ const TrivoMessengerChannel = () => {
   const [posts, setPosts] = useState<ChannelPost[]>([]);
   const [channelInfo, setChannelInfo] = useState<ChannelInfo | null>(null);
   const postsEndRef = useRef<HTMLDivElement>(null);
+
+  // SEO метатеги для страницы канала
+  useSEO({
+    title: channelInfo ? `${channelInfo.name} - TrivoMessenger` : "Канал - TrivoMessenger",
+    description: channelInfo ? `${channelInfo.description} ${channelInfo.members.toLocaleString()} участников.` : "Просмотр канала в TrivoMessenger. Последние посты, обновления и обсуждения.",
+    keywords: "канал, посты, подписка, обновления, новости, trivo",
+    ogTitle: channelInfo ? `Канал ${channelInfo.name}` : "Канал TrivoMessenger",
+    ogDescription: channelInfo ? `Присоединяйтесь к каналу ${channelInfo.name} - ${channelInfo.description}` : "Читайте посты и участвуйте в обсуждениях в каналах TrivoMessenger"
+  });
 
   useEffect(() => {
     const mockPosts: ChannelPost[] = [

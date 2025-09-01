@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { useSEO } from "@/hooks/useSEO";
 
 interface Message {
   id: number;
@@ -50,6 +51,34 @@ const TrivoMessengerMain = () => {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("chats");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // SEO метатеги для главной страницы мессенджера
+  useSEO({
+    title: "TrivoMessenger - Чаты и каналы",
+    description: "Главная страница TrivoMessenger. Личные сообщения, групповые чаты, каналы, аудио и видео контент. Безопасное общение в реальном времени.",
+    keywords: "чаты, сообщения, каналы, группы, общение, мессенджер, trivo",
+    ogTitle: "TrivoMessenger - Современный мессенджер",
+    ogDescription: "Общайтесь с друзьями, присоединяйтесь к каналам, делитесь медиа контентом в безопасном мессенджере TrivoMessenger"
+  });
+
+  // Пример использования хуков (закомментировано для будущего использования)
+  // const { showMessageNotification, requestPermission } = useNotifications();
+  // const { isOnline } = useOnlineStatus({ 
+  //   userId: user?.id, 
+  //   apiEndpoint: '/api/user/online-status' 
+  // });
+
+  // useEffect(() => {
+  //   // Запрашиваем разрешение на уведомления при первом посещении
+  //   const initNotifications = async () => {
+  //     const permission = await requestPermission();
+  //     console.log('Notification permission:', permission);
+  //   };
+  //   
+  //   if (user) {
+  //     initNotifications();
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (!user) {

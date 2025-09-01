@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import { useSEO } from "@/hooks/useSEO";
 
 interface ChatMessage {
   id: number;
@@ -35,6 +36,15 @@ const TrivoMessengerChat = () => {
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [attachmentType, setAttachmentType] = useState<'file' | 'image' | 'video' | 'audio' | 'ads' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // SEO метатеги для страницы чата
+  useSEO({
+    title: chatUser ? `Чат с ${chatUser.name} - TrivoMessenger` : "Чат - TrivoMessenger",
+    description: chatUser ? `Переписка с ${chatUser.name} в TrivoMessenger. Безопасное общение с возможностью отправки файлов и медиа.` : "Личные сообщения в TrivoMessenger. Безопасная переписка один на один.",
+    keywords: "чат, личные сообщения, переписка, безопасность, файлы, медиа, trivo",
+    ogTitle: chatUser ? `Чат с ${chatUser.name}` : "Личный чат TrivoMessenger",
+    ogDescription: "Безопасное общение в личных чатах TrivoMessenger с поддержкой файлов и медиаконтента"
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
