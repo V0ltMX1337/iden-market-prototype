@@ -9,7 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { useTaxiAuth } from '@/contexts/TaxiAuthContext';
-import YandexMap from '@/components/taxi/YandexMap';
+import InteractiveMap from '@/components/taxi/InteractiveMap';
+import AddressInput from '@/components/taxi/AddressInput';
 
 const TaxiOrder = () => {
   const { user, createOrder, calculateCost } = useTaxiAuth();
@@ -290,51 +291,52 @@ const TaxiOrder = () => {
                     </div>
 
                     {showMap ? (
-                      <YandexMap
+                      <InteractiveMap
                         onPointsChange={handleMapPointsChange}
                         onDistanceChange={handleDistanceChange}
                         city={orderData.city}
+                        fromAddress={orderData.fromAddress}
+                        toAddress={orderData.toAddress}
+                        waypointsAddresses={waypoints}
                       />
                     ) : (
                       <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label>Откуда</Label>
-                          <div className="relative">
-                            <Icon name="MapPin" className="absolute left-3 top-3 text-green-500" size={20} />
-                            <Input
-                              value={orderData.fromAddress}
-                              onChange={(e) => setOrderData({ ...orderData, fromAddress: e.target.value })}
-                              placeholder="Адрес отправления"
-                              className="pl-10"
-                              required
-                            />
-                          </div>
-                        </div>
+                        <AddressInput
+                          label="Откуда"
+                          value={orderData.fromAddress}
+                          onChange={(address, coordinates) => {
+                            setOrderData({ ...orderData, fromAddress: address });
+                            if (coordinates) {
+                              setMapPoints(prev => ({ ...prev, from: { address, coordinates } }));
+                            }
+                          }}
+                          placeholder="Введите адрес отправления"
+                          icon="green"
+                          city={orderData.city}
+                        />
 
                         {/* Промежуточные точки */}
                         {waypoints.map((waypoint, index) => (
-                          <div key={index} className="space-y-2">
-                            <Label>Промежуточная точка {index + 1}</Label>
-                            <div className="flex space-x-2">
-                              <div className="relative flex-1">
-                                <Icon name="MapPin" className="absolute left-3 top-3 text-yellow-500" size={20} />
-                                <Input
-                                  value={waypoint}
-                                  onChange={(e) => updateWaypoint(index, e.target.value)}
-                                  placeholder="Промежуточный адрес"
-                                  className="pl-10"
-                                />
-                              </div>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => removeWaypoint(index)}
-                              >
-                                <Icon name="X" size={16} />
-                              </Button>
-                            </div>
-                          </div>
+                          <AddressInput
+                            key={index}
+                            label={`Промежуточная точка ${index + 1}`}
+                            value={waypoint}
+                            onChange={(address, coordinates) => {
+                              updateWaypoint(index, address);
+                              if (coordinates) {
+                                setMapPoints(prev => {
+                                  const newWaypoints = [...(prev.waypoints || [])];
+                                  newWaypoints[index] = { address, coordinates };
+                                  return { ...prev, waypoints: newWaypoints };
+                                });
+                              }
+                            }}
+                            placeholder="Промежуточный адрес"
+                            icon="yellow"
+                            city={orderData.city}
+                            showRemoveButton={true}
+                            onRemove={() => removeWaypoint(index)}
+                          />
                         ))}
 
                         <Button
@@ -347,19 +349,19 @@ const TaxiOrder = () => {
                           Добавить промежуточную точку
                         </Button>
 
-                        <div className="space-y-2">
-                          <Label>Куда</Label>
-                          <div className="relative">
-                            <Icon name="MapPin" className="absolute left-3 top-3 text-red-500" size={20} />
-                            <Input
-                              value={orderData.toAddress}
-                              onChange={(e) => setOrderData({ ...orderData, toAddress: e.target.value })}
-                              placeholder="Адрес назначения"
-                              className="pl-10"
-                              required
-                            />
-                          </div>
-                        </div>
+                        <AddressInput
+                          label="Куда"
+                          value={orderData.toAddress}
+                          onChange={(address, coordinates) => {
+                            setOrderData({ ...orderData, toAddress: address });
+                            if (coordinates) {
+                              setMapPoints(prev => ({ ...prev, to: { address, coordinates } }));
+                            }
+                          }}
+                          placeholder="Введите адрес назначения"
+                          icon="red"
+                          city={orderData.city}
+                        />
                       </div>
                     )}
                   </div>
