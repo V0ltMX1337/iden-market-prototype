@@ -68,7 +68,7 @@ const AvitoFooter = () => {
 
         <div className="border-t border-blue-700 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <p className="text-blue-100">© 2025 Trivo объявления. Все права защищены.</p>
+            <p className="text-blue-100">© 2025 TrivoADS объявления. Все права защищены.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy-policy" className="text-blue-100 hover:text-white">Политика конфиденциальности</Link>
               <Link to="/terms" className="text-blue-100 hover:text-white">Условия использования</Link>
