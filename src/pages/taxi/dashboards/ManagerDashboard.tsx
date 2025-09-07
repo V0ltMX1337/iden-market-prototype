@@ -805,7 +805,7 @@ const ManagerDashboard = () => {
                     </div>
                     <div>
                       <Label className="text-sm font-medium text-gray-500">Дата создания</Label>
-                      <p className="text-gray-800">{new Intl.DateTimeFormat('ru-RU').format(user.createdAt)}</p>
+                      <p className="text-gray-800">{new Intl.DateTimeFormat('ru-RU').format(new Date(user.createdAt))}</p>
                     </div>
                   </div>
 

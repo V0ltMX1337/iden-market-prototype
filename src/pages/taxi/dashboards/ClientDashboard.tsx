@@ -298,6 +298,12 @@ const ClientDashboard = () => {
                     Заказать газель
                   </Button>
                 </Link>
+                <Link to="/migalki/client-ride">
+                  <Button variant="outline" className="w-full justify-start bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+                    <Icon name="Eye" className="mr-3 text-purple-500" size={20} />
+                    Демо: Экран поездки
+                  </Button>
+                </Link>
                 <Link to="/migalki/profile">
                   <Button variant="outline" className="w-full justify-start">
                     <Icon name="Settings" className="mr-3 text-gray-500" size={20} />
@@ -333,6 +339,25 @@ const ClientDashboard = () => {
                         : '—'
                       }
                     </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Telegram */}
+            <Card className="border-none shadow-xl bg-gradient-to-r from-blue-50 to-cyan-50">
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <Icon name="MessageCircle" className="text-blue-500 mt-1" size={20} />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-800 mb-1">Telegram уведомления</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Получайте уведомления о статусе заказа в Telegram
+                    </p>
+                    <Button size="sm" className="w-full bg-blue-500 hover:bg-blue-600">
+                      <Icon name="Plus" className="mr-2" size={14} />
+                      Привязать Telegram
+                    </Button>
                   </div>
                 </div>
               </CardContent>

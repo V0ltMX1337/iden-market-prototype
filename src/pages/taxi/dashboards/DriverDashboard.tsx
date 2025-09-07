@@ -347,9 +347,17 @@ const DriverDashboard = () => {
                     <div className="text-center py-8">
                       <Icon name="Car" className="mx-auto mb-4 text-gray-300" size={48} />
                       <p className="text-gray-500 mb-4">Нет активных заказов</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-400 mb-4">
                         {isOnline ? 'Ожидаем новые заказы...' : 'Включите статус "Онлайн" для получения заказов'}
                       </p>
+                      {isOnline && (
+                        <Link to="/migalki/driver-order">
+                          <Button className="bg-green-500 hover:bg-green-600">
+                            <Icon name="Play" className="mr-2" size={16} />
+                            Начать работу
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -647,7 +655,7 @@ const DriverDashboard = () => {
 
                     <div>
                       <Label className="text-sm font-medium text-gray-500">На сервисе с</Label>
-                      <p className="text-gray-800">{new Intl.DateTimeFormat('ru-RU', { year: 'numeric', month: 'long' }).format(user.createdAt)}</p>
+                      <p className="text-gray-800">{new Intl.DateTimeFormat('ru-RU', { year: 'numeric', month: 'long' }).format(new Date(user.createdAt))}</p>
                     </div>
                   </div>
 
