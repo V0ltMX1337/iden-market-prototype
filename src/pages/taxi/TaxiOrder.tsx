@@ -9,8 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { useTaxiAuth } from '@/contexts/TaxiAuthContext';
-import InteractiveMap from '@/components/taxi/InteractiveMap';
-import AddressInput from '@/components/taxi/AddressInput';
+import UnifiedAddressInput from '@/components/taxi/UnifiedAddressInput';
 
 const TaxiOrder = () => {
   const { user, createOrder, calculateCost } = useTaxiAuth();
@@ -44,7 +43,7 @@ const TaxiOrder = () => {
     to?: { address: string; coordinates: [number, number] };
     waypoints?: Array<{ address: string; coordinates: [number, number] }>;
   }>({});
-  const [showMap, setShowMap] = useState(true);
+
 
   // Если пользователь не авторизован, перенаправляем на авторизацию
   useEffect(() => {
@@ -261,109 +260,13 @@ const TaxiOrder = () => {
                     </Select>
                   </div>
 
-                  {/* Выбор способа ввода адреса */}
+                  {/* Унифицированный ввод адресов */}
                   <div className="space-y-4">
-                    <div className="flex bg-gray-100 p-1 rounded-lg">
-                      <button
-                        type="button"
-                        onClick={() => setShowMap(true)}
-                        className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all flex items-center justify-center space-x-2 ${
-                          showMap
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                      >
-                        <Icon name="Map" size={16} />
-                        <span>Карта</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowMap(false)}
-                        className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all flex items-center justify-center space-x-2 ${
-                          !showMap
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                      >
-                        <Icon name="Edit3" size={16} />
-                        <span>Ручной ввод</span>
-                      </button>
-                    </div>
-
-                    {showMap ? (
-                      <InteractiveMap
-                        onPointsChange={handleMapPointsChange}
-                        onDistanceChange={handleDistanceChange}
-                        city={orderData.city}
-                        fromAddress={orderData.fromAddress}
-                        toAddress={orderData.toAddress}
-                        waypointsAddresses={waypoints}
-                      />
-                    ) : (
-                      <div className="space-y-4">
-                        <AddressInput
-                          label="Откуда"
-                          value={orderData.fromAddress}
-                          onChange={(address, coordinates) => {
-                            setOrderData({ ...orderData, fromAddress: address });
-                            if (coordinates) {
-                              setMapPoints(prev => ({ ...prev, from: { address, coordinates } }));
-                            }
-                          }}
-                          placeholder="Введите адрес отправления"
-                          icon="green"
-                          city={orderData.city}
-                        />
-
-                        {/* Промежуточные точки */}
-                        {waypoints.map((waypoint, index) => (
-                          <AddressInput
-                            key={index}
-                            label={`Промежуточная точка ${index + 1}`}
-                            value={waypoint}
-                            onChange={(address, coordinates) => {
-                              updateWaypoint(index, address);
-                              if (coordinates) {
-                                setMapPoints(prev => {
-                                  const newWaypoints = [...(prev.waypoints || [])];
-                                  newWaypoints[index] = { address, coordinates };
-                                  return { ...prev, waypoints: newWaypoints };
-                                });
-                              }
-                            }}
-                            placeholder="Промежуточный адрес"
-                            icon="yellow"
-                            city={orderData.city}
-                            showRemoveButton={true}
-                            onRemove={() => removeWaypoint(index)}
-                          />
-                        ))}
-
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={addWaypoint}
-                          className="w-full border-dashed"
-                        >
-                          <Icon name="Plus" className="mr-2" size={16} />
-                          Добавить промежуточную точку
-                        </Button>
-
-                        <AddressInput
-                          label="Куда"
-                          value={orderData.toAddress}
-                          onChange={(address, coordinates) => {
-                            setOrderData({ ...orderData, toAddress: address });
-                            if (coordinates) {
-                              setMapPoints(prev => ({ ...prev, to: { address, coordinates } }));
-                            }
-                          }}
-                          placeholder="Введите адрес назначения"
-                          icon="red"
-                          city={orderData.city}
-                        />
-                      </div>
-                    )}
+                    <UnifiedAddressInput
+                      onPointsChange={handleMapPointsChange}
+                      onDistanceChange={handleDistanceChange}
+                      city={orderData.city}
+                    />
                   </div>
 
                   {/* Дополнительные параметры */}

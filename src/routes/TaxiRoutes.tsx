@@ -7,6 +7,7 @@ import TaxiProfile from '@/pages/taxi/TaxiProfile';
 import ClientDashboard from '@/pages/taxi/dashboards/ClientDashboard';
 import DriverDashboard from '@/pages/taxi/dashboards/DriverDashboard';
 import ManagerDashboard from '@/pages/taxi/dashboards/ManagerDashboard';
+import AdminDashboard from '@/pages/taxi/dashboards/AdminDashboard';
 import { TaxiAuthProvider } from '@/contexts/TaxiAuthContext';
 
 const TaxiRoutes = () => {
@@ -23,8 +24,7 @@ const TaxiRoutes = () => {
             <Route path="/dashboard/client" element={<ClientDashboard />} />
             <Route path="/dashboard/driver" element={<DriverDashboard />} />
             <Route path="/dashboard/manager" element={<ManagerDashboard />} />
-            {/* Для админа пока перенаправляем на клиентский дашборд */}
-            <Route path="/dashboard/admin" element={<ClientDashboard />} />
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
           </Routes>
         </TaxiAuthProvider>
       } />

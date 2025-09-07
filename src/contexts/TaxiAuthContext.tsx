@@ -200,17 +200,23 @@ export const TaxiAuthProvider: React.FC<TaxiAuthProviderProps> = ({ children }) 
       // В будущем здесь будет реальный запрос к API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      const userRole = email.includes('admin') ? 'admin' : 
+                    email.includes('driver') ? 'driver' :
+                    email.includes('manager') ? 'manager' : 'client';
+      
       const mockUser: TaxiUser = {
         id: '1',
         email,
         phone: '+7 (900) 123-45-67',
         name: 'Иван Иванов',
-        role: email.includes('admin') ? 'admin' : 
-              email.includes('driver') ? 'driver' :
-              email.includes('manager') ? 'manager' : 'client',
+        role: userRole,
         isActive: true,
         createdAt: new Date(),
         rating: 4.8,
+        carModel: userRole === 'driver' ? 'Toyota Camry' : undefined,
+        carNumber: userRole === 'driver' ? 'А123ВС52' : undefined,
+        carColor: userRole === 'driver' ? 'Белый' : undefined,
+        driverLicense: userRole === 'driver' ? '1234567890' : undefined,
         favoriteAddresses: [
           {
             id: '1',
