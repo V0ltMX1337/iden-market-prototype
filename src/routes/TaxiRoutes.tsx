@@ -2,8 +2,10 @@ import { Routes, Route } from 'react-router-dom';
 import TaxiLanding from '@/pages/taxi/TaxiLanding';
 import TaxiAuth from '@/pages/taxi/TaxiAuth';
 import TaxiOrder from '@/pages/taxi/TaxiOrder';
+import TaxiOrderTracking from '@/pages/taxi/TaxiOrderTracking';
 import TaxiProfile from '@/pages/taxi/TaxiProfile';
 import ClientDashboard from '@/pages/taxi/dashboards/ClientDashboard';
+import DriverDashboard from '@/pages/taxi/dashboards/DriverDashboard';
 import { TaxiAuthProvider } from '@/contexts/TaxiAuthContext';
 
 const TaxiRoutes = () => {
@@ -15,10 +17,11 @@ const TaxiRoutes = () => {
           <Routes>
             <Route path="/auth" element={<TaxiAuth />} />
             <Route path="/order" element={<TaxiOrder />} />
+            <Route path="/tracking/:orderId" element={<TaxiOrderTracking />} />
             <Route path="/profile" element={<TaxiProfile />} />
             <Route path="/dashboard/client" element={<ClientDashboard />} />
-            {/* Для других ролей пока перенаправляем на клиентский дашборд */}
-            <Route path="/dashboard/driver" element={<ClientDashboard />} />
+            <Route path="/dashboard/driver" element={<DriverDashboard />} />
+            {/* Для менеджера и админа пока перенаправляем на клиентский дашборд */}
             <Route path="/dashboard/manager" element={<ClientDashboard />} />
             <Route path="/dashboard/admin" element={<ClientDashboard />} />
           </Routes>

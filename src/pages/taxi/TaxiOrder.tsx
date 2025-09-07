@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { useTaxiAuth } from '@/contexts/TaxiAuthContext';
+import YandexMap from '@/components/taxi/YandexMap';
 
 const TaxiOrder = () => {
   const { user, createOrder, calculateCost } = useTaxiAuth();
@@ -36,6 +37,14 @@ const TaxiOrder = () => {
     distance: number;
   } | null>(null);
 
+  const [realDistance, setRealDistance] = useState<number>(0);
+  const [mapPoints, setMapPoints] = useState<{
+    from?: { address: string; coordinates: [number, number] };
+    to?: { address: string; coordinates: [number, number] };
+    waypoints?: Array<{ address: string; coordinates: [number, number] }>;
+  }>({});
+  const [showMap, setShowMap] = useState(true);
+
   // Если пользователь не авторизован, перенаправляем на авторизацию
   useEffect(() => {
     if (!user) {
@@ -45,14 +54,13 @@ const TaxiOrder = () => {
 
   // Расчет стоимости при изменении параметров
   useEffect(() => {
-    if (orderData.fromAddress && orderData.toAddress) {
+    if (realDistance > 0) {
       calculateEstimate();
     }
-  }, [orderData.fromAddress, orderData.toAddress, orderData.city]);
+  }, [realDistance, orderData.city]);
 
   const calculateEstimate = () => {
-    // Имитация расчета расстояния (в реальном приложении будет API карт)
-    const distance = Math.random() * 20 + 1; // 1-21 км
+    const distance = realDistance;
     
     const now = new Date();
     const isNight = now.getHours() >= 23 || now.getHours() < 6;
@@ -79,6 +87,20 @@ const TaxiOrder = () => {
     });
   };
 
+  // Обработчики карты
+  const handleMapPointsChange = (from: any, to: any, waypoints: any[]) => {
+    setMapPoints({ from, to, waypoints });
+    setOrderData(prev => ({
+      ...prev,
+      fromAddress: from.address,
+      toAddress: to.address
+    }));
+  };
+
+  const handleDistanceChange = (distance: number) => {
+    setRealDistance(distance);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -87,16 +109,16 @@ const TaxiOrder = () => {
     try {
       const order = await createOrder({
         ...orderData,
-        fromCoordinates: [56.2431, 43.8346], // Заглушка координат
-        toCoordinates: [56.2965, 44.0048],
-        waypoints: waypoints.filter(w => w.trim()).map(address => ({
+        fromCoordinates: mapPoints.from?.coordinates || [56.2431, 43.8346],
+        toCoordinates: mapPoints.to?.coordinates || [56.2965, 44.0048],
+        waypoints: mapPoints.waypoints || waypoints.filter(w => w.trim()).map(address => ({
           address,
           coordinates: [56.2431, 43.8346] as [number, number]
         })),
         scheduledAt: orderData.scheduledAt ? new Date(orderData.scheduledAt) : undefined
       });
 
-      navigate(`/migalki/order/${order.id}`);
+      navigate(`/migalki/tracking/${order.id}`);
     } catch (error) {
       console.error('Ошибка создания заказа:', error);
     } finally {
@@ -238,71 +260,108 @@ const TaxiOrder = () => {
                     </Select>
                   </div>
 
-                  {/* Адреса */}
+                  {/* Выбор способа ввода адреса */}
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Откуда</Label>
-                      <div className="relative">
-                        <Icon name="MapPin" className="absolute left-3 top-3 text-green-500" size={20} />
-                        <Input
-                          value={orderData.fromAddress}
-                          onChange={(e) => setOrderData({ ...orderData, fromAddress: e.target.value })}
-                          placeholder="Адрес отправления"
-                          className="pl-10"
-                          required
-                        />
-                      </div>
+                    <div className="flex bg-gray-100 p-1 rounded-lg">
+                      <button
+                        type="button"
+                        onClick={() => setShowMap(true)}
+                        className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all flex items-center justify-center space-x-2 ${
+                          showMap
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        <Icon name="Map" size={16} />
+                        <span>Карта</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowMap(false)}
+                        className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all flex items-center justify-center space-x-2 ${
+                          !showMap
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        <Icon name="Edit3" size={16} />
+                        <span>Ручной ввод</span>
+                      </button>
                     </div>
 
-                    {/* Промежуточные точки */}
-                    {waypoints.map((waypoint, index) => (
-                      <div key={index} className="space-y-2">
-                        <Label>Промежуточная точка {index + 1}</Label>
-                        <div className="flex space-x-2">
-                          <div className="relative flex-1">
-                            <Icon name="MapPin" className="absolute left-3 top-3 text-yellow-500" size={20} />
+                    {showMap ? (
+                      <YandexMap
+                        onPointsChange={handleMapPointsChange}
+                        onDistanceChange={handleDistanceChange}
+                        city={orderData.city}
+                      />
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label>Откуда</Label>
+                          <div className="relative">
+                            <Icon name="MapPin" className="absolute left-3 top-3 text-green-500" size={20} />
                             <Input
-                              value={waypoint}
-                              onChange={(e) => updateWaypoint(index, e.target.value)}
-                              placeholder="Промежуточный адрес"
+                              value={orderData.fromAddress}
+                              onChange={(e) => setOrderData({ ...orderData, fromAddress: e.target.value })}
+                              placeholder="Адрес отправления"
                               className="pl-10"
+                              required
                             />
                           </div>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            onClick={() => removeWaypoint(index)}
-                          >
-                            <Icon name="X" size={16} />
-                          </Button>
+                        </div>
+
+                        {/* Промежуточные точки */}
+                        {waypoints.map((waypoint, index) => (
+                          <div key={index} className="space-y-2">
+                            <Label>Промежуточная точка {index + 1}</Label>
+                            <div className="flex space-x-2">
+                              <div className="relative flex-1">
+                                <Icon name="MapPin" className="absolute left-3 top-3 text-yellow-500" size={20} />
+                                <Input
+                                  value={waypoint}
+                                  onChange={(e) => updateWaypoint(index, e.target.value)}
+                                  placeholder="Промежуточный адрес"
+                                  className="pl-10"
+                                />
+                              </div>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() => removeWaypoint(index)}
+                              >
+                                <Icon name="X" size={16} />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={addWaypoint}
+                          className="w-full border-dashed"
+                        >
+                          <Icon name="Plus" className="mr-2" size={16} />
+                          Добавить промежуточную точку
+                        </Button>
+
+                        <div className="space-y-2">
+                          <Label>Куда</Label>
+                          <div className="relative">
+                            <Icon name="MapPin" className="absolute left-3 top-3 text-red-500" size={20} />
+                            <Input
+                              value={orderData.toAddress}
+                              onChange={(e) => setOrderData({ ...orderData, toAddress: e.target.value })}
+                              placeholder="Адрес назначения"
+                              className="pl-10"
+                              required
+                            />
+                          </div>
                         </div>
                       </div>
-                    ))}
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={addWaypoint}
-                      className="w-full border-dashed"
-                    >
-                      <Icon name="Plus" className="mr-2" size={16} />
-                      Добавить промежуточную точку
-                    </Button>
-
-                    <div className="space-y-2">
-                      <Label>Куда</Label>
-                      <div className="relative">
-                        <Icon name="MapPin" className="absolute left-3 top-3 text-red-500" size={20} />
-                        <Input
-                          value={orderData.toAddress}
-                          onChange={(e) => setOrderData({ ...orderData, toAddress: e.target.value })}
-                          placeholder="Адрес назначения"
-                          className="pl-10"
-                          required
-                        />
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Дополнительные параметры */}
