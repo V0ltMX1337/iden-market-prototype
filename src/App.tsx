@@ -16,6 +16,7 @@ const OtherRoutes = lazy(() => import("./routes/OtherRoutes"));
 const ProfileRoutes = lazy(() => import("./routes/ProfileRoutes"));
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
 const TaxiRoutes = lazy(() => import("./routes/TaxiRoutes"));
+const TelegramAdminRoutes = lazy(() => import("./routes/TelegramAdminRoutes"));
 // const MessengerRoutes = lazy(() => import("./routes/MessengerRoutes"));
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => {
                 <ProfileRoutes />
                 <AdminRoutes />
                 <TaxiRoutes />
+                <TelegramAdminRoutes />
                 {/* <MessengerRoutes /> */}
                 
               </Suspense>
