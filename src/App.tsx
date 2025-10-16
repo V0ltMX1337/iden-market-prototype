@@ -20,6 +20,7 @@ const TelegramAdminRoutes = lazy(() => import("./routes/TelegramAdminRoutes"));
 const MigvpnRoutes = lazy(() => import("./routes/MigvpnRoutes"));
 const MfoRoutes = lazy(() => import("./routes/MfoRoutes"));
 const GruzRoutes = lazy(() => import("./routes/GruzRoutes"));
+const NewRoutes = lazy(() => import("./routes/NewRoutes"));
 // const MessengerRoutes = lazy(() => import("./routes/MessengerRoutes"));
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => {
                 <MigvpnRoutes />
                 <MfoRoutes />
                 <GruzRoutes />
+                <NewRoutes />
                 {/* <MessengerRoutes /> */}
                 
               </Suspense>
