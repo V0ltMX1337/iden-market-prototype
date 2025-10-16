@@ -19,7 +19,12 @@ const RightSidebar = ({ onNavigate }: RightSidebarProps) => {
         <CardContent className="p-3">
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm font-semibold">Возможные друзья</div>
-            <Button variant="ghost" size="sm" className="text-xs h-auto p-0 text-blue-600">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs h-auto p-0 text-blue-600"
+              onClick={() => onNavigate('friends')}
+            >
               Все
             </Button>
           </div>
@@ -42,7 +47,15 @@ const RightSidebar = ({ onNavigate }: RightSidebarProps) => {
                   </div>
                   <div className="text-xs text-gray-500">{user.mutualFriends} общих</div>
                 </div>
-                <Button size="sm" variant="outline" className="h-7 text-xs">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="h-7 text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alert('Заявка в друзья отправлена!');
+                  }}
+                >
                   <Icon name="UserPlus" size={14} className="mr-1" />
                 </Button>
               </div>
@@ -71,7 +84,7 @@ const RightSidebar = ({ onNavigate }: RightSidebarProps) => {
               <a href="#" className="hover:underline">Правила</a>
               <a href="#" className="hover:underline">Реклама</a>
             </div>
-            <div className="text-xs">© 2024 MyPlatform</div>
+            <div className="text-xs">© 2024 TRIVO</div>
           </div>
         </CardContent>
       </Card>

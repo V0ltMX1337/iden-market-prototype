@@ -108,7 +108,7 @@ const NewPage = () => {
   return (
     <>
       <Helmet>
-        <title>MyPlatform — Главная</title>
+        <title>TRIVO — Главная</title>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

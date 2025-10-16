@@ -26,11 +26,17 @@ const LeftSidebar = ({ currentUser, onNavigate }: LeftSidebarProps) => {
           </div>
           
           <div className="space-y-1 text-sm">
-            <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+            <div 
+              className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+              onClick={() => onNavigate('friends')}
+            >
               <span className="text-gray-700">Друзья</span>
               <span className="font-semibold text-gray-900">{currentUser.friendsCount}</span>
             </div>
-            <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+            <div 
+              className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+              onClick={() => onNavigate('profile')}
+            >
               <span className="text-gray-700">Подписчики</span>
               <span className="font-semibold text-gray-900">{currentUser.followersCount}</span>
             </div>
@@ -43,12 +49,16 @@ const LeftSidebar = ({ currentUser, onNavigate }: LeftSidebarProps) => {
           <div className="text-xs font-semibold text-gray-500 mb-2 px-2">БЫСТРЫЙ ДОСТУП</div>
           <div className="space-y-1">
             {[
-              { icon: 'Bookmark', label: 'Закладки', count: 0 },
-              { icon: 'Image', label: 'Фотографии', count: 0 },
-              { icon: 'Video', label: 'Видео', count: 0 },
-              { icon: 'Music', label: 'Аудиозаписи', count: 0 },
+              { icon: 'Bookmark', label: 'Закладки', count: 0, action: 'profile' },
+              { icon: 'Image', label: 'Фотографии', count: 0, action: 'profile' },
+              { icon: 'Video', label: 'Видео', count: 0, action: 'video' },
+              { icon: 'Music', label: 'Аудиозаписи', count: 0, action: 'music' },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer text-sm">
+              <div 
+                key={item.label} 
+                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer text-sm"
+                onClick={() => onNavigate(item.action)}
+              >
                 <Icon name={item.icon as any} size={18} className="text-gray-600" />
                 <span className="flex-1">{item.label}</span>
                 {item.count > 0 && <span className="text-xs text-gray-500">{item.count}</span>}
@@ -63,7 +73,11 @@ const LeftSidebar = ({ currentUser, onNavigate }: LeftSidebarProps) => {
           <div className="text-xs font-semibold text-gray-500 mb-2 px-2">МОИ СООБЩЕСТВА</div>
           <div className="space-y-2">
             {['🌍', '💻', '📸'].map((emoji, idx) => (
-              <div key={idx} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+              <div 
+                key={idx} 
+                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                onClick={() => onNavigate('communities')}
+              >
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-lg">
                   {emoji}
                 </div>

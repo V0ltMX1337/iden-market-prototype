@@ -113,6 +113,14 @@ const FeedTab = ({ currentUser, onNavigate }: FeedTabProps) => {
               {currentUser.avatar}
             </div>
             <Input placeholder="Что у вас нового?" className="flex-1" />
+            <Button 
+              size="sm" 
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => alert('Пост опубликован!')}
+            >
+              <Icon name="Send" size={16} className="mr-1" />
+              Отправить
+            </Button>
           </div>
           <div className="flex gap-3">
             <Button variant="ghost" size="sm" className="flex-1 text-sm">
