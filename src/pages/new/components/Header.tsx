@@ -6,9 +6,10 @@ import { User, TabType } from '../types';
 interface HeaderProps {
   currentUser: User;
   onTabChange: (tab: TabType) => void;
+  onNavigate: (type: string, data?: any) => void;
 }
 
-const Header = ({ currentUser, onTabChange }: HeaderProps) => {
+const Header = ({ currentUser, onTabChange, onNavigate }: HeaderProps) => {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="container mx-auto px-4">
@@ -36,6 +37,13 @@ const Header = ({ currentUser, onTabChange }: HeaderProps) => {
             <button className="relative p-2 hover:bg-gray-100 rounded-lg">
               <Icon name="Bell" size={24} className="text-gray-600" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <button
+              onClick={() => onNavigate('settings')}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+              title="Настройки"
+            >
+              <Icon name="Settings" size={24} className="text-gray-600" />
             </button>
             <div 
               className="cursor-pointer"

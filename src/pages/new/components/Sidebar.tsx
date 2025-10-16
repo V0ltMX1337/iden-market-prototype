@@ -14,9 +14,8 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     { id: 'friends' as TabType, icon: 'Users', label: 'Друзья', badge: 3 },
     { id: 'communities' as TabType, icon: 'UsersRound', label: 'Сообщества', badge: null },
     { id: 'video' as TabType, icon: 'Video', label: 'Видео', badge: null },
-    { id: 'ads' as TabType, icon: 'ShoppingBag', label: 'Объявления', badge: null },
-    { id: 'taxi' as TabType, icon: 'Car', label: 'Такси', badge: null },
     { id: 'music' as TabType, icon: 'Music', label: 'Музыка', badge: null },
+    { id: 'services' as TabType, icon: 'Grid3x3', label: 'Сервисы', badge: null },
   ];
 
   return (

@@ -6,12 +6,13 @@ import { User } from '../types';
 
 interface ProfileTabProps {
   currentUser: User;
+  onNavigate?: (type: string, data?: any) => void;
 }
 
-const ProfileTab = ({ currentUser }: ProfileTabProps) => {
+const ProfileTab = ({ currentUser, onNavigate }: ProfileTabProps) => {
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <Card className="mb-6">
+    <div className="space-y-4">
+      <Card>
         <CardContent className="p-0">
           <div className="h-48 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg"></div>
           <div className="p-6">
@@ -33,7 +34,10 @@ const ProfileTab = ({ currentUser }: ProfileTabProps) => {
                   </div>
                 </div>
               </div>
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                onClick={() => onNavigate?.('settings')}
+              >
                 <Icon name="Settings" size={20} className="mr-2" />
                 Редактировать
               </Button>
@@ -43,7 +47,7 @@ const ProfileTab = ({ currentUser }: ProfileTabProps) => {
       </Card>
 
       <Tabs defaultValue="posts">
-        <TabsList className="mb-6">
+        <TabsList>
           <TabsTrigger value="posts">Записи</TabsTrigger>
           <TabsTrigger value="photos">Фотографии</TabsTrigger>
           <TabsTrigger value="videos">Видео</TabsTrigger>

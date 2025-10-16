@@ -128,4 +128,9 @@ export interface TrivoidAuthData {
   code?: string;
 }
 
-export type TabType = 'feed' | 'messages' | 'friends' | 'ads' | 'communities' | 'video' | 'taxi' | 'music' | 'profile';
+export type TabType = 'feed' | 'messages' | 'friends' | 'ads' | 'communities' | 'video' | 'taxi' | 'music' | 'profile' | 'services' | 'settings';
+
+export interface AppView {
+  type: 'tab' | 'user-profile' | 'community-page' | 'settings';
+  data?: any;
+}
