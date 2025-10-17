@@ -84,7 +84,7 @@ const MessagesTab = ({ currentUser }: MessagesTabProps) => {
   const chatMessages = messages.filter(msg => msg.chatId === selectedChat);
 
   return (
-    <div className="h-[calc(100vh-80px)] flex rounded-lg overflow-hidden shadow-sm">
+    <div className="h-[calc(100vh-56px)] flex bg-white">
       <div className="w-full md:w-80 border-r border-gray-200 bg-white flex-shrink-0">
         <div className="p-4 border-b">
           <Input placeholder="Поиск сообщений..." />

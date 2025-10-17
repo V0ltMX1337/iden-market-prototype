@@ -14,8 +14,6 @@ import ServicesTab from './tabs/ServicesTab';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MobileNav from './components/MobileNav';
-import LeftSidebar from './components/LeftSidebar';
-import RightSidebar from './components/RightSidebar';
 import UserProfileView from './views/UserProfileView';
 import SettingsView from './views/SettingsView';
 import { User, TabType } from './types';
@@ -103,9 +101,7 @@ const NewPage = () => {
     }
   };
 
-  const showLeftSidebar = viewType === 'tab' && ['feed', 'friends', 'video', 'music', 'profile'].includes(activeTab);
-  const showRightSidebar = viewType === 'tab' && ['feed', 'friends'].includes(activeTab);
-  const isFullWidthTab = ['messages', 'ads', 'communities', 'taxi', 'services'].includes(activeTab);
+  const isWideLayout = ['messages', 'communities', 'services'].includes(activeTab);
 
   return (
     <>
@@ -113,43 +109,23 @@ const NewPage = () => {
         <title>TRIVO — Главная</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header currentUser={currentUser} onTabChange={(tab) => {
           setActiveTab(tab);
           setViewType('tab');
         }} onNavigate={handleNavigate} />
 
-        <div className="flex">
+        <div className="flex flex-1 overflow-hidden">
           <Sidebar activeTab={activeTab} onTabChange={(tab) => {
             setActiveTab(tab);
             setViewType('tab');
           }} />
 
-          <div className="flex-1 p-4 pb-16 md:pb-4">
-            {isFullWidthTab ? (
-              <main className="max-w-7xl mx-auto">
-                {renderContent()}
-              </main>
-            ) : (
-              <div className="flex justify-center gap-4 max-w-[1400px] mx-auto">
-                <div className="hidden lg:block" style={{ width: showLeftSidebar ? '240px' : '0', flexShrink: 0 }}>
-                  {showLeftSidebar && (
-                    <LeftSidebar currentUser={currentUser} onNavigate={handleNavigate} />
-                  )}
-                </div>
-                
-                <main className="flex-1" style={{ maxWidth: '680px' }}>
-                  {renderContent()}
-                </main>
-
-                <div className="hidden xl:block" style={{ width: showRightSidebar ? '280px' : '0', flexShrink: 0 }}>
-                  {showRightSidebar && (
-                    <RightSidebar onNavigate={handleNavigate} />
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          <main className="flex-1 overflow-y-auto bg-gray-50">
+            <div className={isWideLayout ? 'h-full' : 'max-w-2xl mx-auto py-4 px-3'}>
+              {renderContent()}
+            </div>
+          </main>
         </div>
 
         <MobileNav activeTab={activeTab} onTabChange={(tab) => {

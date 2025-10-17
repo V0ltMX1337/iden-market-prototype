@@ -106,64 +106,52 @@ const FeedTab = ({ currentUser, onNavigate }: FeedTabProps) => {
 
   return (
     <div className="space-y-3">
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-lg">
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white flex-shrink-0">
               {currentUser.avatar}
             </div>
-            <Input placeholder="Что у вас нового?" className="flex-1" />
+            <Input 
+              placeholder="Что у вас нового?" 
+              className="flex-1 border-0 bg-gray-100 h-9 text-sm focus:bg-white focus:ring-1 focus:ring-blue-500"
+            />
             <Button 
               size="sm" 
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
               onClick={() => alert('Пост опубликован!')}
             >
-              <Icon name="Send" size={16} className="mr-1" />
-              Отправить
-            </Button>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="ghost" size="sm" className="flex-1 text-sm">
-              <Icon name="Image" size={16} className="mr-1" />
-              Фото
-            </Button>
-            <Button variant="ghost" size="sm" className="flex-1 text-sm">
-              <Icon name="Video" size={16} className="mr-1" />
-              Видео
-            </Button>
-            <Button variant="ghost" size="sm" className="flex-1 text-sm">
-              <Icon name="Music" size={16} className="mr-1" />
-              Музыка
+              <Icon name="Send" size={16} />
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {posts.map((post) => (
-        <Card key={post.id}>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3 mb-3">
+        <Card key={post.id} className="border-0 shadow-sm">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-2 mb-3">
               <div 
-                className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg cursor-pointer"
+                className="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white cursor-pointer flex-shrink-0"
                 onClick={() => onNavigate?.('user-profile', post.author)}
               >
                 {post.author.avatar}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div 
-                  className="font-semibold hover:underline cursor-pointer"
+                  className="font-medium text-sm hover:underline cursor-pointer truncate"
                   onClick={() => onNavigate?.('user-profile', post.author)}
                 >
                   {post.author.name}
                 </div>
                 <div className="text-xs text-gray-500">{post.timestamp}</div>
               </div>
-              <button className="p-2 hover:bg-gray-100 rounded-lg">
+              <button className="p-1.5 hover:bg-gray-100 rounded-full flex-shrink-0">
                 <Icon name="MoreHorizontal" size={18} className="text-gray-600" />
               </button>
             </div>
             
-            <p className="mb-3 text-sm">{post.text}</p>
+            <p className="mb-3 text-[15px] leading-relaxed">{post.text}</p>
             
             {post.images && post.images.length > 0 && (
               <div className="bg-gray-100 h-48 rounded-lg mb-3 flex items-center justify-center">
@@ -171,33 +159,36 @@ const FeedTab = ({ currentUser, onNavigate }: FeedTabProps) => {
               </div>
             )}
             
-            <div className="flex items-center gap-4 text-gray-600 text-sm border-t pt-3">
+            <div className="flex items-center gap-6 text-gray-600 text-sm pt-2 border-t">
               <button 
                 onClick={() => handleLike(post.id)}
-                className={`flex items-center gap-1 transition-colors ${
+                className={`flex items-center gap-1.5 transition-colors ${
                   post.isLiked ? 'text-red-500' : 'hover:text-red-500'
                 }`}
               >
-                <Icon name="Heart" size={18} fill={post.isLiked ? 'currentColor' : 'none'} />
-                <span>{post.likes}</span>
+                <Icon name={post.isLiked ? 'Heart' : 'Heart'} size={18} fill={post.isLiked ? 'currentColor' : 'none'} />
+                <span className="text-xs font-medium">{post.likes}</span>
               </button>
+              
               <button 
                 onClick={() => setShowComments(showComments === post.id ? null : post.id)}
-                className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+                className="flex items-center gap-1.5 hover:text-blue-600 transition-colors"
               >
                 <Icon name="MessageCircle" size={18} />
-                <span>{post.comments}</span>
+                <span className="text-xs font-medium">{post.comments}</span>
               </button>
+              
               <button 
                 onClick={() => handleRepost(post.id)}
-                className={`flex items-center gap-1 transition-colors ${
+                className={`flex items-center gap-1.5 transition-colors ${
                   post.isReposted ? 'text-green-500' : 'hover:text-green-500'
                 }`}
               >
                 <Icon name="Repeat2" size={18} />
-                <span>{post.reposts}</span>
+                <span className="text-xs font-medium">{post.reposts}</span>
               </button>
-              <button className="flex items-center gap-1 hover:text-blue-500 transition-colors ml-auto">
+              
+              <button className="flex items-center gap-1.5 hover:text-gray-900 transition-colors ml-auto">
                 <Icon name="Share2" size={18} />
               </button>
             </div>
@@ -206,43 +197,35 @@ const FeedTab = ({ currentUser, onNavigate }: FeedTabProps) => {
               <div className="mt-3 pt-3 border-t space-y-3">
                 {(postComments[post.id] || []).map((comment) => (
                   <div key={comment.id} className="flex gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white text-sm">
+                    <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs flex-shrink-0">
                       {comment.author.avatar}
                     </div>
-                    <div className="flex-1">
-                      <div className="bg-gray-100 rounded-lg p-2">
-                        <div className="font-semibold text-sm">{comment.author.name}</div>
-                        <div className="text-sm">{comment.text}</div>
-                      </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                        <button className="hover:underline">{comment.timestamp}</button>
-                        <button className="hover:underline">Нравится</button>
-                        <button className="hover:underline">Ответить</button>
-                      </div>
+                    <div className="flex-1 bg-gray-100 rounded-2xl rounded-tl-none px-3 py-2">
+                      <div className="font-medium text-sm">{comment.author.name}</div>
+                      <p className="text-sm">{comment.text}</p>
+                      <div className="text-xs text-gray-500 mt-1">{comment.timestamp}</div>
                     </div>
                   </div>
                 ))}
                 
                 <div className="flex gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-sm">
+                  <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs flex-shrink-0">
                     {currentUser.avatar}
                   </div>
-                  <div className="flex-1 flex gap-2">
-                    <Input
-                      placeholder="Написать комментарий..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
-                      className="text-sm"
-                    />
-                    <Button 
-                      size="sm"
-                      onClick={() => handleAddComment(post.id)}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <Icon name="Send" size={16} />
-                    </Button>
-                  </div>
+                  <Input
+                    placeholder="Написать комментарий..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
+                    className="flex-1 border-0 bg-gray-100 h-8 text-sm"
+                  />
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleAddComment(post.id)}
+                    className="bg-blue-600 hover:bg-blue-700 h-8 px-3"
+                  >
+                    <Icon name="Send" size={14} />
+                  </Button>
                 </div>
               </div>
             )}
