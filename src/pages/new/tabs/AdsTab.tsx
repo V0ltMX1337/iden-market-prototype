@@ -13,6 +13,7 @@ interface AdsTabProps {
 const AdsTab = ({ currentUser }: AdsTabProps) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   
   const [ads] = useState<Ad[]>([
     {

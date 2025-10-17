@@ -103,7 +103,9 @@ const NewPage = () => {
     }
   };
 
-  const showSidebars = viewType === 'tab' && activeTab !== 'messages';
+  const showLeftSidebar = viewType === 'tab' && ['feed', 'friends', 'video', 'music', 'profile'].includes(activeTab);
+  const showRightSidebar = viewType === 'tab' && ['feed', 'friends'].includes(activeTab);
+  const isFullWidthTab = ['messages', 'ads', 'communities', 'taxi', 'services'].includes(activeTab);
 
   return (
     <>
@@ -123,17 +125,29 @@ const NewPage = () => {
             setViewType('tab');
           }} />
 
-          <div className="flex-1 flex gap-4 p-4 pb-16 md:pb-4">
-            {showSidebars && (
-              <LeftSidebar currentUser={currentUser} onNavigate={handleNavigate} />
-            )}
-            
-            <main className={showSidebars ? 'flex-1 max-w-3xl' : 'flex-1 max-w-7xl mx-auto'}>
-              {renderContent()}
-            </main>
+          <div className="flex-1 p-4 pb-16 md:pb-4">
+            {isFullWidthTab ? (
+              <main className="max-w-7xl mx-auto">
+                {renderContent()}
+              </main>
+            ) : (
+              <div className="flex justify-center gap-4 max-w-[1400px] mx-auto">
+                <div className="hidden lg:block" style={{ width: showLeftSidebar ? '240px' : '0', flexShrink: 0 }}>
+                  {showLeftSidebar && (
+                    <LeftSidebar currentUser={currentUser} onNavigate={handleNavigate} />
+                  )}
+                </div>
+                
+                <main className="flex-1" style={{ maxWidth: '680px' }}>
+                  {renderContent()}
+                </main>
 
-            {showSidebars && (
-              <RightSidebar onNavigate={handleNavigate} />
+                <div className="hidden xl:block" style={{ width: showRightSidebar ? '280px' : '0', flexShrink: 0 }}>
+                  {showRightSidebar && (
+                    <RightSidebar onNavigate={handleNavigate} />
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>
